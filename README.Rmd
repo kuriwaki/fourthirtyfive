@@ -1,0 +1,49 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# cdhexmap
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of cdhexmap is to ...
+
+## Installation
+
+You can install the development version of cdhexmap from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+remotes::install_github("kuriwaki/cdhexmap")
+```
+
+## Example
+
+
+```{r example}
+library(cdhexmap)
+
+```
+
+```{r}
+c2009_shp
+```
+
+```{r geomsf}
+c2009_shp |> 
+  ggplot() + geom_sf(fill = "white") + theme_void() +
+  geom_sf_text(aes(label = district, geometry = center), size = 1)
+```
+
