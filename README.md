@@ -7,7 +7,10 @@
 
 <!-- badges: end -->
 
-The goal of cdhexmap is to …
+cdhexmap is a package that provides a shapefile in hexagonal form as
+inspired by the Daily Kos map style. It also provides descriptive names
+for each district, as inspired by [Daily
+Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts).
 
 ## Installation
 
@@ -19,14 +22,50 @@ You can install the development version of cdhexmap from
 remotes::install_github("kuriwaki/cdhexmap")
 ```
 
+If you have the repository on your computer, you can open the Rstudio
+Project (.Rproj) and use devtools:
+
+``` r
+devtools::load_all()
+```
+
+`load_all` is a fast way to get your changes implemented. To fully
+install the changes installed and working across sessions, you will need
+to install.
+
+``` r
+devtools::install()
+```
+
 ## Example
+
+The main output of the package is a dataset, which comes pre-loaded with
+the package.
 
 ``` r
 library(cdhexmap)
 #> Loading required package: sf
-#> Linking to GEOS 3.11.0, GDAL 3.5.3, PROJ 9.1.0; sf_use_s2() is TRUE
+#> Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
 #> Loading required package: ggplot2
 ```
+
+The package names the shapefiles by the year of the congress.
+
+| Object      | Congress | Years in Session | Year Elected | Year up for Election |
+|-------------|----------|------------------|--------------|----------------------|
+| `c2005_shp` | 109th    | 2005-2006        | 2004         | 2006                 |
+| `c2007_shp` | 110th    | 2007-2008        | 2006         | 2008                 |
+| `c2009_shp` | 111th    | 2009-2010        | 2008         | 2010                 |
+| `c2011_shp` | 112th    | 2011-2012        | 2010         | 2012                 |
+| `c2013_shp` | 113th    | 2013-2014        | 2012         | 2014                 |
+| `c2015_shp` | 114th    | 2015-2016        | 2014         | 2016                 |
+| `c2017_shp` | 115th    | 2017-2018        | 2016         | 2018                 |
+| `c2019_shp` | 116th    | 2019-2020        | 2018         | 2020                 |
+| `c2021_shp` | 117th    | 2021-2022        | 2020         | 2022                 |
+| `c2023_shp` | 118th    | 2023-2024        | 2022         | 2024                 |
+| `c2025_shp` | 119th    | 2025-2026        | 2024         | 2026                 |
+
+Each file is a shapefile:
 
 ``` r
 c2009_shp
