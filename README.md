@@ -37,6 +37,9 @@ to install.
 devtools::install()
 ```
 
+Read more about the terms and customs for making a R package at
+<https://r-pkgs.org/>.
+
 ## Example
 
 The main output of the package is a dataset, which comes pre-loaded with
