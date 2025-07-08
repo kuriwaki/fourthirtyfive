@@ -41,6 +41,7 @@ devtools::load_all()
 devtools::install()
 ```
 
+Read more about the terms and customs for making a R package at <https://r-pkgs.org/>.
 
 ## Example
 
