@@ -263,3 +263,7 @@ ggsave(plot_118,
        filename = "plot2024.png",
        device = "png",
        height = 6, width = 5, units = "in")
+
+# upload
+usethis::use_data(dotmap_cd, overwrite = TRUE)
+
