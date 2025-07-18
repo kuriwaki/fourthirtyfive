@@ -8,6 +8,7 @@ library(purrr)
 library(geomander)
 library(ggforce)
 library(tigris)
+library(patchwork)
 options(tigris_use_cache = TRUE)
 
 # use geomander/get_lewis for cd for 110th congress b/c no census data before 2010
@@ -264,6 +265,10 @@ ggsave(plot_118,
        device = "png",
        height = 6, width = 5, units = "in")
 
+# combine plots
+comb_dotmap <- plot_110 + plot_112 + plot_114 + plot_116 + plot_118
+
+
 # upload
-usethis::use_data(dotmap_cd, overwrite = TRUE)
+usethis::use_data(comb_dotmap, overwrite = TRUE)
 
