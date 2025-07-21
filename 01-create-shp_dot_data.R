@@ -1,13 +1,12 @@
 # Create datasets for dot maps for each Congress 2006-2024
 
-# Pull 2008, 2012, 2016, 2020, 2024 maps and create a dot map for congressional
-# districts.
+# Pull congressional districts maps for 2006-2024 and create a dot sf map
 
-# Use geomander/get_lewis for cd for 109th and 110th congress (2006 and 2008)
-# b/c there is no census data before 2010.
+# `cong_lewis` function: Use geomander/get_lewis for cd for 109th and 110th
+# congress (2005 and 2007) b/c there is no census data before 2010.
 
-# Use census data for congressional district for 112th, 114th, 116th, 118th
-# congresses (2010-2024).
+# `congcen` function: Use census data for congressional district for 112th,
+# 114th, 116th, 118th congresses (2011-2023).
 
 # Load libraries ----
 library(tidyverse)
@@ -22,11 +21,9 @@ library(tigris)
 options(tigris_use_cache = TRUE)
 
 # Parameters ----
-# 50 states
 states <- c(state.abb)
-# use Albers Equal Area CRS for continental U.S.
 proj_crs <- 5070
-# radius of each dot (in meters) so that they are all the same size
+# circles are not the same size without fixing the radius
 circ_radius <- 15000
 
 # Function to generate geographic congressional data from `geomander` ----
@@ -58,11 +55,12 @@ cong_lewis <- function(cong_ses, title_lbl, name) {
       centroid = st_centroid(geometry),
       x = st_coordinates(centroid)[, 1],
       y = st_coordinates(centroid)[, 2],
-      # circles are not the same size without fixing the radius
       radius = circ_radius
     )
 
-  # layout optimization
+  # layout optimization and layout cost function to minimize overlap and
+  # total displacement.
+  # circles overlap on the map if not used
   # see mccartan's circles
   coords <- as.matrix(st_drop_geometry(centroids)[, c("x", "y")])
   radii <- centroids$radius
@@ -70,9 +68,6 @@ cong_lewis <- function(cong_ses, title_lbl, name) {
   sep_mat <- outer(radii, radii, `+`) * 1.02
   diag(sep_mat) <- 0
 
-  # layout cost function: minimize overlap and total displacement
-  # circles overlap on the map otherwise
-  # see mccartan's circles
   fn <- function(pos) {
     xy <- matrix(pos, ncol = 2)
     dm <- as.matrix(dist(xy))
@@ -82,20 +77,17 @@ cong_lewis <- function(cong_ses, title_lbl, name) {
     disp + 10 * pen
   }
 
-  # run optimization to minimize overlap
-  # adapted from mccartan's circles
   parscale <- rep(mean_sep, length(coords))
+  # method is "L-BFGS-B" instead of "Nelder-Mead" b/c of large amt of data
   res <- optim(coords, fn, method = "L-BFGS-B", control = list(
     maxit = 1e5, reltol = 1e-8, parscale = parscale
   ))
 
-  # assign optimized positions to centroids
-  # adapted from mccartan's circles
   xy_opt <- matrix(res$par, ncol = 2)
   centroids$x_opt <- xy_opt[, 1]
   centroids$y_opt <- xy_opt[, 2]
 
-  # only need certain variables
+  # only need certain variables to map
   centroids <- centroids |>
     select(cd, statename, geometry, radius, x_opt, y_opt)
 
