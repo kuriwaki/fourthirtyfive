@@ -5,7 +5,7 @@
 # `cong_lewis` function: Use geomander/get_lewis for cd for 109th and 110th
 # congress (2005 and 2007) b/c there is no census data before 2010.
 
-# `congcen` function: Use census data for congressional district for 112th,
+# `cong_cen` function: Use census data for congressional district for 112th,
 # 114th, 116th, 118th congresses (2011-2023).
 
 # Load libraries ----
@@ -160,7 +160,8 @@ shp_dot_2013 <- cong_cen(2013, "113th Congress", "CD113FP", "shp_dot_2013")
 shp_dot_2015 <- cong_cen(2015, "114th Congress", "CD114FP", "shp_dot_2015")
 shp_dot_2017 <- cong_cen(2017, "115th Congress", "CD115FP", "shp_dot_2017")
 shp_dot_2019 <- cong_cen(2019, "116th Congress", "CD116FP", "shp_dot_2019")
-shp_dot_2021 <- cong_cen(2021, "117th Congress", "CD117FP", "shp_dot_2021")
+# shows 116th Congress on the census
+shp_dot_2021 <- cong_cen(2021, "116th Congress", "CD116FP", "shp_dot_2021")
 shp_dot_2023 <- cong_cen(2023, "118th Congress", "CD118FP", "shp_dot_2023")
 
 # To plot data ----
