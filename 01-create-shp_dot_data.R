@@ -27,7 +27,7 @@ proj_crs <- 5070
 circ_radius <- 15000
 
 # Function to generate geographic congressional data from `geomander` ----
-cong_lewis <- function(cong_ses, title_lbl, name) {
+cong_lewis <- function(cong_ses, name) {
   # get district shapefile for a state
   lewis_sf <- map_df(states, function(st) {
     tryCatch(
@@ -98,7 +98,7 @@ cong_lewis <- function(cong_ses, title_lbl, name) {
 
 # Function to generate geographic congressional data from census ----
 # Similar code to above function
-cong_cen <- function(cong_year, title_lbl, cd_lbl, name) {
+cong_cen <- function(cong_year, cd_lbl, name) {
   # get district shapefile for a state
   cd <- congressional_districts(year = cong_year)
 
@@ -152,17 +152,17 @@ cong_cen <- function(cong_year, title_lbl, cd_lbl, name) {
 }
 
 # Run function to create dataset for each Congress ----
-shp_dot_2005 <- cong_lewis(109, "109th Congress", "shp_dot_2005")
-shp_dot_2007 <- cong_lewis(110, "110th Congress", "shp_dot_2007")
-shp_dot_2009 <- cong_lewis(111, "111th Congress", "shp_dot_2009")
-shp_dot_2011 <- cong_cen(2011, "112th Congress", "CD112FP", "shp_dot_2011")
-shp_dot_2013 <- cong_cen(2013, "113th Congress", "CD113FP", "shp_dot_2013")
-shp_dot_2015 <- cong_cen(2015, "114th Congress", "CD114FP", "shp_dot_2015")
-shp_dot_2017 <- cong_cen(2017, "115th Congress", "CD115FP", "shp_dot_2017")
-shp_dot_2019 <- cong_cen(2019, "116th Congress", "CD116FP", "shp_dot_2019")
+shp_dot_2005 <- cong_lewis(109, "shp_dot_2005")
+shp_dot_2007 <- cong_lewis(110, "shp_dot_2007")
+shp_dot_2009 <- cong_lewis(111, "shp_dot_2009")
+shp_dot_2011 <- cong_cen(2011, "CD112FP", "shp_dot_2011")
+shp_dot_2013 <- cong_cen(2013, "CD113FP", "shp_dot_2013")
+shp_dot_2015 <- cong_cen(2015, "CD114FP", "shp_dot_2015")
+shp_dot_2017 <- cong_cen(2017, "CD115FP", "shp_dot_2017")
+shp_dot_2019 <- cong_cen(2019, "CD116FP", "shp_dot_2019")
 # shows 116th Congress on the census
-shp_dot_2021 <- cong_cen(2021, "116th Congress", "CD116FP", "shp_dot_2021")
-shp_dot_2023 <- cong_cen(2023, "118th Congress", "CD118FP", "shp_dot_2023")
+shp_dot_2021 <- cong_cen(2021, "CD116FP", "shp_dot_2021")
+shp_dot_2023 <- cong_cen(2023, "CD118FP", "shp_dot_2023")
 
 # To plot data ----
 ## states_map <- tigris::states(cb = TRUE, resolution = "20m") |>
@@ -177,7 +177,7 @@ shp_dot_2023 <- cong_cen(2023, "118th Congress", "CD118FP", "shp_dot_2023")
 ## fill = "darkblue", color = NA, alpha = 0.9) +
 ## coord_sf(crs = proj_crs) +
 ## theme_void() +
-## labs(title = title_lbl)
+## labs(title = "109th Congress")
 
 # Write ---
 usethis::use_data(shp_dot_2005, overwrite = TRUE)
