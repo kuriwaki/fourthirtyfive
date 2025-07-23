@@ -17,7 +17,9 @@ library(dplyr)
 library(purrr)
 library(geomander)
 library(ggplot2)
+library(rmapshaper)
 library(tigris)
+library(tictoc)
 options(tigris_use_cache = TRUE)
 
 # Parameters ----
@@ -127,6 +129,8 @@ shp_dot_func <- function(source = c("geomander", "census"),
   # only need certain variables to map
   centroids <- centroids |>
     select(cd, statename, x_opt, y_opt) |>
+    mutate(geom_poly = geometry) |>
+    select(cd, statename, geom_poly, x_opt, y_opt) |>
     st_drop_geometry() |>
     st_as_sf(coords = c("x_opt", "y_opt"), crs = proj_crs)
 
