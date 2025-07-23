@@ -64,7 +64,7 @@ shp_dot_func <- function(source = c("geomander", "census"),
       )
 
   } else if (source == "census") {
-    cd <- congressional_districts(year = ses_or_year)
+    cd <- congressional_districts(year = ses_or_year, cb = TRUE)
 
     cd <- cd |>
       mutate(geometry = st_make_valid(geometry)) |>
@@ -131,7 +131,8 @@ shp_dot_func <- function(source = c("geomander", "census"),
     mutate(geom_poly = geometry) |>
     select(cd, statename, geom_poly, x_opt, y_opt) |>
     st_drop_geometry() |>
-    st_as_sf(coords = c("x_opt", "y_opt"), crs = proj_crs)
+    st_as_sf(coords = c("x_opt", "y_opt"), crs = proj_crs) |>
+    mutate(geom_poly = rmapshaper::ms_simplify(geom_poly))
 
   return(centroids)
 }
@@ -140,7 +141,7 @@ shp_dot_func <- function(source = c("geomander", "census"),
 shp_dot_2005 <- shp_dot_func("geomander", 109)
 shp_dot_2007 <- shp_dot_func("geomander", 110)
 shp_dot_2009 <- shp_dot_func("geomander", 111)
-shp_dot_2011 <- shp_dot_func("census", 2011, "CD112FP")
+shp_dot_2011 <- shp_dot_func("geomander", 112)
 shp_dot_2013 <- shp_dot_func("census", 2013, "CD113FP")
 shp_dot_2015 <- shp_dot_func("census", 2015, "CD114FP")
 shp_dot_2017 <- shp_dot_func("census", 2017, "CD115FP")
