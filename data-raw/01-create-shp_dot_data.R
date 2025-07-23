@@ -19,7 +19,6 @@ library(geomander)
 library(ggplot2)
 library(rmapshaper)
 library(tigris)
-library(tictoc)
 options(tigris_use_cache = TRUE)
 
 # Parameters ----
