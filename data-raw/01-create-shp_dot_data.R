@@ -3,26 +3,19 @@
 
 library(tidyverse)
 library(sf)
-library(dplyr)
-library(purrr)
-library(geomander)
-library(ggplot2)
-library(rmapshaper)
 library(tigris)
-library(ccesMRPprep)
+library(geomander) # for get_lewis
+library(ccesMRPprep) # for to_cd. remotes::install_github("kuriwaki/ccesMRPprep")
 library(glue)
-options(tigris_use_cache = TRUE)
 
 # Parameters ----
-states <- c(state.abb)
 proj_crs <- 5070
 circ_radius <- 17000
-
 
 # temporary download full shapefiles
 if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
   for (c in 109:112) {
-    map_df(states, \(x) geomander::get_lewis(state = x, congress = c), .progress = TRUE) |>
+    map_df(state.abb, \(x) geomander::get_lewis(state = x, congress = c), .progress = TRUE) |>
       write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
   }
 
@@ -43,7 +36,7 @@ shp_dot_func <- function(source = c("geomander", "census"),
                          cd_col = NULL) {
   source <- match.arg(source)
 
-  if (source == "geomander") {
+  if (source == "lewis") {
     # get district shapefile for a state
     cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
       mutate(geometry = st_make_valid(geometry)) |>
@@ -124,10 +117,10 @@ shp_dot_func <- function(source = c("geomander", "census"),
 }
 
 # Run function to create dataset for each Congress ----
-shp_dot_2005 <- shp_dot_func("geomander", 109)
-shp_dot_2007 <- shp_dot_func("geomander", 110)
-shp_dot_2009 <- shp_dot_func("geomander", 111)
-shp_dot_2011 <- shp_dot_func("geomander", 112)
+shp_dot_2005 <- shp_dot_func("lewis", 109)
+shp_dot_2007 <- shp_dot_func("lewis", 110)
+shp_dot_2009 <- shp_dot_func("lewis", 111)
+shp_dot_2011 <- shp_dot_func("lewis", 112)
 shp_dot_2013 <- shp_dot_func("census", 113, CD113FP)
 shp_dot_2015 <- shp_dot_func("census", 114, CD114FP)
 shp_dot_2017 <- shp_dot_func("census", 115, CD115FP)
