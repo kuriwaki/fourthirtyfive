@@ -73,13 +73,16 @@ slightly dodged so that points in dense places do not overlap.
 library(sf)
 library(ggplot2)
 
+shp_dot_2023
+
 # plot points combined with state outline
 shp_dot_2005 |>
   ggplot() +
   geom_sf(data = shp_states) +
   geom_sf(alpha = 0.5)
-# can also use geom_circle in ggforce(), but need to set constant radius to keep
-# circle sizes the same
+
+# can also use ggforce::geom_circle, extracting x,y coordinates from geom and
+# setting a radius e.g. to 150000
 }
 \author{
 Zoya Ahmer, Shiro Kuriwaki, Cory McCartan
