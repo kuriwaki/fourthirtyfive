@@ -10,36 +10,42 @@ library(ggplot2)
 library(rmapshaper)
 library(tigris)
 library(ccesMRPprep)
+library(glue)
 options(tigris_use_cache = TRUE)
 
 # Parameters ----
 states <- c(state.abb)
 proj_crs <- 5070
-circ_radius <- 15000
+circ_radius <- 17000
+
+
+# temporary download full shapefiles
+if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
+  for (c in 109:112) {
+    map_df(states, \(x) geomander::get_lewis(state = x, congress = c), .progress = TRUE) |>
+      write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
+  }
+
+  for (c in 113:118) {
+    yr = 2*c + 1786 + 1
+    tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
+      write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
+  }
+}
+
 
 # Function to generate geographic congressional data from `geomander` OR
 # geographic congressional data from census
+#' @param c congress number
 #' @param cd_col unquoted name of the variable
 shp_dot_func <- function(source = c("geomander", "census"),
-                         ses_or_year,
+                         c,
                          cd_col = NULL) {
   source <- match.arg(source)
 
   if (source == "geomander") {
     # get district shapefile for a state
-    lewis_sf <- map_df(states, function(st) {
-      tryCatch(
-        {
-          get_lewis(state = st, congress = ses_or_year)
-        },
-        error = function(e) {
-          message(paste("Error fetching:", st))
-          NULL
-        }
-      )
-    })
-
-    cd_sf <- lewis_sf |>
+    cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
       mutate(geometry = st_make_valid(geometry)) |>
       # filter out AK/HI for now to make it easier to map
       filter(!statename %in% c("Alaska", "Hawaii")) |>
@@ -49,9 +55,7 @@ shp_dot_func <- function(source = c("geomander", "census"),
   }
 
   if (source == "census") {
-    cen_shp <- congressional_districts(year = ses_or_year, cb = TRUE)
-
-    cd_sf <- cen_shp |>
+    cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
       mutate(geometry = st_make_valid(geometry)) |>
       # remove AK, HI, PR, territories for now to make it easier to map
       filter(!STATEFP %in% c("02", "15", "72", "60", "66", "69", "78")) |>
@@ -67,16 +71,16 @@ shp_dot_func <- function(source = c("geomander", "census"),
   }
 
   # common operations
-    centroids <- cd_sf |>
-      filter(statename != "District of Columbia") |>
-      mutate(cd = to_cd(statename, dist),
-             dist = NULL, statename = NULL) |>
-      mutate(
-        centroid = st_centroid(geometry),
-        x = st_coordinates(centroid)[, 1],
-        y = st_coordinates(centroid)[, 2],
-        radius = circ_radius
-      )
+  centroids <- cd_sf |>
+    filter(statename != "District of Columbia") |>
+    mutate(cd = to_cd(statename, dist),
+           dist = NULL, statename = NULL) |>
+    mutate(
+      centroid = st_centroid(geometry),
+      x = st_coordinates(centroid)[, 1],
+      y = st_coordinates(centroid)[, 2],
+      radius = circ_radius
+    )
 
   # layout optimization and layout cost function to minimize overlap and
   # total displacement.
@@ -99,9 +103,11 @@ shp_dot_func <- function(source = c("geomander", "census"),
 
   # method is "L-BFGS-B" instead of "Nelder-Mead" b/c of large amt of data
   cli::cli_progress_message("Starting force directed algorithm")
+  tictoc::tic()
   res <- optim(coords, fn, method = "L-BFGS-B", control = list(
-    maxit = 1e1, factr = 1e-8, parscale = rep(circ_radius, length(coords))
+    maxit = 1e2, factr = 1e10, parscale = rep(circ_radius, length(coords))
   ))
+  tictoc::toc()
 
   xy_opt <- matrix(res$par, ncol = 2)
   centroids$x_opt <- xy_opt[, 1]
@@ -109,14 +115,11 @@ shp_dot_func <- function(source = c("geomander", "census"),
 
   # want point geometry
   # only need certain variables to map
-  centroids <- centroids |>
-    mutate(geom_poly = geometry) |>
-    select(cd, geom_poly, x_opt, y_opt) |>
+  centroids |>
+    select(cd, geometry, x_opt, y_opt) |>
+    arrange(cd) |>
     st_drop_geometry() |>
-    st_as_sf(coords = c("x_opt", "y_opt"), crs = proj_crs) |>
-    mutate(geom_poly = rmapshaper::ms_simplify(geom_poly))
-
-  return(centroids)
+    st_as_sf(coords = c("x_opt", "y_opt"), crs = proj_crs)
 }
 
 # Run function to create dataset for each Congress ----
@@ -124,12 +127,12 @@ shp_dot_2005 <- shp_dot_func("geomander", 109)
 shp_dot_2007 <- shp_dot_func("geomander", 110)
 shp_dot_2009 <- shp_dot_func("geomander", 111)
 shp_dot_2011 <- shp_dot_func("geomander", 112)
-shp_dot_2013 <- shp_dot_func("census", 2013, CD113FP)
-shp_dot_2015 <- shp_dot_func("census", 2015, CD114FP)
-shp_dot_2017 <- shp_dot_func("census", 2017, CD115FP)
-shp_dot_2019 <- shp_dot_func("census", 2019, CD116FP)
-shp_dot_2021 <- shp_dot_func("census", 2021, CD116FP) # shows 116th Congress on the census
-shp_dot_2023 <- shp_dot_func("census", 2023, CD118FP)
+shp_dot_2013 <- shp_dot_func("census", 113, CD113FP)
+shp_dot_2015 <- shp_dot_func("census", 114, CD114FP)
+shp_dot_2017 <- shp_dot_func("census", 115, CD115FP)
+shp_dot_2019 <- shp_dot_func("census", 116, CD116FP)
+shp_dot_2021 <- shp_dot_func("census", 117, CD116FP)
+shp_dot_2023 <- shp_dot_func("census", 118, CD118FP)
 
 # Write ---
 usethis::use_data(shp_dot_2005, overwrite = TRUE, compress = "xz")
@@ -142,3 +145,13 @@ usethis::use_data(shp_dot_2017, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2019, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2021, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2023, overwrite = TRUE, compress = "xz")
+
+# separate state function
+shp_state <- tigris::states(cb = TRUE, resolution = "20m") |>
+  select(statename = NAME, state = STUSPS, geometry) |>
+  filter(!state %in% c("HI", "AK", "PR")) |>
+  arrange(state) |>
+  st_transform(crs = proj_crs)
+usethis::use_data(shp_state, overwrite = TRUE, compress = "xz")
+
+
