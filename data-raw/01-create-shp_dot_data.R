@@ -27,11 +27,11 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
 }
 
 
-# Function to generate geographic congressional data from `geomander` OR
+# Function to generate geographic congressional data from `lewis` OR
 # geographic congressional data from census
 #' @param c congress number
 #' @param cd_col unquoted name of the variable
-shp_dot_func <- function(source = c("geomander", "census"),
+shp_dot_func <- function(source = c("lewis", "census"),
                          c,
                          cd_col = NULL) {
   source <- match.arg(source)
