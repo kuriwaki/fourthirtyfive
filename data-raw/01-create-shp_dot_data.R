@@ -50,6 +50,7 @@ shp_dot_func <- function(source = c("geomander", "census"),
       # filter out AK/HI for now to make it easier to map
       filter(!statename %in% c("Alaska", "Hawaii")) |>
       st_transform(crs = proj_crs) |>
+      as.data.frame() |>
       rename(dist = district)
 
   }
