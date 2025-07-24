@@ -1,16 +1,6 @@
 # Create datasets for dot maps for each Congress 2006-2024
-
 # Pull congressional districts maps for 2006-2024 and create a dot sf map
 
-# `shp_dot_func` function:
-
-# *First part uses  geomander/get_lewis for cd for 109th and 110th
-# congress (2005 and 2007) b/c there is no census data before 2010.
-
-# *Second part uses census data for congressional district for 112th,
-# 114th, 116th, 118th congresses (2011-2023).
-
-# Load libraries ----
 library(tidyverse)
 library(sf)
 library(dplyr)
@@ -47,34 +37,24 @@ shp_dot_func <- function(source = c("geomander", "census"),
       )
     })
 
-    lewis_sf <- lewis_sf |>
+    cd_sf <- lewis_sf |>
       mutate(geometry = st_make_valid(geometry)) |>
       # filter out AK/HI for now to make it easier to map
       filter(!statename %in% c("Alaska", "Hawaii")) |>
       st_transform(crs = proj_crs) |>
       rename(cd = district)
 
-    # compute centroids
-    centroids <- lewis_sf |>
-      mutate(
-        centroid = st_centroid(geometry),
-        x = st_coordinates(centroid)[, 1],
-        y = st_coordinates(centroid)[, 2],
-        radius = circ_radius
-      )
+  }
 
-  } else if (source == "census") {
-    cd <- congressional_districts(year = ses_or_year, cb = TRUE)
+  if (source == "census") {
+    cen_shp <- congressional_districts(year = ses_or_year, cb = TRUE)
 
-    cd <- cd |>
+    cd_sf <- cen_shp |>
       mutate(geometry = st_make_valid(geometry)) |>
       # remove AK, HI, PR, territories for now to make it easier to map
       filter(!STATEFP %in% c("02", "15", "72", "60", "66", "69", "78")) |>
-      st_transform(crs = proj_crs)
-
-    # match census dataset columns to the geomander dataset
-    cd <- cd |> mutate(STATEFP = as.character(STATEFP))
-    cd <- cd |>
+      st_transform(crs = proj_crs) |>
+      mutate(STATEFP = as.character(STATEFP)) |>
       left_join(
         tigris::fips_codes |>
           select(STATEFP = state_code, statename = state_name) |>
@@ -84,22 +64,22 @@ shp_dot_func <- function(source = c("geomander", "census"),
 
     stopifnot(!is.null(cd_lbl))
 
-    cd <- cd |>
+    cd_sf <- cd_sf |>
       mutate(cd = sub("^0+", "", .data[[cd_lbl]]))
+  }
 
-    centroids <- cd |>
+    centroids <- cd_sf |>
       mutate(
         centroid = st_centroid(geometry),
         x = st_coordinates(centroid)[, 1],
         y = st_coordinates(centroid)[, 2],
         radius = circ_radius
       )
-  }
 
   # layout optimization and layout cost function to minimize overlap and
   # total displacement.
   # circles overlap on the map if not used
-  # see mccartan's circles
+  # optimization written by Cory McCartan
   coords <- as.matrix(st_drop_geometry(centroids)[, c("x", "y")])
   radii <- centroids$radius
   mean_sep <- mean(as.matrix(dist(coords)))
