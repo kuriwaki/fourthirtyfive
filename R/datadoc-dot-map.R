@@ -19,7 +19,7 @@
 #' # plot points combined with state outline
 #' shp_dot_2005 |>
 #'   ggplot() +
-#'   geom_sf(data = shp_st) +
+#'   geom_sf(data = shp_states) +
 #'   geom_sf(alpha = 0.5)
 #' # can also use geom_circle in ggforce(), but need to set constant radius to keep
 #' # circle sizes the same
@@ -53,4 +53,4 @@ NULL
 #' Shapefile of US states with Albers projection. Useful as an outline to dot maps of CDs.
 #'
 #' @seealso \link{shp_dot}
-"shp_state"
+"shp_states"

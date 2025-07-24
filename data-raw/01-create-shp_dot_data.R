@@ -141,11 +141,11 @@ usethis::use_data(shp_dot_2021, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2023, overwrite = TRUE, compress = "xz")
 
 # separate state function
-shp_state <- tigris::states(cb = TRUE, resolution = "20m") |>
+shp_states <- tigris::states(cb = TRUE, resolution = "20m") |>
   select(statename = NAME, state = STUSPS, geometry) |>
   filter(!state %in% c("HI", "AK", "PR")) |>
   arrange(state) |>
   st_transform(crs = proj_crs)
-usethis::use_data(shp_state, overwrite = TRUE, compress = "xz")
+usethis::use_data(shp_states, overwrite = TRUE, compress = "xz")
 
 
