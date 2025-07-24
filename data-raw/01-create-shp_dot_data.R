@@ -9,6 +9,7 @@ library(geomander)
 library(ggplot2)
 library(rmapshaper)
 library(tigris)
+library(ccesMRPprep)
 options(tigris_use_cache = TRUE)
 
 # Parameters ----
@@ -18,9 +19,10 @@ circ_radius <- 15000
 
 # Function to generate geographic congressional data from `geomander` OR
 # geographic congressional data from census
+#' @param cd_col unquoted name of the variable
 shp_dot_func <- function(source = c("geomander", "census"),
                          ses_or_year,
-                         cd_lbl = NULL) {
+                         cd_col = NULL) {
   source <- match.arg(source)
 
   if (source == "geomander") {
@@ -42,7 +44,7 @@ shp_dot_func <- function(source = c("geomander", "census"),
       # filter out AK/HI for now to make it easier to map
       filter(!statename %in% c("Alaska", "Hawaii")) |>
       st_transform(crs = proj_crs) |>
-      rename(cd = district)
+      rename(dist = district)
 
   }
 
@@ -60,15 +62,15 @@ shp_dot_func <- function(source = c("geomander", "census"),
           select(STATEFP = state_code, statename = state_name) |>
           distinct(),
         by = "STATEFP"
-      )
-
-    stopifnot(!is.null(cd_lbl))
-
-    cd_sf <- cd_sf |>
-      mutate(cd = sub("^0+", "", .data[[cd_lbl]]))
+      ) |>
+      mutate(dist = str_remove({{cd_col}}, "^0+"))
   }
 
+  # common operations
     centroids <- cd_sf |>
+      filter(statename != "District of Columbia") |>
+      mutate(cd = to_cd(statename, dist),
+             dist = NULL, statename = NULL) |>
       mutate(
         centroid = st_centroid(geometry),
         x = st_coordinates(centroid)[, 1],
@@ -96,6 +98,7 @@ shp_dot_func <- function(source = c("geomander", "census"),
   }
 
   # method is "L-BFGS-B" instead of "Nelder-Mead" b/c of large amt of data
+  cli::cli_progress_message("Starting force directed algorithm")
   res <- optim(coords, fn, method = "L-BFGS-B", control = list(
     maxit = 1e1, factr = 1e-8, parscale = rep(circ_radius, length(coords))
   ))
@@ -107,9 +110,8 @@ shp_dot_func <- function(source = c("geomander", "census"),
   # want point geometry
   # only need certain variables to map
   centroids <- centroids |>
-    select(cd, statename, x_opt, y_opt) |>
     mutate(geom_poly = geometry) |>
-    select(cd, statename, geom_poly, x_opt, y_opt) |>
+    select(cd, geom_poly, x_opt, y_opt) |>
     st_drop_geometry() |>
     st_as_sf(coords = c("x_opt", "y_opt"), crs = proj_crs) |>
     mutate(geom_poly = rmapshaper::ms_simplify(geom_poly))
@@ -122,13 +124,12 @@ shp_dot_2005 <- shp_dot_func("geomander", 109)
 shp_dot_2007 <- shp_dot_func("geomander", 110)
 shp_dot_2009 <- shp_dot_func("geomander", 111)
 shp_dot_2011 <- shp_dot_func("geomander", 112)
-shp_dot_2013 <- shp_dot_func("census", 2013, "CD113FP")
-shp_dot_2015 <- shp_dot_func("census", 2015, "CD114FP")
-shp_dot_2017 <- shp_dot_func("census", 2017, "CD115FP")
-shp_dot_2019 <- shp_dot_func("census", 2019, "CD116FP")
-# shows 116th Congress on the census
-shp_dot_2021 <- shp_dot_func("census", 2021, "CD116FP")
-shp_dot_2023 <- shp_dot_func("census", 2023, "CD118FP")
+shp_dot_2013 <- shp_dot_func("census", 2013, CD113FP)
+shp_dot_2015 <- shp_dot_func("census", 2015, CD114FP)
+shp_dot_2017 <- shp_dot_func("census", 2017, CD115FP)
+shp_dot_2019 <- shp_dot_func("census", 2019, CD116FP)
+shp_dot_2021 <- shp_dot_func("census", 2021, CD116FP) # shows 116th Congress on the census
+shp_dot_2023 <- shp_dot_func("census", 2023, CD118FP)
 
 # Write ---
 usethis::use_data(shp_dot_2005, overwrite = TRUE, compress = "xz")
