@@ -1,4 +1,4 @@
-Package: cdhexmap
+Package: cdmap
 Title: Shapefiles for visualizing congressional districts
 Version: 0.0.0.9000
 Authors@R: 

@@ -1,25 +1,25 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# cdhexmap
+# cdmap
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-cdhexmap is a package that provides a shapefile in hexagonal form as
+cdmap is a package that provides a shapefile in hexagonal form as
 inspired by the Daily Kos map style. It also provides descriptive names
 for each district, as inspired by [Daily
 Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts).
 
 ## Installation
 
-You can install the development version of cdhexmap from
+You can install the development version of cdmap from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-remotes::install_github("kuriwaki/cdhexmap")
+remotes::install_github("kuriwaki/cdmap")
 ```
 
 If you have the repository on your computer, you can open the Rstudio
@@ -46,7 +46,7 @@ The main output of the package is a dataset, which comes pre-loaded with
 the package.
 
 ``` r
-library(cdhexmap)
+library(cdmap)
 #> Loading required package: sf
 #> Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
 #> Loading required package: ggplot2
