@@ -41,19 +41,16 @@ shp_dot_func <- function(source = c("lewis", "census"),
     # get district shapefile for a state
     cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
       mutate(geometry = st_make_valid(geometry)) |>
-      # filter out AK/HI for now to make it easier to map
-      filter(!statename %in% c("Alaska", "Hawaii")) |>
       st_transform(crs = proj_crs) |>
       as.data.frame() |>
       rename(dist = district)
-
   }
 
   if (source == "census") {
     cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
       mutate(geometry = st_make_valid(geometry)) |>
-      # remove AK, HI, PR, territories for now to make it easier to map
-      filter(!STATEFP %in% c("02", "15", "72", "60", "66", "69", "78")) |>
+      # remove PR, territories
+      filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
       st_transform(crs = proj_crs) |>
       mutate(STATEFP = as.character(STATEFP)) |>
       left_join(
@@ -75,7 +72,7 @@ shp_dot_func <- function(source = c("lewis", "census"),
       x = st_coordinates(centroid)[, 1],
       y = st_coordinates(centroid)[, 2],
       radius = circ_radius
-    )
+      )
 
   # layout optimization and layout cost function to minimize overlap and
   # total displacement.
@@ -110,7 +107,7 @@ shp_dot_func <- function(source = c("lewis", "census"),
 
   # want point geometry
   # only need certain variables to map
-  centroids |>
+  centroids <- centroids |>
     select(cd, geometry, x_opt, y_opt) |>
     arrange(cd) |>
     st_drop_geometry() |>
@@ -124,9 +121,12 @@ shp_dot_func <- function(source = c("lewis", "census"),
   st_geometry(hi) <- st_geometry(hi) + c(5.23e6, -1.48e6)
 
   akhi_adjusted <- bind_rows(ak, hi)
-  st_crs(akhi_adjusted) <- 5070
+  st_crs(akhi_adjusted) <- proj_crs
 
   centroids[str_starts(centroids$cd, "AK|HI"), ] <- akhi_adjusted
+
+  # points from 50 states
+  return(centroids)
 }
 
 # Run function to create dataset for each Congress ----
@@ -159,7 +159,6 @@ shp_states <- tigris::states(cb = TRUE, resolution = "20m") |>
   filter(!state %in% c("HI", "AK", "PR")) |>
   arrange(state) |>
   st_transform(crs = proj_crs)
-usethis::use_data(shp_states, overwrite = TRUE, compress = "xz")
 
 # AK and HI
 urbn_sf <- urbnmapr::get_urbn_map(map = "states", sf = TRUE)
