@@ -7,6 +7,7 @@ library(tigris)
 library(geomander) # for get_lewis
 library(ccesMRPprep) # for to_cd. remotes::install_github("kuriwaki/ccesMRPprep")
 library(glue)
+library(urbnmapr) # to add alaska and hawaii to map
 
 # Parameters ----
 proj_crs <- 5070
@@ -31,7 +32,7 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
 # geographic congressional data from census
 #' @param c congress number
 #' @param cd_col unquoted name of the variable
-shp_dot_func <- function(source = c("geomander", "census"),
+shp_dot_func <- function(source = c("lewis", "census"),
                          c,
                          cd_col = NULL) {
   source <- match.arg(source)
@@ -114,6 +115,18 @@ shp_dot_func <- function(source = c("geomander", "census"),
     arrange(cd) |>
     st_drop_geometry() |>
     st_as_sf(coords = c("x_opt", "y_opt"), crs = proj_crs)
+
+  # add ak and hi and shift points to match map
+  ak <- centroids[str_starts(centroids$cd, "AK"), ]
+  hi <- centroids[str_starts(centroids$cd, "HI"), ]
+
+  st_geometry(ak) <- st_geometry(ak) + c(1.15e6, -4.7e6)
+  st_geometry(hi) <- st_geometry(hi) + c(5.23e6, -1.48e6)
+
+  akhi_adjusted <- bind_rows(ak, hi)
+  st_crs(akhi_adjusted) <- 5070
+
+  centroids[str_starts(centroids$cd, "AK|HI"), ] <- akhi_adjusted
 }
 
 # Run function to create dataset for each Congress ----
@@ -140,7 +153,7 @@ usethis::use_data(shp_dot_2019, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2021, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2023, overwrite = TRUE, compress = "xz")
 
-# separate state function
+# Separate 50 state function ---
 shp_states <- tigris::states(cb = TRUE, resolution = "20m") |>
   select(statename = NAME, state = STUSPS, geometry) |>
   filter(!state %in% c("HI", "AK", "PR")) |>
@@ -148,4 +161,28 @@ shp_states <- tigris::states(cb = TRUE, resolution = "20m") |>
   st_transform(crs = proj_crs)
 usethis::use_data(shp_states, overwrite = TRUE, compress = "xz")
 
+# AK and HI
+urbn_sf <- urbnmapr::get_urbn_map(map = "states", sf = TRUE)
 
+# https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+
+# just AK and HI
+akhi <- urbn_sf[50:51, ] |>
+  select(cd = state_abbv, geometry) |>
+  st_geometry() # reduce to just the geometry column
+st_crs(akhi) <- 5070
+
+# actual shift
+akhi_shifted = akhi + c(-0.3e6, 2.5e6)
+
+akhi_sf = st_sf(akhi_shifted, crs = 5070) |>
+  rename(geometry = akhi_shifted) |>
+  mutate(state = c("AK", "HI"),
+         geometry = st_simplify(geometry))
+
+# map with centroid points
+shp_states <- shp_states |>
+  bind_rows(akhi_sf)
+
+# Write ---
+usethis::use_data(shp_states, overwrite = TRUE, compress = "xz")
