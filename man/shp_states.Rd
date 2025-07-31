@@ -5,13 +5,22 @@
 \alias{shp_states}
 \title{State map}
 \format{
-An object of class \code{sf} (inherits from \code{data.frame}) with 49 rows and 3 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 51 rows and 3 columns.
+}
+\source{
+Alaska and Hawaii are modified following UrbanInstitute/urbnmapr
 }
 \usage{
 shp_states
 }
 \description{
 Shapefile of US states with Albers projection. Useful as an outline to dot maps of CDs.
+}
+\examples{
+ shp_states |>
+   ggplot() +
+   geom_sf() +
+   geom_sf_text(aes(label = state))
 }
 \seealso{
 \link{shp_dot}

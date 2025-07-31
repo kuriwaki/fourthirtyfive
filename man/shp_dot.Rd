@@ -17,31 +17,31 @@
 \format{
 Each object is for a particular congress. The year indicates the start
 of that Congress. Each observational is a congressional district, represented by
-a point.  Hawaii and Alaska are not represented.
+a point.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
 }
 \source{
 Coordinates from 2012 onwards taken from US Census, \code{tigris} package.
-Coordinates from early Congresses taken from Jefrey B. Lewis, historical congressional
+Coordinates from early Congresses taken from Jeffrey B. Lewis, historical congressional
 district shapefiles
 }
 \usage{
@@ -79,7 +79,7 @@ shp_dot_2023
 shp_dot_2005 |>
   ggplot() +
   geom_sf(data = shp_states) +
-  geom_sf(alpha = 0.5)
+  geom_sf(size = 1, alpha = 0.5)
 
 # can also use ggforce::geom_circle, extracting x,y coordinates from geom and
 # setting a radius e.g. to 150000

@@ -1,6 +1,3 @@
-# Create datasets for dot maps for each Congress 2006-2024
-# Pull congressional districts maps for 2006-2024 and create a dot sf map
-
 library(tidyverse)
 library(sf)
 library(tigris)
@@ -10,7 +7,7 @@ library(glue)
 
 # Parameters ----
 proj_crs <- 5070
-circ_radius <- 17000
+circ_radius <- 18000
 
 # temporary download full shapefiles
 if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
@@ -26,9 +23,8 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
   }
 }
 
-
-# Function to generate geographic congressional data from `lewis` OR
-# geographic congressional data from census
+#' Dodge centroids
+#' @param source get from Lewis data or Census tigris
 #' @param c congress number
 #' @param cd_col unquoted name of the variable
 shp_dot_func <- function(source = c("lewis", "census"),
@@ -40,19 +36,16 @@ shp_dot_func <- function(source = c("lewis", "census"),
     # get district shapefile for a state
     cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
       mutate(geometry = st_make_valid(geometry)) |>
-      # filter out AK/HI for now to make it easier to map
-      filter(!statename %in% c("Alaska", "Hawaii")) |>
       st_transform(crs = proj_crs) |>
       as.data.frame() |>
       rename(dist = district)
-
   }
 
   if (source == "census") {
     cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
       mutate(geometry = st_make_valid(geometry)) |>
-      # remove AK, HI, PR, territories for now to make it easier to map
-      filter(!STATEFP %in% c("02", "15", "72", "60", "66", "69", "78")) |>
+      # remove PR, territories
+      filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
       st_transform(crs = proj_crs) |>
       mutate(STATEFP = as.character(STATEFP)) |>
       left_join(
@@ -63,18 +56,18 @@ shp_dot_func <- function(source = c("lewis", "census"),
       ) |>
       mutate(dist = str_remove({{cd_col}}, "^0+"))
   }
-
   # common operations
   centroids <- cd_sf |>
     filter(statename != "District of Columbia") |>
-    mutate(cd = to_cd(statename, dist),
+    mutate(cd = ccesMRPprep::to_cd(statename, dist),
            dist = NULL, statename = NULL) |>
+    geomander::st_centerish() |>
     mutate(
-      centroid = st_centroid(geometry),
+      centroid = geometry,
       x = st_coordinates(centroid)[, 1],
       y = st_coordinates(centroid)[, 2],
       radius = circ_radius
-    )
+      )
 
   # layout optimization and layout cost function to minimize overlap and
   # total displacement.
@@ -109,11 +102,25 @@ shp_dot_func <- function(source = c("lewis", "census"),
 
   # want point geometry
   # only need certain variables to map
-  centroids |>
+  centroids <- centroids |>
     select(cd, geometry, x_opt, y_opt) |>
     arrange(cd) |>
     st_drop_geometry() |>
     st_as_sf(coords = c("x_opt", "y_opt"), crs = proj_crs)
+
+  # add ak and hi and shift points to match map
+  ak <- centroids[str_starts(centroids$cd, "AK"), ]
+  hi <- centroids[str_starts(centroids$cd, "HI"), ]
+
+  st_geometry(ak) <- st_geometry(ak) + c(1.15e6, -4.7e6)
+  st_geometry(hi) <- st_geometry(hi) + c(5.23e6, -1.48e6)
+
+  akhi_adjusted <- bind_rows(ak, hi)
+  st_crs(akhi_adjusted) <- proj_crs
+
+  centroids[str_starts(centroids$cd, "AK|HI"), ] <- akhi_adjusted
+
+  return(centroids)
 }
 
 # Run function to create dataset for each Congress ----
@@ -139,13 +146,3 @@ usethis::use_data(shp_dot_2017, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2019, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2021, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2023, overwrite = TRUE, compress = "xz")
-
-# separate state function
-shp_states <- tigris::states(cb = TRUE, resolution = "20m") |>
-  select(statename = NAME, state = STUSPS, geometry) |>
-  filter(!state %in% c("HI", "AK", "PR")) |>
-  arrange(state) |>
-  st_transform(crs = proj_crs)
-usethis::use_data(shp_states, overwrite = TRUE, compress = "xz")
-
-

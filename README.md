@@ -47,28 +47,44 @@ the package.
 
 ``` r
 library(cdmap)
-#> Loading required package: sf
-#> Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
-#> Loading required package: ggplot2
 ```
 
 The package names the shapefiles by the year of the congress.
 
-| Object      | Congress | Years in Session | Year Elected | Year up for Election |
-|-------------|----------|------------------|--------------|----------------------|
-| `c2005_shp` | 109th    | 2005-2006        | 2004         | 2006                 |
-| `c2007_shp` | 110th    | 2007-2008        | 2006         | 2008                 |
-| `c2009_shp` | 111th    | 2009-2010        | 2008         | 2010                 |
-| `c2011_shp` | 112th    | 2011-2012        | 2010         | 2012                 |
-| `c2013_shp` | 113th    | 2013-2014        | 2012         | 2014                 |
-| `c2015_shp` | 114th    | 2015-2016        | 2014         | 2016                 |
-| `c2017_shp` | 115th    | 2017-2018        | 2016         | 2018                 |
-| `c2019_shp` | 116th    | 2019-2020        | 2018         | 2020                 |
-| `c2021_shp` | 117th    | 2021-2022        | 2020         | 2022                 |
-| `c2023_shp` | 118th    | 2023-2024        | 2022         | 2024                 |
-| `c2025_shp` | 119th    | 2025-2026        | 2024         | 2026                 |
+| Object    | Congress | Years in Session | Year Elected | Year up for Election |
+|-----------|----------|------------------|--------------|----------------------|
+| `**_2005` | 109th    | 2005-2006        | 2004         | 2006                 |
+| `**_2007` | 110th    | 2007-2008        | 2006         | 2008                 |
+| `**_2009` | 111th    | 2009-2010        | 2008         | 2010                 |
+| `**_2011` | 112th    | 2011-2012        | 2010         | 2012                 |
+| `**_2013` | 113th    | 2013-2014        | 2012         | 2014                 |
+| `**_2015` | 114th    | 2015-2016        | 2014         | 2016                 |
+| `**_2017` | 115th    | 2017-2018        | 2016         | 2018                 |
+| `**_2019` | 116th    | 2019-2020        | 2018         | 2020                 |
+| `**_2021` | 117th    | 2021-2022        | 2020         | 2022                 |
+| `**_2023` | 118th    | 2023-2024        | 2022         | 2024                 |
+| `**_2025` | 119th    | 2025-2026        | 2024         | 2026                 |
 
-Each file is a shapefile:
+We are building several types of maps. The **dotmap** is where one CD is
+treated as point. We use the centeroid of the actual map, and dodge it
+so that crowded points do not completely overlap with each other.
+
+``` r
+library(sf)
+#> Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
+library(ggplot2)
+
+shp_dot_2023 |>
+  ggplot() +
+  geom_sf(data = shp_states) +
+  geom_sf(size = 1, alpha = 0.5)
+```
+
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+Another is a hexmap, where each district is shown as a combination of
+hexagons. This is inspired by the DailyKos format. For now, one test
+dataset available.
 
 ``` r
 c2009_shp
