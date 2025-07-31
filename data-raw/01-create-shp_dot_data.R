@@ -23,7 +23,6 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
   }
 }
 
-
 #' Dodge centroids
 #' @param source get from Lewis data or Census tigris
 #' @param c congress number
