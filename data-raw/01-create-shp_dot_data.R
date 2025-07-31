@@ -1,17 +1,13 @@
-# Create datasets for dot maps for each Congress 2006-2024
-# Pull congressional districts maps for 2006-2024 and create a dot sf map
-
 library(tidyverse)
 library(sf)
 library(tigris)
 library(geomander) # for get_lewis
 library(ccesMRPprep) # for to_cd. remotes::install_github("kuriwaki/ccesMRPprep")
 library(glue)
-library(urbnmapr) # to add alaska and hawaii to map
 
 # Parameters ----
 proj_crs <- 5070
-circ_radius <- 17000
+circ_radius <- 18000
 
 # temporary download full shapefiles
 if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
@@ -28,8 +24,8 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
 }
 
 
-# Function to generate geographic congressional data from `geomander` OR
-# geographic congressional data from census
+#' Dodge centroids
+#' @param source get from Lewis data or Census tigris
 #' @param c congress number
 #' @param cd_col unquoted name of the variable
 shp_dot_func <- function(source = c("lewis", "census"),
@@ -61,14 +57,14 @@ shp_dot_func <- function(source = c("lewis", "census"),
       ) |>
       mutate(dist = str_remove({{cd_col}}, "^0+"))
   }
-
   # common operations
   centroids <- cd_sf |>
     filter(statename != "District of Columbia") |>
-    mutate(cd = to_cd(statename, dist),
+    mutate(cd = ccesMRPprep::to_cd(statename, dist),
            dist = NULL, statename = NULL) |>
+    geomander::st_centerish() |>
     mutate(
-      centroid = st_centroid(geometry),
+      centroid = geometry,
       x = st_coordinates(centroid)[, 1],
       y = st_coordinates(centroid)[, 2],
       radius = circ_radius
@@ -125,7 +121,6 @@ shp_dot_func <- function(source = c("lewis", "census"),
 
   centroids[str_starts(centroids$cd, "AK|HI"), ] <- akhi_adjusted
 
-  # points from 50 states
   return(centroids)
 }
 
@@ -152,36 +147,3 @@ usethis::use_data(shp_dot_2017, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2019, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2021, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2023, overwrite = TRUE, compress = "xz")
-
-# Separate 50 state function ---
-shp_states <- tigris::states(cb = TRUE, resolution = "20m") |>
-  select(statename = NAME, state = STUSPS, geometry) |>
-  filter(!state %in% c("HI", "AK", "PR")) |>
-  arrange(state) |>
-  st_transform(crs = proj_crs)
-
-# AK and HI
-urbn_sf <- urbnmapr::get_urbn_map(map = "states", sf = TRUE)
-
-# https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
-
-# just AK and HI
-akhi <- urbn_sf[50:51, ] |>
-  select(cd = state_abbv, geometry) |>
-  st_geometry() # reduce to just the geometry column
-st_crs(akhi) <- 5070
-
-# actual shift
-akhi_shifted = akhi + c(-0.3e6, 2.5e6)
-
-akhi_sf = st_sf(akhi_shifted, crs = 5070) |>
-  rename(geometry = akhi_shifted) |>
-  mutate(state = c("AK", "HI"),
-         geometry = st_simplify(geometry))
-
-# map with centroid points
-shp_states <- shp_states |>
-  bind_rows(akhi_sf)
-
-# Write ---
-usethis::use_data(shp_states, overwrite = TRUE, compress = "xz")
