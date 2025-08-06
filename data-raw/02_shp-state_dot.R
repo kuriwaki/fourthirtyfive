@@ -30,7 +30,9 @@ akhi_sf = tibble(
     akhi[1, ] + c(-0.3e6, 2.5e6),
     (akhi[2, ] + c(-0.15e6, 2.26e6)) * rot(pi/16) * 1.2)) |>
   st_sf(crs = 5070) |>
-  mutate(geometry = st_simplify(geometry))
+  mutate(geometry = st_simplify(geometry)) |>
+  mutate(statename = c("Alaska", "Hawaii"))
+
 
 # combine
 shp_states <- shp_states |>

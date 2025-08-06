@@ -120,7 +120,8 @@ shp_dot_func <- function(source = c("lewis", "census"),
 
   centroids[str_starts(centroids$cd, "AK|HI"), ] <- akhi_adjusted
 
-  return(centroids)
+  centroids <- centroids |>
+    mutate(cong = c, .before = 1)
 }
 
 # Run function to create dataset for each Congress ----
