@@ -60,7 +60,9 @@ shp_dot_func <- function(source = c("lewis", "census"),
   centroids <- cd_sf |>
     filter(statename != "District of Columbia") |>
     mutate(cd = ccesMRPprep::to_cd(statename, dist),
-           dist = NULL, statename = NULL) |>
+           dist = NULL, statename = NULL,
+           # fix entries for at large states in the census
+           cd = sub("-NA$", "-01", cd)) |>
     geomander::st_centerish() |>
     mutate(
       centroid = geometry,
