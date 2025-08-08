@@ -6,6 +6,7 @@ Authors@R:
      person("Shiro", "Kuriwaki", , "shiro.kuriwaki@yale.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5687-2647")),
      person("Zoya", "Ahmer", role = "ctb"),
+     person("Zachary", "Donnini", role = "ctb"),
      person("Cory", "McCartan", role = "ctb")
      )
 Description: Shapefiles for visualizing congressional districts.
