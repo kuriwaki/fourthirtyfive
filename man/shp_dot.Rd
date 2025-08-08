@@ -19,25 +19,25 @@ Each object is for a particular congress. The year indicates the start
 of that Congress. Each observational is a congressional district, represented by
 a point.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 432 rows and 2 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 }
 \source{
 Coordinates from 2012 onwards taken from US Census, \code{tigris} package.
