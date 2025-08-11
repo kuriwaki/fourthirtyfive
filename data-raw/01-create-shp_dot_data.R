@@ -10,7 +10,7 @@ proj_crs <- 5070
 circ_radius <- 18000
 
 # temporary download full shapefiles
-if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
+if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:119}.rds")))) {
   for (c in 109:112) {
     map_df(state.abb, \(x) geomander::get_lewis(state = x, congress = c), .progress = TRUE) |>
       write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
@@ -21,11 +21,12 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
     tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
       write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
   }
+  # 2024 shapefile for 119th
+  for (c in 119) {
+    tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
+      write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
+  }
 }
-
-# download 2024/2025 bc 2024 doesn't work w func input
-tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
-  write_rds(glue("~/Downloads/tmp_shp_119.rds"))
 
 #' Dodge centroids
 #' @param source get from Lewis data or Census tigris
