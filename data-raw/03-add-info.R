@@ -39,38 +39,36 @@ info_2009 <- shp_dot_2009 |>
 ## download 2024 cd names
 ## use 2018 names from c115
 
-## between the 2012-14 and 2016 data, FL, NC, VA (maybe PA) changed their districts
 info_2011 <- shp_dot_2011 |>
   left_join(c111, by = "cd") |>
   rename(cd_description = name) |>
   st_drop_geometry() |>
   as_tibble()
 
-## modify some states manually
+## between the 2012-14 and 2016 data, FL, NC, VA (maybe PA) changed their districts
+## 113th Congress (January 2013-2015) vs 114th (January 2015-2017) (same)
 info_2013 <- shp_dot_2013 |>
   left_join(cd_info_2016 |> select(cd, cd_description = dailykos_name)) |>
   st_drop_geometry() |>
   as_tibble()
 
-## modify some states manually
 info_2015 <- shp_dot_2015 |>
   left_join(cd_info_2016 |> select(cd, cd_description = dailykos_name)) |>
   st_drop_geometry() |>
   as_tibble()
 
-## between the 2016 and 2018 data, PA changed their districts
 info_2017 <- shp_dot_2017 |>
-  left_join(c115, by = "cd") |>
-  rename(cd_description = dailykos_name) |>
+  left_join(cd_info_2016 |> select(cd, cd_description = dailykos_name)) |>
   st_drop_geometry() |>
   as_tibble()
 
-## between the 2018 and 2020 data, NC changed their districts
+## between the 2016 and 2018 data, PA changed their districts-- CD116
 info_2019 <- shp_dot_2019 |>
   left_join(cd_info_2018 |> select(cd, cd_description = dailykos_name)) |>
   st_drop_geometry() |>
   as_tibble()
 
+## between the 2018 and 2020 data, NC changed their districts
 # match cd names to 2021-2023 ---
 info_2021 <- shp_dot_2021 |>
   left_join(cd_info_2020 |> select(cd, cd_description = dailykos_name)) |>
