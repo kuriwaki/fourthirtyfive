@@ -1,7 +1,18 @@
 #' Congressional District level information
 #'
 #'
-#' Some of the most consequential variables to include in MRP are measured at the district-level. We include one such data for congressional districts.
+#' Modeled after the  unique descriptive names for district codes in 2018 given
+#' by Daily Kos (later renamed to The Downballot), we include such data for
+#' congressional districts.
+
+#' @format Each object is for a particular congress. The year indicates the start
+#'  of that Congress. Each observational is a congressional district, represented by
+#'  a point.
+#'
+#' @source info_20** column from 2013 onwards taken from "cd_info" in the `ccesMRPprep`
+#' package (See Source for full citation). info_20** from earlier years were
+#' coded in Daily Kos style by Zachary Donnini.
+#'
 #' @name info
 NULL
 
