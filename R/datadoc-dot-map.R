@@ -90,3 +90,5 @@ NULL
 "info_2021"
 #' @rdname info
 "info_2023"
+#' @rdname info
+"info_2025"

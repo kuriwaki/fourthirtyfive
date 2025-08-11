@@ -81,6 +81,11 @@ info_2023 <- shp_dot_2023 |>
   st_drop_geometry() |>
   as_tibble()
 
+info_2025 <- shp_dot_2025 |>
+  left_join(cd_info_2024 |> select(cd, cd_description = dailykos_name)) |>
+  st_drop_geometry() |>
+  as_tibble()
+
 # Write ---
 usethis::use_data(info_2005, overwrite = TRUE, compress = "xz")
 usethis::use_data(info_2007, overwrite = TRUE, compress = "xz")
@@ -92,3 +97,4 @@ usethis::use_data(info_2017, overwrite = TRUE, compress = "xz")
 usethis::use_data(info_2019, overwrite = TRUE, compress = "xz")
 usethis::use_data(info_2021, overwrite = TRUE, compress = "xz")
 usethis::use_data(info_2023, overwrite = TRUE, compress = "xz")
+usethis::use_data(info_2025, overwrite = TRUE, compress = "xz")

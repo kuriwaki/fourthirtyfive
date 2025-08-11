@@ -1,6 +1,6 @@
 # to download CD shps for 109-118 congresses
-# temporary download full shapefiles
 
+# temporary download full shapefiles
 load_cd_shps <- function(cong = 109:118) {
   # for lewis sf for congresses 109-112
   if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
@@ -17,3 +17,9 @@ load_cd_shps <- function(cong = 109:118) {
     }
   }
 }
+
+# download 2024/2025 bc 2024 doesn't work w func input
+tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
+  write_rds(glue("~/Downloads/tmp_shp_119.rds"))
+
+

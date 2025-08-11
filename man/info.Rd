@@ -13,8 +13,11 @@
 \alias{info_2019}
 \alias{info_2021}
 \alias{info_2023}
+\alias{info_2025}
 \title{Congressional District level information}
 \format{
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
+
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
@@ -55,6 +58,8 @@ info_2019
 info_2021
 
 info_2023
+
+info_2025
 }
 \description{
 Some of the most consequential variables to include in MRP are measured at the district-level. We include one such data for congressional districts.

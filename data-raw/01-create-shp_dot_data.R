@@ -23,6 +23,10 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
   }
 }
 
+# download 2024/2025 bc 2024 doesn't work w func input
+tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
+  write_rds(glue("~/Downloads/tmp_shp_119.rds"))
+
 #' Dodge centroids
 #' @param source get from Lewis data or Census tigris
 #' @param c congress number
@@ -137,6 +141,7 @@ shp_dot_2017 <- shp_dot_func("census", 115, CD115FP)
 shp_dot_2019 <- shp_dot_func("census", 116, CD116FP)
 shp_dot_2021 <- shp_dot_func("census", 117, CD116FP)
 shp_dot_2023 <- shp_dot_func("census", 118, CD118FP)
+shp_dot_2025 <- shp_dot_func("census", 119, CD119FP)
 
 # Write ---
 usethis::use_data(shp_dot_2005, overwrite = TRUE, compress = "xz")
@@ -149,3 +154,4 @@ usethis::use_data(shp_dot_2017, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2019, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2021, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2023, overwrite = TRUE, compress = "xz")
+usethis::use_data(shp_dot_2025, overwrite = TRUE, compress = "xz")
