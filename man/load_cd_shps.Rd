@@ -16,15 +16,12 @@ historical congressional district shapefiles.
 load_cd_shps(c)
 }
 \arguments{
-\item{c}{integer, congress number (109–119) to load.}
+\item{c}{integer, choose a congress number (109–119) to load.}
 }
 \value{
 An sf object with CD boundaries for the requested Congress.
 }
 \description{
-Download CD Shapes
-}
-\details{
 \code{load_cd_shps} is a function to temporarily download shapefiles (\code{sf} objects)
 for U.S. congressional districts for a given Congress number (109-119th).
 }

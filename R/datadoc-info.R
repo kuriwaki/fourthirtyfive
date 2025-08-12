@@ -1,13 +1,9 @@
-#' Congressional District level information
-#'
-#'
-#' Modeled after the  unique descriptive names for district codes in 2018 given
+#' @title Congressional District level information
+#' @name info
+#' @description Modeled after the  unique descriptive names for district codes in 2018 given
 #' by Daily Kos (later renamed to The Downballot), which combines state, district
 #' number,and notable place names to make districts easier to identify and remember.
 #' We include such data for congressional districts.
-#'
-#' @title Congressional District level information
-#' @name info
 #'
 #' @format Each object is for a particular congress. The year indicates the start
 #'  of that Congress. Each observation is a congressional district, which contains a
@@ -19,7 +15,7 @@
 #'    for the district number.}
 #'    \item{`cd_description`}{The unique descriptive name for the district code.
 #'    info_20** column from 2013 onwards taken from "cd_info" in the
-#'    [`ccesMRPprep`](https://github.com/kuriwaki/ccesMRPprep) package
+#'    [`ccesMRPprep`](https://github.com/kuriwaki/ccesMRPprep)
 #'    package (See Source for full citation). info_20** from earlier years (2005–2011)
 #'    were manually coded in Daily Kos style.}
 #'  }

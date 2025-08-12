@@ -26,7 +26,7 @@ left to be of length 2. At-large districts like Delaware are given a "-01"
 for the district number.}
 \item{\code{cd_description}}{The unique descriptive name for the district code.
 info_20** column from 2013 onwards taken from "cd_info" in the
-\href{https://github.com/kuriwaki/ccesMRPprep}{\code{ccesMRPprep}} package
+\href{https://github.com/kuriwaki/ccesMRPprep}{\code{ccesMRPprep}}
 package (See Source for full citation). info_20** from earlier years (2005–2011)
 were manually coded in Daily Kos style.}
 }
@@ -105,9 +105,6 @@ info_2023
 info_2025
 }
 \description{
-Congressional District level information
-}
-\details{
 Modeled after the  unique descriptive names for district codes in 2018 given
 by Daily Kos (later renamed to The Downballot), which combines state, district
 number,and notable place names to make districts easier to identify and remember.

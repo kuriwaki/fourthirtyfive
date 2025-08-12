@@ -1,10 +1,7 @@
-#' Download CD Shapes
-#'
-#' `load_cd_shps` is a function to temporarily download shapefiles (`sf` objects)
-#'  for U.S. congressional districts for a given Congress number (109-119th).
-#'
 #' @title Download CD Shapes
 #' @name load_cd_shps
+#' @description `load_cd_shps` is a function to temporarily download shapefiles (`sf` objects)
+#'  for U.S. congressional districts for a given Congress number (109-119th).
 #'
 #' @format Each object is the sf for a particular congress. The year indicates
 #'  the start of that congress
@@ -17,7 +14,7 @@
 #' cd109 <- load_cd_shps(109)
 
 #'Load CD sf
-#' @param c integer, congress number (109–119) to load.
+#' @param c integer, choose a congress number (109–119) to load.
 #'
 #' @return An sf object with CD boundaries for the requested Congress.
 load_cd_shps <- function(c) {
