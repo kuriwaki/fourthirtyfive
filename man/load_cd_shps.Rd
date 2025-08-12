@@ -4,25 +4,32 @@
 \alias{load_cd_shps}
 \title{Download CD Shapes}
 \format{
-Each object is the sf for a particular congress. The year indicates the start
-of that congress
+Each object is the sf for a particular congress. The year indicates
+the start of that congress
 }
 \source{
 Shapefiles from 2012 onwards taken from US Census, \code{tigris} package.
-Shapefiles from early congresses taken from Jeffrey B. Lewis, historical congressional
-district shapefiles
+Shapefiles from early congresses are taken from Jeffrey B. Lewis,
+historical congressional district shapefiles.
 }
 \usage{
 load_cd_shps(c)
 }
 \arguments{
-\item{c}{congress number}
+\item{c}{integer, congress number (109–119) to load.}
+}
+\value{
+An sf object with CD boundaries for the requested Congress.
 }
 \description{
-\code{load_cd_shps} is a function to temporarily download shapefiles for congressional
-Districts per congress (109-119th)
+Download CD Shapes
+}
+\details{
+\code{load_cd_shps} is a function to temporarily download shapefiles (\code{sf} objects)
+for U.S. congressional districts for a given Congress number (109-119th).
 }
 \examples{
-load_cd_shps(109)
+# Load the 109th Congress shapefile
+cd109 <- load_cd_shps(109)
 Load CD sf
 }

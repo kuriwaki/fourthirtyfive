@@ -16,7 +16,20 @@
 \alias{info_2025}
 \title{Congressional District level information}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
+Each object is for a particular congress. The year indicates the start
+of that Congress. Each observation is a congressional district, which contains a
+unique descriptive name.
+\describe{
+\item{\code{cd}}{District code. Each row is a a two-letter abbreviation for the
+state followed by a dash, and the district number padded with zeros to the
+left to be of length 2. At-large districts like Delaware are given a "-01"
+for the district number.}
+\item{\code{cd_description}}{The unique descriptive name for the district code.
+info_20** column from 2013 onwards taken from "cd_info" in the
+\href{https://github.com/kuriwaki/ccesMRPprep}{\code{ccesMRPprep}} package
+package (See Source for full citation). info_20** from earlier years (2005–2011)
+were manually coded in Daily Kos style.}
+}
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
 
@@ -37,6 +50,36 @@ An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) w
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
 
 An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
+
+An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
+}
+\source{
+2005-2011 descriptive names: Zachary Donnini.
+
+Daily Kos, "2008, 2012 results for districts used in \strong{2012, 2014}"
+\url{https://bit.ly/3N4PDZK}
+
+Daily Kos, "2008, 2012, & 2016 results for districts used in \strong{2018}." \url{https://bit.ly/3bXtAPB}
+
+Daily Kos, "2012, 2016 & 2020 presidential election results for congressional districts in \strong{2020}", \url{https://bit.ly/3DRhPcj}
+
+Daily Kos, 2020 presidential election results by later congressional districts:
+\itemize{
+\item \strong{2022} congressional districts: \url{https://bit.ly/4gLYnBK}
+\item \strong{2024} congressional districts: \url{https://bit.ly/47KTvZw}
+}
+
+Daily Kos, congressional district geography and most populous places:
+\itemize{
+\item 119th Congress: \url{https://bit.ly/geography_119}\cr
+\item 118th Congress: \url{https://bit.ly/geography_118}
+}
+
+PA 2016 descriptive names: Shiro Kuriwaki and Lara Putnam.
+
+Also see Cha, Kuriwaki, and Snyder, 2024,
+"Candidates in American General Elections", \url{https://doi.org/10.7910/DVN/DGDRDT},
+Harvard Dataverse, for congressional candidate's (instead of President's) vote totals.
 }
 \usage{
 info_2005
@@ -62,6 +105,15 @@ info_2023
 info_2025
 }
 \description{
-Some of the most consequential variables to include in MRP are measured at the district-level. We include one such data for congressional districts.
+Congressional District level information
+}
+\details{
+Modeled after the  unique descriptive names for district codes in 2018 given
+by Daily Kos (later renamed to The Downballot), which combines state, district
+number,and notable place names to make districts easier to identify and remember.
+We include such data for congressional districts.
+}
+\examples{
+head(info_2005)
 }
 \keyword{datasets}

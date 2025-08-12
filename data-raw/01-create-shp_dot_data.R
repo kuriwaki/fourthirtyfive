@@ -22,6 +22,7 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:119}.rds")))) {
       write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
   }
   # 2024 shapefile for 119th
+  # the standard year formula does not yet work for this session in `tigris`
   for (c in 119) {
     tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
       write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
