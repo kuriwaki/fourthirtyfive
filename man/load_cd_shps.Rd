@@ -22,11 +22,11 @@ load_cd_shps(c)
 An sf object with CD boundaries for the requested Congress.
 }
 \description{
-\code{load_cd_shps} is a function to temporarily download shapefiles (\code{sf} objects)
-for U.S. congressional districts for a given Congress number (109-119th).
+Download shapefiles (\code{sf} objects) for U.S. congressional districts for a
+given Congress number (109-119th).
 }
 \examples{
 # Load the 109th Congress shapefile
 cd109 <- load_cd_shps(109)
-Load CD sf
+
 }

@@ -1,12 +1,12 @@
-#' @title Download CD Shapes
-#' @name load_cd_shps
-#' @description `load_cd_shps` is a function to temporarily download shapefiles (`sf` objects)
-#'  for U.S. congressional districts for a given Congress number (109-119th).
+#' Download CD Shapes
+#'
+#' Download shapefiles (`sf` objects) for U.S. congressional districts for a
+#' given Congress number (109-119th).
 #'
 #' @param c integer, choose a congress number (109–119) to load.
+#'
 #' @format Each object is the sf for a particular congress. The year indicates
 #'  the start of that congress
-#'
 #' @source Shapefiles from 2012 onwards taken from US Census, `tigris` package.
 #'  Shapefiles from early congresses are taken from Jeffrey B. Lewis,
 #'  historical congressional district shapefiles.
