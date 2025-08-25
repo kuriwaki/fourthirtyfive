@@ -21,7 +21,7 @@ load_cd_shps <- function(c) {
 
   if (c <= 112) {
     # use possibly() and otherwise so VA doesn't stop whole func
-    sf <- map_df(state.abb, possibly(~ geomander::get_lewis(state = .x, congress = c), NULL))
+    sf <- purrr::map_df(state.abb, purrr::possibly(~ geomander::get_lewis(state = .x, congress = c), NULL))
 
   } else if (c >= 113 & c <= 118) {
     yr <- 2 * c + 1786 + 1
