@@ -17,6 +17,7 @@ shp_states
 Shapefile of US states with Albers projection. Useful as an outline to dot maps of CDs.
 }
 \examples{
+ library(ggplot2)
  shp_states |>
    ggplot() +
    geom_sf() +

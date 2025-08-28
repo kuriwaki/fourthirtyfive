@@ -15,10 +15,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
-    dplyr,
     purrr,
-    sf,
-    tibble,
     tigris,
     geomander (>= 2.4.0)
 Depends: 
@@ -26,5 +23,6 @@ Depends:
 Remotes:
     christopherkenny/geomander
 Suggests: 
+    sf,
     ggplot2
 LazyData: true

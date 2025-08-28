@@ -4,3 +4,4 @@
 ^README\.Rmd$
 explore/
 ^LICENSE\.md$
+^^\\.lintr$$

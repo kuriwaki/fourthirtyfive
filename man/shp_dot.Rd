@@ -13,11 +13,14 @@
 \alias{shp_dot_2019}
 \alias{shp_dot_2021}
 \alias{shp_dot_2023}
+\alias{shp_dot_2025}
 \title{Dodged CD coordinates}
 \format{
 Each object is for a particular congress. The year indicates the start
 of that Congress. Each observational is a congressional district, represented by
 a point.
+
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
 An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
@@ -64,6 +67,8 @@ shp_dot_2019
 shp_dot_2021
 
 shp_dot_2023
+
+shp_dot_2025
 }
 \description{
 sf file per congress. The sf geometry is a coordinate of the centroid of the CD,
