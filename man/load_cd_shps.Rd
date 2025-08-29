@@ -12,21 +12,31 @@ Shapefiles from 2012 onwards taken from US Census, \code{tigris} package.
 Shapefiles from early congresses are taken from Jeffrey B. Lewis,
 historical congressional district shapefiles.
 }
-\usage{
-load_cd_shps(c)
-}
 \arguments{
 \item{c}{integer, choose a congress number (109–119) to load.}
+
+\item{5070}{integer EPSG code for output CRS (default 5070).}
 }
 \value{
 An sf object with CD boundaries for the requested Congress.
 }
 \description{
+Download CD Shapes
+}
+\details{
 Download shapefiles (\code{sf} objects) for U.S. congressional districts for a
 given Congress number (109-119th).
 }
 \examples{
+library(sf)
+library(ggplot2)
+
 # Load the 109th Congress shapefile
 cd109 <- load_cd_shps(109)
+
+# Create a map with cd boundaries
+cd109 |>
+  ggplot() +
+  geom_sf()
 
 }

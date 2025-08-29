@@ -119,10 +119,4 @@ c2009_shp
 #> 10 POLYGON ((-42911.85 1024085... POINT (-90424.92 1054591)
 ```
 
-``` r
-c2009_shp |> 
-  ggplot() + geom_sf(fill = "white") + theme_void() +
-  geom_sf_text(aes(label = district, geometry = center), size = 1)
-```
-
 <img src="man/figures/README-geomsf-1.png" width="100%" />

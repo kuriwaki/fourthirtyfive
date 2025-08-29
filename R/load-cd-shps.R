@@ -3,8 +3,11 @@
 #' Download shapefiles (`sf` objects) for U.S. congressional districts for a
 #' given Congress number (109-119th).
 #'
-#' @param c integer, choose a congress number (109–119) to load.
+#' @name load_cd_shps
+#' @title Download CD Shapes
 #'
+#' @param c integer, choose a congress number (109–119) to load.
+#' @param 5070 integer EPSG code for output CRS (default 5070).
 #'
 #' @format Each object is the sf for a particular congress. The year indicates
 #'  the start of that congress
@@ -24,15 +27,11 @@
 #'   ggplot() +
 #'   geom_sf()
 #'
-#' @export
 #' @importFrom utils data
+#' @importFrom sf st_transform
 #' @return An sf object with CD boundaries for the requested Congress.
-#'
+#' @export
 
-# Parameters ----
-proj_crs <- 5070
-
-# Function ----
 library(sf)
 
 load_cd_shps <- function(c) {
@@ -42,20 +41,21 @@ load_cd_shps <- function(c) {
     utils::data("state", package = "datasets", envir = environment())
     sf <- purrr::map_df(state.abb,
                         purrr::possibly(~ geomander::get_lewis(state = .x, congress = c), NULL)) |>
-      st_transform(crs = proj_crs)
+      sf::st_transform(crs = 5070)
 
   } else if (c >= 113 & c <= 118) {
     yr <- 2 * c + 1786 + 1
     sf <- tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
       # remove PR, territories
-      filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
-      st_transform(crs = proj_crs)
+      dplyr::filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
+      st_transform(crs = 5070)
 
   } else if (c == 119) {
     # 2024 shapefile for 119th
     sf <- tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
-      filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
-      st_transform(crs = proj_crs)
+      dplyr::filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
+      sf::st_transform(crs = 5070)
   }
   sf
 }
+

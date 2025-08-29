@@ -80,19 +80,3 @@ shp_dot_2023 |>
   geom_sf(size = 1, alpha = 0.5)
 
 ```
-
-
-
-
-Another is a hexmap, where each district is shown as a combination of hexagons. This is inspired by the DailyKos format. For now, one test dataset available. 
-
-```{r}
-c2009_shp
-```
-
-```{r geomsf}
-c2009_shp |> 
-  ggplot() + geom_sf(fill = "white") + theme_void() +
-  geom_sf_text(aes(label = district, geometry = center), size = 1)
-```
-

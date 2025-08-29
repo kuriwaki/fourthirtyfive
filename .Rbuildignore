@@ -4,4 +4,6 @@
 ^README\.Rmd$
 explore/
 ^LICENSE\.md$
-^^\\.lintr$$
+^\.lintr$
+^.*\.Rproj$
+^\.Rproj\.user$
