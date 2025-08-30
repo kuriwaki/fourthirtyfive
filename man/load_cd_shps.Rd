@@ -12,10 +12,13 @@ Shapefiles from 2012 onwards taken from US Census, \code{tigris} package.
 Shapefiles from early congresses are taken from Jeffrey B. Lewis,
 historical congressional district shapefiles.
 }
+\usage{
+load_cd_shps(cong, epsg = 5070)
+}
 \arguments{
-\item{c}{integer, choose a congress number (109–119) to load.}
+\item{cong}{integer, choose a congress number (109–119) to load.}
 
-\item{5070}{integer EPSG code for output CRS (default 5070).}
+\item{epsg}{integer EPSG code for output CRS (default 5070).}
 }
 \value{
 An sf object with CD boundaries for the requested Congress.
@@ -24,7 +27,7 @@ An sf object with CD boundaries for the requested Congress.
 Download CD Shapes
 }
 \details{
-Download shapefiles (\code{sf} objects) for U.S. congressional districts for a
+Download shapefiles for U.S. congressional districts for a
 given Congress number (109-119th).
 }
 \examples{
