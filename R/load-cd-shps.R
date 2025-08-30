@@ -42,14 +42,14 @@ load_cd_shps <- function(cong, epsg = 5070) {
 
   } else if (cong >= 113 & cong <= 118) {
     yr <- 2 * cong + 1786 + 1
-    sf <- tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
+    sf <- tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m", progress_bar = FALSE) |>
       # remove PR, territories
       dplyr::filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
       st_transform(crs = epsg)
 
   } else if (cong == 119) {
     # 2024 shapefile for 119th
-    sf <- tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
+    sf <- tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m", progress_bar = FALSE) |>
       dplyr::filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
       sf::st_transform(crs = epsg)
   }
