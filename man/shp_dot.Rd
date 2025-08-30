@@ -13,31 +13,34 @@
 \alias{shp_dot_2019}
 \alias{shp_dot_2021}
 \alias{shp_dot_2023}
-\title{Dodged CD coordinates}
+\alias{shp_dot_2025}
+\title{Dotmap: Dodged CD centroids}
 \format{
 Each object is for a particular congress. The year indicates the start
 of that Congress. Each observational is a congressional district, represented by
 a point.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 
-An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 2 columns.
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
+
+An object of class \code{sf} (inherits from \code{data.frame}) with 435 rows and 3 columns.
 }
 \source{
 Coordinates from 2012 onwards taken from US Census, \code{tigris} package.
@@ -64,9 +67,11 @@ shp_dot_2019
 shp_dot_2021
 
 shp_dot_2023
+
+shp_dot_2025
 }
 \description{
-sf file per congress. The sf geometry is a coordinate of the centroid of the CD,
+Shapfile of coordinates. Each row contains a coordinate of the centroid of the CD,
 slightly dodged so that points in dense places do not overlap.
 }
 \examples{

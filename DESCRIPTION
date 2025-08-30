@@ -6,17 +6,24 @@ Authors@R:
      person("Shiro", "Kuriwaki", , "shiro.kuriwaki@yale.edu", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5687-2647")),
      person("Zoya", "Ahmer", role = "ctb"),
+     person("Zachary", "Donnini", role = "ctb"),
      person("Cory", "McCartan", role = "ctb")
      )
 Description: Shapefiles for visualizing congressional districts.
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Imports:
+    dplyr,
+    sf,
+    purrr,
+    tigris,
+    geomander (>= 2.4.0)
 Depends: 
     R (>= 3.5)
+Remotes:
+    christopherkenny/geomander
 Suggests: 
-    sf,
     ggplot2
 LazyData: true

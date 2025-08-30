@@ -10,8 +10,9 @@ proj_crs <- 5070
 circ_radius <- 18000
 
 # temporary download full shapefiles
-if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
+if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:119}.rds")))) {
   for (c in 109:112) {
+    utils::data("state", package = "datasets", envir = environment())
     map_df(state.abb, \(x) geomander::get_lewis(state = x, congress = c), .progress = TRUE) |>
       write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
   }
@@ -19,6 +20,12 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:118}.rds")))) {
   for (c in 113:118) {
     yr = 2*c + 1786 + 1
     tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
+      write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
+  }
+  # 2024 shapefile for 119th
+  # the standard year formula does not yet work for this session in `tigris`
+  for (c in 119) {
+    tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
       write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
   }
 }
@@ -60,7 +67,9 @@ shp_dot_func <- function(source = c("lewis", "census"),
   centroids <- cd_sf |>
     filter(statename != "District of Columbia") |>
     mutate(cd = ccesMRPprep::to_cd(statename, dist),
-           dist = NULL, statename = NULL) |>
+           dist = NULL, statename = NULL,
+           # fix entries for at large states in the census
+           cd = sub("-NA$", "-01", cd)) |>
     geomander::st_centerish() |>
     mutate(
       centroid = geometry,
@@ -120,7 +129,8 @@ shp_dot_func <- function(source = c("lewis", "census"),
 
   centroids[str_starts(centroids$cd, "AK|HI"), ] <- akhi_adjusted
 
-  return(centroids)
+  centroids <- centroids |>
+    mutate(cong = c, .before = 1)
 }
 
 # Run function to create dataset for each Congress ----
@@ -134,6 +144,7 @@ shp_dot_2017 <- shp_dot_func("census", 115, CD115FP)
 shp_dot_2019 <- shp_dot_func("census", 116, CD116FP)
 shp_dot_2021 <- shp_dot_func("census", 117, CD116FP)
 shp_dot_2023 <- shp_dot_func("census", 118, CD118FP)
+shp_dot_2025 <- shp_dot_func("census", 119, CD119FP)
 
 # Write ---
 usethis::use_data(shp_dot_2005, overwrite = TRUE, compress = "xz")
@@ -146,3 +157,4 @@ usethis::use_data(shp_dot_2017, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2019, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2021, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2023, overwrite = TRUE, compress = "xz")
+usethis::use_data(shp_dot_2025, overwrite = TRUE, compress = "xz")

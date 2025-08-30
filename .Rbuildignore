@@ -3,3 +3,7 @@
 ^data-raw$
 ^README\.Rmd$
 explore/
+^LICENSE\.md$
+^\.lintr$
+^.*\.Rproj$
+^\.Rproj\.user$

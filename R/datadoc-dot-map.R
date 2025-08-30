@@ -1,6 +1,6 @@
-#' Dodged CD coordinates
+#' Dotmap: Dodged CD centroids
 #'
-#' sf file per congress. The sf geometry is a coordinate of the centroid of the CD,
+#' Shapfile of coordinates. Each row contains a coordinate of the centroid of the CD,
 #'  slightly dodged so that points in dense places do not overlap.
 #'
 #' @format Each object is for a particular congress. The year indicates the start
@@ -11,6 +11,8 @@
 #' @source Coordinates from 2012 onwards taken from US Census, `tigris` package.
 #'  Coordinates from early Congresses taken from Jeffrey B. Lewis, historical congressional
 #'  district shapefiles
+#'
+#'
 #' @examples
 #' library(sf)
 #' library(ggplot2)
@@ -48,6 +50,8 @@ NULL
 "shp_dot_2021"
 #' @rdname shp_dot
 "shp_dot_2023"
+#' @rdname shp_dot
+"shp_dot_2025"
 
 
 #' State map
@@ -58,6 +62,7 @@ NULL
 #' @source Alaska and Hawaii are modified following UrbanInstitute/urbnmapr
 #'
 #' @examples
+#'  library(ggplot2)
 #'  shp_states |>
 #'    ggplot() +
 #'    geom_sf() +
