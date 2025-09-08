@@ -14,7 +14,7 @@
 \alias{shp_dot_2021}
 \alias{shp_dot_2023}
 \alias{shp_dot_2025}
-\title{Dodged CD coordinates}
+\title{Dotmap: Dodged CD centroids}
 \format{
 Each object is for a particular congress. The year indicates the start
 of that Congress. Each observational is a congressional district, represented by
@@ -71,7 +71,7 @@ shp_dot_2023
 shp_dot_2025
 }
 \description{
-sf file per congress. The sf geometry is a coordinate of the centroid of the CD,
+Shapfile of coordinates. Each row contains a coordinate of the centroid of the CD,
 slightly dodged so that points in dense places do not overlap.
 }
 \examples{

@@ -15,10 +15,12 @@ knitr::opts_chunk$set(
 
 # cdmap
 
+Maintainer: Shiro Kuriwaki
+
 <!-- badges: start -->
 <!-- badges: end -->
 
-cdmap is a package that provides a shapefile in hexagonal form as inspired by the Daily Kos map style. It also provides descriptive names for each district, as inspired by [Daily Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts).
+cdmap is a package that provides shapefiles and other data for congressional districts, 2006-2025. 
 
 ## Installation
 
@@ -29,29 +31,72 @@ You can install the development version of cdmap from [GitHub](https://github.co
 remotes::install_github("kuriwaki/cdmap")
 ```
 
-If you have the repository on your computer, you can open the Rstudio Project (.Rproj) and use devtools:
-
-```{r, eval=FALSE}
-devtools::load_all()
-```
-
-`load_all` is a fast way to get your changes implemented. To fully install the changes installed and working across sessions, you will need to install.
-
-```{r, eval=FALSE}
-devtools::install()
-```
-
-Read more about the terms and customs for making a R package at <https://r-pkgs.org/>.
 
 ## Example
 
-The main output of the package is a dataset, which comes pre-loaded with the package.
+The main output of the package are datasets which comes pre-loaded with the package.
 
 ```{r example}
 library(cdmap)
 ```
 
-The package names the shapefiles by the year of the congress.
+
+We are building several types of maps. First, the **dotmap** is where one CD is treated as point. We use the centroid of the actual map, and dodge it so that crowded points do not completely overlap with each other.
+
+```{r}
+library(sf)
+library(ggplot2)
+
+shp_dot_2023 |>
+  ggplot() +
+  geom_sf(data = shp_states) +
+  geom_sf(size = 1, alpha = 0.5) +
+  theme_void()
+
+```
+
+
+We are currently working on providing **hexmaps** (i.e., maps that present CDs as combinations of hexagons) for all years. A 2016-era version of these versions are provided in <https://github.com/kuriwaki/donnermap> and the Downballot links recorded there.
+
+```{r}
+library(donnermap) # remotes::install_github("kuriwaki/donnermap")
+
+ggplot(cd_shp) + 
+  geom_sf() + 
+  theme_void() +
+  labs(caption = "Map Source: http://dkel.ec/map")
+```
+
+
+
+We do not store actual CD shapefiles, but we provide a function to draw these from either the Census or Jeff Lewis's historical shapefiles.
+
+
+```{r}
+cd_shps <- load_cd_shps(c = 118)
+
+cd_shps |> 
+  # remove Alaska and Hawaii for now
+  dplyr::filter(!STATEFP %in% c("15", "02")) |>  
+  ggplot() +
+  geom_sf() + 
+  theme_void()
+```
+
+
+We also provide a dataset of the **descriptive names** of each district (e.g., calling AZ-01 in the 110th congressional district "Phoenix exurbs, Prescott, and Flagstaff"). 
+These are inspired by [Daily
+Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts).
+
+
+```{r}
+info_2007
+```
+
+
+## Data format
+
+We name the datasets (`shp_dot_**`, `info_**`) by the year of the congress.
 
 |Object | Congress | Years in Session | Year Elected | Year up for Election | 
 |-------|----------|-------|---------------|----------|
@@ -67,16 +112,3 @@ The package names the shapefiles by the year of the congress.
 |`**_2023` | 118th | 2023-2024 | 2022 | 2024 |
 |`**_2025` | 119th | 2025-2026 | 2024 | 2026 |
 
-
-We are building several types of maps. The **dotmap** is where one CD is treated as point. We use the centeroid of the actual map, and dodge it so that crowded points do not completely overlap with each other.
-
-```{r}
-library(sf)
-library(ggplot2)
-
-shp_dot_2023 |>
-  ggplot() +
-  geom_sf(data = shp_states) +
-  geom_sf(size = 1, alpha = 0.5)
-
-```
