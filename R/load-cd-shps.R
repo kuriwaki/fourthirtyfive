@@ -1,12 +1,12 @@
 #' Download CD Shapes
 #'
 #' Download shapefiles (`sf` objects) for U.S. congressional districts for a
-#' given Congress number (109-119th).
+#' given Congress number (1-119th).
 #'
 #' @name load_cd_shps
 #' @title Download CD Shapes
 #'
-#' @param c integer, choose a congress number (109–119) to load.
+#' @param c integer, choose a congress number (1–119) to load.
 #' @param 5070 integer EPSG code for output CRS (default 5070).
 #'
 #' @format Each object is the sf for a particular congress. The year indicates
@@ -36,26 +36,45 @@ library(sf)
 
 load_cd_shps <- function(c) {
 
-  if (c <= 112) {
+  # load one congress
+  load_one <- function(ci) {
+    if (ci <= 112) {
     # use possibly() and otherwise so VA doesn't stop whole func
     utils::data("state", package = "datasets", envir = environment())
     sf <- purrr::map_df(state.abb,
-                        purrr::possibly(~ geomander::get_lewis(state = .x, congress = c), NULL)) |>
+                        purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)) |>
       sf::st_transform(crs = 5070)
 
-  } else if (c >= 113 & c <= 118) {
-    yr <- 2 * c + 1786 + 1
-    sf <- tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
-      # remove PR, territories
-      dplyr::filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
-      st_transform(crs = 5070)
+    } else if (ci >= 113 & ci <= 118) {
+      yr <- 2 * ci + 1786 + 1
+      sf <- tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
+        # remove PR, territories
+        dplyr::filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
+        st_transform(crs = 5070)
 
-  } else if (c == 119) {
-    # 2024 shapefile for 119th
-    sf <- tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
-      dplyr::filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
-      sf::st_transform(crs = 5070)
+    } else if (ci == 119) {
+      # 2024 shapefile for 119th
+      sf <- tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
+        dplyr::filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
+        sf::st_transform(crs = 5070)
+
+      } else if (ci > 119) {
+      stop("Congress number greater than 119 is not yet supported.")
+    }
+    sf
   }
-  sf
+
+  if (length(c) == 1) {
+    # single congress-- return one sf
+    return(load_one(c))
+  } else {
+    # vector-- load all and bind w congress column
+    res_list <- lapply(c, load_one)
+    out <- dplyr::bind_rows(
+      Map(function(x, ci) dplyr::mutate(x, congress = ci), res_list, c)
+    )
+    return(out)
+  }
 }
+
 
