@@ -1,0 +1,54 @@
+#' Load dot-map point datasets
+#'
+#' This function returns one or more of the `shp_dot_*` datasets.
+#'
+#' @param years Integer vector of years (e.g., 2011 or c(2005, 2009, 2011)).
+#'
+#' @return An sf object (single year) or sf/tibble (multiple years).
+#' @examples
+#' # Single dataset
+#' load_shp_dot(2011)
+#'
+#' # Multiple datasets combined
+#' load_shp_dot(c(2005, 2009, 2011))
+#'
+#' @export
+load_shp_dot <- function(years) {
+  years <- as.integer(years)
+  if (anyNA(years)) stop("`years` must be integer years like 2011 or 2005:2009.", call. = FALSE)
+
+  one <- function(y) {
+    obj <- paste0("shp_dot_", y)
+
+    # load from data/ (works when package is installed)
+    utils::data(list = obj, package = "cdmap", envir = environment())
+
+    if (!exists(obj, envir = environment(), inherits = FALSE)) {
+      stop(sprintf("Year not available.", obj),
+           call. = FALSE)
+    }
+
+    obj <- get(obj, envir = environment())
+
+  }
+
+  lst <- lapply(years, one)
+
+  if (length(years) == 1L) {
+    lst[[1]]
+  } else {
+    # bind rows across years
+    dplyr::bind_rows(lst)
+  }
+}
+
+#' List all available years for shp_dot datasets in data/
+#'
+#' @return Vector of years for which `shp_dot_*` works
+#' @examples
+#' shp_dot_years
+#' @export
+shp_dot_years <- c("shp_dot_2005", "shp_dot_2007", "shp_dot_2009",
+                   "shp_dot_2011", "shp_dot_2013", "shp_dot_2015",
+                   "shp_dot_2017", "shp_dot_2019", "shp_dot_2021",
+                   "shp_dot_2023", "shp_dot_2025")
