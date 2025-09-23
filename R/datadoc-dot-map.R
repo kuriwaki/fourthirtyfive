@@ -1,6 +1,6 @@
 #' Dotmap: Dodged CD centroids
 #'
-#' Shapfile of coordinates. Each row contains a coordinate of the centroid of the CD,
+#' Shapefile of coordinates. Each row contains a coordinate of the centroid of the CD,
 #'  slightly dodged so that points in dense places do not overlap.
 #'
 #' @format Each object is for a particular congress. The year indicates the start
