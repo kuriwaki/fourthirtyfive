@@ -12,10 +12,11 @@ Shapefiles from 2012 onwards taken from US Census, \code{tigris} package.
 Shapefiles from early congresses are taken from Jeffrey B. Lewis,
 historical congressional district shapefiles.
 }
+\usage{
+load_cd_shps(c, epsg = 5070)
+}
 \arguments{
 \item{c}{integer, choose a congress number (1–119) to load.}
-
-\item{cong}{integer, choose a congress number (109–119) to load.}
 
 \item{epsg}{integer EPSG code for output CRS (default 5070).}
 }

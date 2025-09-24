@@ -71,7 +71,7 @@ shp_dot_2023
 shp_dot_2025
 }
 \description{
-Shapfile of coordinates. Each row contains a coordinate of the centroid of the CD,
+Shapefile of coordinates. Each row contains a coordinate of the centroid of the CD,
 slightly dodged so that points in dense places do not overlap.
 }
 \examples{

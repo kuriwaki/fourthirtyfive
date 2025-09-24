@@ -9,7 +9,6 @@
 #' @title Download CD Shapes
 #'
 #' @param c integer, choose a congress number (1–119) to load.
-#' @param cong integer, choose a congress number (109–119) to load.
 #' @param epsg integer EPSG code for output CRS (default 5070).
 #'
 #' @format Each object is the sf for a particular congress. The year indicates
@@ -38,9 +37,6 @@
 #' @importFrom rlang .data
 #' @return An sf object with CD boundaries for the requested Congress.
 #' @export
-
-library(sf)
-
 load_cd_shps <- function(c, epsg = 5070) {
 
   # load one congress
@@ -73,12 +69,12 @@ load_cd_shps <- function(c, epsg = 5070) {
   }
 
   if (length(c) == 1) {
-    # single congress-- return one sf
+    # single congress: return one sf
     return(load_one(c))
   } else {
-    # vector-- load all and bind w congress column
+    # vector: load all and bind w congress column
     res_list <- lapply(c, load_one)
-    out <- dplyr::bind_rows(
+    out <- dplyr::bind_rows( ## TODO: simplify
       Map(function(x, ci) dplyr::mutate(x, congress = ci), res_list, c)
     )
     return(out)
