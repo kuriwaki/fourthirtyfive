@@ -13,10 +13,13 @@ Shapefiles from early congresses are taken from Jeffrey B. Lewis,
 historical congressional district shapefiles.
 }
 \usage{
-load_cd_shps(c, epsg = 5070)
+load_cd_shps(year = NULL, congress = NULL, epsg = 5070)
 }
 \arguments{
-\item{c}{integer, choose a congress number (1–119) to load.}
+\item{year}{integer, choose a year to load}
+
+\item{congress}{integer, choose a congress number (1–119) to load (optional).
+Optional if \code{congress} is given.}
 
 \item{epsg}{integer EPSG code for output CRS (default 5070).}
 }
@@ -37,10 +40,11 @@ library(sf)
 library(ggplot2)
 
 # Load the 109th Congress shapefile
-cd109 <- load_cd_shps(109)
+cd109 <- load_cd_shps(congress = 109)
+cd108  <- load_cd_shps(year = 2003)
 
 # Load the 109th and 110th Congress shapefile
-cd109_110 <- load_cd_shps(109:110)
+cd109_110 <- load_cd_shps(congress = c(109,110))
 
 # Create a map with cd boundaries
 cd109 |>

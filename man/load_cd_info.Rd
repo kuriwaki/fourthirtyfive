@@ -4,22 +4,25 @@
 \alias{load_cd_info}
 \title{Load congressional district info}
 \usage{
-load_cd_info(yrs)
+load_cd_info(year = NULL, congress = NULL)
 }
 \arguments{
-\item{yrs}{Integer vector of years (e.g., \code{2011} or \code{c(2005, 2009, 2011)}).}
+\item{year}{Integer vector of years (e.g., \code{2011} or \code{c(2005, 2009, 2011)}).}
+
+\item{congress}{Integer vector of Congress numbers}
 }
 \value{
-A tibble with congressional district info for the requested yrs.
+A tibble with congressional district info for the requested year.
 }
 \description{
 This function returns one or more of the \verb{info_*} datasets
 }
 \examples{
 # load one dataset
-load_cd_info(2011)
+load_cd_info(year = 2011)
+load_cd_info(congress = 109)
 
 # load multiple datasets
-load_cd_info(c(2005, 2007, 2009))
+load_cd_info(year = c(2005, 2007, 2009))
 
 }

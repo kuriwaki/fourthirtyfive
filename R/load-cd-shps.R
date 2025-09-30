@@ -7,8 +7,9 @@
 #'
 #' @name load_cd_shps
 #' @title Download CD Shapes
-#'
-#' @param c integer, choose a congress number (1–119) to load.
+#' @param year integer, choose a year to load
+#' @param congress integer, choose a congress number (1–119) to load (optional).
+#' Optional if `congress` is given.
 #' @param epsg integer EPSG code for output CRS (default 5070).
 #'
 #' @format Each object is the sf for a particular congress. The year indicates
@@ -22,10 +23,11 @@
 #' library(ggplot2)
 #'
 #' # Load the 109th Congress shapefile
-#' cd109 <- load_cd_shps(109)
+#' cd109 <- load_cd_shps(congress = 109)
+#' cd108  <- load_cd_shps(year = 2003)
 #'
 #' # Load the 109th and 110th Congress shapefile
-#' cd109_110 <- load_cd_shps(109:110)
+#' cd109_110 <- load_cd_shps(congress = c(109,110))
 #'
 #' # Create a map with cd boundaries
 #' cd109 |>
@@ -37,49 +39,56 @@
 #' @importFrom rlang .data
 #' @return An sf object with CD boundaries for the requested Congress.
 #' @export
-load_cd_shps <- function(c, epsg = 5070) {
+load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
+
+  if (is.null(congress) && is.null(year))
+    stop("Provide `congress` or `year`.", call. = FALSE)
+
+  if (is.null(congress))congress <- year_to_cong(year)
+  if (is.null(year))year <- cong_to_firstyear(congress)
+
+  # allow length-1 recycling
+  if (length(congress) != length(year)) {
+    if (length(congress) == 1L) congress <- rep.int(congress, length(year))
+    else if (length(year) == 1L) year <- rep.int(year, length(congress))
+    else stop("`congress` and `year` must have same length.", call. = FALSE)
+  }
+
+  # normalize
+  congress <- as.integer(congress)
+  year <- as.integer(cong_to_firstyear(congress))
 
   # load one congress
-  load_one <- function(ci) {
-    if (ci <= 112) {
-    # use possibly() and otherwise so VA doesn't stop whole func
-    utils::data("state", package = "datasets", envir = environment())
-    sf <- purrr::map_df(state.abb,
-                        purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)) |>
-      sf::st_transform(crs = epsg)
+  load_one <- function(ci, yr) {
+    ci <- as.integer(ci)[1]
+    yr <- as.integer(yr)[1]
 
-    } else if (ci >= 113 & ci <= 118) {
-      yr <- 2 * ci + 1786 + 1
-      sf <- tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m")
-      # remove PR, territories
-      sf <- sf[!(sf$STATEFP %in% c("72","60","66","69","78")), ] |>
-        st_transform(crs = epsg)
+    if (ci <= 112) {
+      utils::data("state", package = "datasets", envir = environment())
+      sf_obj <- purrr::map_df(
+        state.abb,
+        purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)
+      ) |>
+        sf::st_transform(crs = epsg)
+
+    } else if (ci >= 113 && ci <= 118) {
+      sf_obj <- tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
+        dplyr::filter(!(.data$STATEFP %in% c("72","60","66","69","78"))) |>
+        sf::st_transform(crs = epsg)
 
     } else if (ci == 119) {
-      # 2024 shapefile for 119th
-      sf <- tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m")
-      # remove PR, territories
-      sf <- sf[!(sf$STATEFP %in% c("72","60","66","69","78")), ] |>
-        st_transform(crs = epsg)
+      sf_obj <- tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
+        dplyr::filter(!(.data$STATEFP %in% c("72","60","66","69","78"))) |>
+        sf::st_transform(crs = epsg)
 
-      } else if (ci > 119) {
-      stop("Congress number greater than 119 is not yet supported.")
+    } else {
+      stop("Congress number greater than 119 is not yet supported.", call. = FALSE)
     }
-    sf
+
+    dplyr::mutate(sf_obj,
+                  congress = ci,
+                  year     = if (ci == 119) 2024L else yr)
   }
 
-  if (length(c) == 1) {
-    # single congress: return one sf
-    return(load_one(c))
-  } else {
-    # vector: load all and bind w congress column
-    res_list <- lapply(c, load_one)
-    out <- dplyr::bind_rows( ## TODO: simplify
-      Map(function(x, ci) dplyr::mutate(x, congress = ci), res_list, c)
-    )
-    return(out)
-
-  }
+  dplyr::bind_rows(Map(load_one, congress, year))
 }
-
-

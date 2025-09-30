@@ -4,10 +4,10 @@
 \alias{load_shp_dot}
 \title{Load dot-map point datasets}
 \usage{
-load_shp_dot(years)
+load_shp_dot(year)
 }
 \arguments{
-\item{years}{Integer vector of years (e.g., 2011 or c(2005, 2009, 2011)).}
+\item{year}{Integer vector of years (e.g., 2011 or c(2005, 2009, 2011)).}
 }
 \value{
 An sf object (single year) or sf/tibble (multiple years).
@@ -16,10 +16,10 @@ An sf object (single year) or sf/tibble (multiple years).
 This function returns one or more of the \verb{shp_dot_*} datasets.
 }
 \examples{
-# Single dataset
+# load one dataset
 load_shp_dot(2011)
 
-# Multiple datasets combined
+# load multiple datasets
 load_shp_dot(c(2005, 2009, 2011))
 
 }

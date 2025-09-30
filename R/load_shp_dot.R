@@ -2,20 +2,20 @@
 #'
 #' This function returns one or more of the `shp_dot_*` datasets.
 #'
-#' @param years Integer vector of years (e.g., 2011 or c(2005, 2009, 2011)).
+#' @param year Integer vector of years (e.g., 2011 or c(2005, 2009, 2011)).
 #'
 #' @return An sf object (single year) or sf/tibble (multiple years).
 #' @examples
-#' # Single dataset
+#' # load one dataset
 #' load_shp_dot(2011)
 #'
-#' # Multiple datasets combined
+#' # load multiple datasets
 #' load_shp_dot(c(2005, 2009, 2011))
 #'
 #' @export
-load_shp_dot <- function(years) {
-  years <- as.integer(years)
-  if (anyNA(years)) stop("`years` must be integer years like 2011 or 2005:2009.", call. = FALSE)
+load_shp_dot <- function(year) {
+  year <- as.integer(year)
+  if (anyNA(year)) stop("`year` must be integer years like 2011 or 2005:2009.", call. = FALSE)
 
   one <- function(y) {
     obj <- paste0("shp_dot_", y)
@@ -32,9 +32,9 @@ load_shp_dot <- function(years) {
 
   }
 
-  lst <- lapply(years, one)
+  lst <- lapply(year, one)
 
-  if (length(years) == 1L) {
+  if (length(year) == 1L) {
     lst[[1]]
   } else {
     # bind rows across years
