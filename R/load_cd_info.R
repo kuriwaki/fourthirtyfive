@@ -16,25 +16,12 @@
 #'
 #' @export
 load_cd_info <- function(year = NULL, congress = NULL) {
-  if (is.null(year) && is.null(congress)) {
-    stop("Provide `year` or `congress`.", call. = FALSE)
-  }
 
   if (!is.null(year)) {
     congress <- year_to_cong(year)
   } else if (!is.null(congress)) {
     year <- cong_to_firstyear(congress)
   }
-
-  # recycle length-1
-  if (length(congress) != length(year)) {
-    if (length(congress) == 1L) congress <- rep.int(congress, length(year))
-    else if (length(year) == 1L) year <- rep.int(year, length(congress))
-    else stop("`congress` and `year` must have same length.", call. = FALSE)
-  }
-
-  # normalize to congress start year
-  year <- cong_to_firstyear(congress)
 
   # one dataset
   one <- function(y) {

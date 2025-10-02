@@ -8,9 +8,7 @@
 #' @export
 cong_to_firstyear <- function(congress) {
   if (!is.numeric(congress)) stop("Congress must be an integer.", call. = FALSE)
-  out <- 1787L + 2L * as.integer(congress)
-  out[is.na(congress)] <- NA_integer_
-  out
+  1789L + 2L * (congress - 1L)
 }
 
 #' Convert year of Congress to Congressional session
@@ -21,8 +19,9 @@ cong_to_firstyear <- function(congress) {
 #' year_to_cong(c(2003, 2005)) # 108, 109
 #' @export
 year_to_cong <- function(year) {
-  if (!is.numeric(year)) stop("Year must be an integer.", call. = FALSE)
-  out <- as.integer((as.integer(year) - 1789L) %/% 2L + 1L)
+  if (!is.numeric(year)) stop("`year` must be numeric/integer.", call. = FALSE)
+  year <- as.integer(year)
+  out <- (year - 1789L) %/% 2L + 1L
   out[is.na(year)] <- NA_integer_
   out
 }

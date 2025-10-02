@@ -24,7 +24,7 @@
 #'
 #' # Load the 109th Congress shapefile
 #' cd109 <- load_cd_shps(congress = 109)
-#' cd108  <- load_cd_shps(year = 2003)
+#' cd108 <- load_cd_shps(year = 2003)
 #'
 #' # Load the 109th and 110th Congress shapefile
 #' cd109_110 <- load_cd_shps(congress = c(109,110))
@@ -41,43 +41,36 @@
 #' @export
 load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
 
-  if (is.null(congress) && is.null(year))
-    stop("Provide `congress` or `year`.", call. = FALSE)
-
-  if (is.null(congress))congress <- year_to_cong(year)
-  if (is.null(year))year <- cong_to_firstyear(congress)
-
-  # allow length-1 recycling
-  if (length(congress) != length(year)) {
-    if (length(congress) == 1L) congress <- rep.int(congress, length(year))
-    else if (length(year) == 1L) year <- rep.int(year, length(congress))
-    else stop("`congress` and `year` must have same length.", call. = FALSE)
-  }
-
   # normalize
-  congress <- as.integer(congress)
-  year <- as.integer(cong_to_firstyear(congress))
+  if (!is.null(congress)) {
+    congress <- as.integer(congress)
+    } else {
+    congress <- year_to_cong(year)
+    }
 
   # load one congress
-  load_one <- function(ci, yr) {
-    ci <- as.integer(ci)[1]
-    yr <- as.integer(yr)[1]
+  load_one <- function(ci) {
+    ci <- as.integer(ci)
+    year <- as.integer(cong_to_firstyear(ci))
 
     if (ci <= 112) {
       utils::data("state", package = "datasets", envir = environment())
       sf_obj <- purrr::map_df(
         state.abb,
-        purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)
-      ) |>
+        purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)) |>
         sf::st_transform(crs = epsg)
 
     } else if (ci >= 113 && ci <= 118) {
-      sf_obj <- tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
+      sf_obj <- tigris::congressional_districts(year = year,
+                                                cb = TRUE,
+                                                resolution = "20m") |>
         dplyr::filter(!(.data$STATEFP %in% c("72","60","66","69","78"))) |>
         sf::st_transform(crs = epsg)
 
     } else if (ci == 119) {
-      sf_obj <- tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
+      sf_obj <- tigris::congressional_districts(year = 2024,
+                                                cb = TRUE,
+                                                resolution = "20m") |>
         dplyr::filter(!(.data$STATEFP %in% c("72","60","66","69","78"))) |>
         sf::st_transform(crs = epsg)
 
@@ -87,8 +80,8 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
 
     dplyr::mutate(sf_obj,
                   congress = ci,
-                  year     = if (ci == 119) 2024L else yr)
+                  year = if (ci == 119) 2024L else year)
   }
 
-  dplyr::bind_rows(Map(load_one, congress, year))
+  dplyr::bind_rows(lapply(congress, load_one))
 }
