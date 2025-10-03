@@ -22,6 +22,8 @@
 #' load_shp_dot(congress = c(109, 110))
 #'
 #' # plot points combined with state outline
+#' library(ggplot2)
+#'
 #' load_shp_dot(year = 2005) |>
 #'   ggplot() +
 #'   geom_sf(data = shp_states) +
