@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 Maintainer: Shiro Kuriwaki
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/kuriwaki/cdmap/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kuriwaki/cdmap/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 cdmap is a package that provides shapefiles and other data for congressional districts, 2006-2025. 
@@ -47,12 +48,17 @@ We are building several types of maps. First, the **dotmap** is where one CD is 
 library(sf)
 library(ggplot2)
 
-shp_dot_2023 |>
+load_shp_dot(2023) |>
   ggplot() +
   geom_sf(data = shp_states) +
   geom_sf(size = 1, alpha = 0.5) +
   theme_void()
+```
 
+For now, the output of each function for recent years is stored as a package dataset as well:
+
+```{r}
+shp_dot_2023
 ```
 
 
@@ -61,8 +67,8 @@ We are currently working on providing **hexmaps** (i.e., maps that present CDs a
 ```{r}
 library(donnermap) # remotes::install_github("kuriwaki/donnermap")
 
-ggplot(cd_shp) + 
-  geom_sf() + 
+ggplot(cd_shp) +
+  geom_sf() +
   theme_void() +
   labs(caption = "Map Source: http://dkel.ec/map")
 ```
@@ -75,11 +81,11 @@ We do not store actual CD shapefiles, but we provide a function to draw these fr
 ```{r}
 cd_shps <- load_cd_shps(c = 118)
 
-cd_shps |> 
+cd_shps |>
   # remove Alaska and Hawaii for now
-  dplyr::filter(!STATEFP %in% c("15", "02")) |>  
+  dplyr::filter(!STATEFP %in% c("15", "02")) |>
   ggplot() +
-  geom_sf() + 
+  geom_sf() +
   theme_void()
 ```
 
@@ -90,8 +96,15 @@ Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-
 
 
 ```{r}
+load_cd_info(2007)
+```
+
+This can be loaded as an object too, for now:
+
+```{r, eval = FALSE}
 info_2007
 ```
+
 
 
 ## Data format

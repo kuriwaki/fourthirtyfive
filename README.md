@@ -41,7 +41,7 @@ library(sf)
 #> Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
 library(ggplot2)
 
-shp_dot_2023 |>
+load_shp_dot(2023) |>
   ggplot() +
   geom_sf(data = shp_states) +
   geom_sf(size = 1, alpha = 0.5) +
@@ -49,6 +49,30 @@ shp_dot_2023 |>
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+
+For now, the output of each function for recent years is stored as a
+package dataset as well:
+
+``` r
+shp_dot_2023
+#> Simple feature collection with 435 features and 2 fields
+#> Geometry type: POINT
+#> Dimension:     XY
+#> Bounding box:  xmin: -2288151 ymin: 118141.6 xmax: 2073753 ymax: 3105727
+#> Projected CRS: NAD83 / Conus Albers
+#> First 10 features:
+#>    cong    cd                  geometry
+#> 1   118 AK-01 POINT (-1935091 654711.3)
+#> 2   118 AL-01 POINT (780145.2 921677.4)
+#> 3   118 AL-02  POINT (934714.7 1007996)
+#> 4   118 AL-03  POINT (947758.5 1172320)
+#> 5   118 AL-04  POINT (799973.5 1270900)
+#> 6   118 AL-05  POINT (852955.2 1339883)
+#> 7   118 AL-06  POINT (851197.4 1185212)
+#> 8   118 AL-07  POINT (783499.7 1078747)
+#> 9   118 AR-01  POINT (421002.1 1377139)
+#> 10  118 AR-02  POINT (328419.7 1351219)
+```
 
 We are currently working on providing **hexmaps** (i.e., maps that
 present CDs as combinations of hexagons) for all years. A 2016-era
@@ -59,13 +83,13 @@ recorded there.
 ``` r
 library(donnermap) # remotes::install_github("kuriwaki/donnermap")
 
-ggplot(cd_shp) + 
-  geom_sf() + 
+ggplot(cd_shp) +
+  geom_sf() +
   theme_void() +
   labs(caption = "Map Source: http://dkel.ec/map")
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
 
 We do not store actual CD shapefiles, but we provide a function to draw
 these from either the Census or Jeff Lewis’s historical shapefiles.
@@ -73,15 +97,15 @@ these from either the Census or Jeff Lewis’s historical shapefiles.
 ``` r
 cd_shps <- load_cd_shps(c = 118)
 
-cd_shps |> 
+cd_shps |>
   # remove Alaska and Hawaii for now
-  dplyr::filter(!STATEFP %in% c("15", "02")) |>  
+  dplyr::filter(!STATEFP %in% c("15", "02")) |>
   ggplot() +
-  geom_sf() + 
+  geom_sf() +
   theme_void()
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 We also provide a dataset of the **descriptive names** of each district
 (e.g., calling AZ-01 in the 110th congressional district “Phoenix
@@ -89,7 +113,7 @@ exurbs, Prescott, and Flagstaff”). These are inspired by [Daily
 Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts).
 
 ``` r
-info_2007
+load_cd_info(2007)
 #> # A tibble: 435 × 3
 #>     cong cd    cd_description                                
 #>    <dbl> <chr> <chr>                                         
@@ -104,6 +128,12 @@ info_2007
 #>  9   110 AR-01 Northeastern Arkansas                         
 #> 10   110 AR-02 Greater Little Rock                           
 #> # ℹ 425 more rows
+```
+
+This can be loaded as an object too, for now:
+
+``` r
+info_2007
 ```
 
 ## Data format

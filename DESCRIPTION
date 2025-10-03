@@ -19,6 +19,7 @@ Imports:
     sf,
     purrr,
     tigris,
+    rlang,
     geomander (>= 2.4.0)
 Depends: 
     R (>= 3.5)

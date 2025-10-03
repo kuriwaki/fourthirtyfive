@@ -1,8 +1,12 @@
-#' @title Congressional District level information
-#' @name info
-#' @description A 435-row table, per each Congress, with descriptive names for each CD.
+#' Load congressional district info
 #'
+#' This function returns one or more of the `info_*` datasets
 #'
+#' @param year Integer vector of years (e.g., `2011` or `c(2005, 2009, 2011)`).
+#' @param congress Integer vector of Congress numbers
+#'
+#' @return A 435-row tibble with congressional district info for the requested
+#'  year, with descriptive names for each CD. See `format`.
 #' @format Each object is for a particular congress. The year indicates the start
 #'  of that Congress. Each observation is a congressional district, which contains a
 #'  unique descriptive name.
@@ -46,31 +50,36 @@
 #'    Harvard Dataverse, for congressional candidate's (instead of President's) vote totals.
 #'
 #' @examples
-#' head(info_2005)
-NULL
+#' # load one dataset
+#' load_cd_info(year = 2011)
+#' load_cd_info(congress = 109)
+#'
+#' # load multiple datasets
+#' load_cd_info(year = c(2005, 2007, 2009))
+#'
+#' @export
+load_cd_info <- function(year = NULL, congress = NULL) {
+  if (!is.null(year)) {
+    congress <- year_to_cong(year)
+  } else if (!is.null(congress)) {
+    year <- cong_to_firstyear(congress)
+  }
 
-#' @name info
-NULL
+  # one dataset
+  load_one <- function(y) {
+    nm <- paste0("info_", y)
+    utils::data(list = nm, package = "cdmap", envir = environment())
+    if (!exists(nm, envir = environment(), inherits = FALSE)) {
+      stop(sprintf("`%s` not found in package data. Check available years.", nm), call. = FALSE)
+    }
+    get(nm, envir = environment())
+  }
 
-#' @rdname info
-"info_2005"
-#' @rdname info
-"info_2007"
-#' @rdname info
-"info_2009"
-#' @rdname info
-"info_2011"
-#' @rdname info
-"info_2013"
-#' @rdname info
-"info_2015"
-#' @rdname info
-"info_2017"
-#' @rdname info
-"info_2019"
-#' @rdname info
-"info_2021"
-#' @rdname info
-"info_2023"
-#' @rdname info
-"info_2025"
+  out_list <- lapply(unique(year), load_one)
+
+  if (length(out_list) == 1L) {
+    out_list[[1]]
+  } else {
+    dplyr::bind_rows(out_list)
+  }
+}
