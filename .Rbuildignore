@@ -7,3 +7,4 @@ explore/
 ^\.lintr$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.github$

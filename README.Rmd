@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 Maintainer: Shiro Kuriwaki
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/kuriwaki/cdmap/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kuriwaki/cdmap/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 cdmap is a package that provides shapefiles and other data for congressional districts, 2006-2025. 
