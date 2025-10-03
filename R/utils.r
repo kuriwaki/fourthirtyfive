@@ -20,8 +20,5 @@ cong_to_firstyear <- function(congress) {
 #' @export
 year_to_cong <- function(year) {
   if (!is.numeric(year)) stop("`year` must be numeric/integer.", call. = FALSE)
-  year <- as.integer(year)
-  out <- (year - 1789L) %/% 2L + 1L
-  out[is.na(year)] <- NA_integer_
-  out
+  as.integer((as.integer(year) - 1789) %/% 2 + 1)
 }

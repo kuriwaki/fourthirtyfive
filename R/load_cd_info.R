@@ -19,12 +19,12 @@ load_cd_info <- function(year = NULL, congress = NULL) {
 
   if (!is.null(year)) {
     congress <- year_to_cong(year)
-  } else if (!is.null(congress)) {
+    } else if (!is.null(congress)) {
     year <- cong_to_firstyear(congress)
-  }
+    }
 
   # one dataset
-  one <- function(y) {
+  load_one <- function(y) {
     nm <- paste0("info_", y)
     utils::data(list = nm, package = "cdmap", envir = environment())
     if (!exists(nm, envir = environment(), inherits = FALSE)) {
@@ -33,7 +33,7 @@ load_cd_info <- function(year = NULL, congress = NULL) {
     get(nm, envir = environment())
   }
 
-  out_list <- lapply(unique(year), one)
+  out_list <- lapply(unique(year), load_one)
 
   if (length(out_list) == 1L) {
     out_list[[1]]

@@ -55,9 +55,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
 
     if (ci <= 112) {
       utils::data("state", package = "datasets", envir = environment())
-      sf_obj <- purrr::map_df(
-        state.abb,
-        purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)) |>
+      sf_obj <- purrr::map_df(state.abb,purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)) |>
         sf::st_transform(crs = epsg)
 
     } else if (ci >= 113 && ci <= 118) {
