@@ -62,9 +62,9 @@ NULL
 #' @source Alaska and Hawaii are modified following UrbanInstitute/urbnmapr
 #'
 #' @examples
-#'  library(ggplot2)
-#'  shp_states |>
-#'    ggplot() +
-#'    geom_sf() +
-#'    geom_sf_text(aes(label = state))
+#' library(ggplot2)
+#' shp_states |>
+#'   ggplot() +
+#'   geom_sf() +
+#'   geom_sf_text(aes(label = state))
 "shp_states"

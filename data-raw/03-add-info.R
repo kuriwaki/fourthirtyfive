@@ -16,7 +16,7 @@ c115 <- read_sheet(names_raw, sheet = "2018") |> select(cd, dailykos_name)
 info_2005 <- shp_dot_2005 |>
   left_join(c111, by = "cd") |>
   # overwrite names for GA and TX w/ c109
-  left_join(c109|> rename(name_109 = name), by = "cd") |>
+  left_join(c109 |> rename(name_109 = name), by = "cd") |>
   # replace c111 with c109 for GA and TX
   mutate(cd_description = if_else(str_starts(cd, "GA") | str_starts(cd, "TX"), name_109, name)) |>
   select(-name_109, -name) |>

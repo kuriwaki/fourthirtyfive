@@ -27,7 +27,7 @@
 #' cd108 <- load_cd_shps(year = 2003)
 #'
 #' # Load the 109th and 110th Congress shapefile
-#' cd109_110 <- load_cd_shps(congress = c(109,110))
+#' cd109_110 <- load_cd_shps(congress = c(109, 110))
 #'
 #' # Create a map with cd boundaries
 #' cd109 |>
@@ -40,13 +40,12 @@
 #' @return An sf object with CD boundaries for the requested Congress.
 #' @export
 load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
-
   # normalize
   if (!is.null(congress)) {
     congress <- as.integer(congress)
-    } else {
+  } else {
     congress <- year_to_cong(year)
-    }
+  }
 
   # load one congress
   load_one <- function(ci) {
@@ -55,30 +54,32 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
 
     if (ci <= 112) {
       utils::data("state", package = "datasets", envir = environment())
-      sf_obj <- purrr::map_df(state.abb,purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)) |>
+      sf_obj <- purrr::map_df(state.abb, purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)) |>
         sf::st_transform(crs = epsg)
-
     } else if (ci >= 113 && ci <= 118) {
-      sf_obj <- tigris::congressional_districts(year = year,
-                                                cb = TRUE,
-                                                resolution = "20m") |>
-        dplyr::filter(!(.data$STATEFP %in% c("72","60","66","69","78"))) |>
+      sf_obj <- tigris::congressional_districts(
+        year = year,
+        cb = TRUE,
+        resolution = "20m"
+      ) |>
+        dplyr::filter(!(.data$STATEFP %in% c("72", "60", "66", "69", "78"))) |>
         sf::st_transform(crs = epsg)
-
     } else if (ci == 119) {
-      sf_obj <- tigris::congressional_districts(year = 2024,
-                                                cb = TRUE,
-                                                resolution = "20m") |>
-        dplyr::filter(!(.data$STATEFP %in% c("72","60","66","69","78"))) |>
+      sf_obj <- tigris::congressional_districts(
+        year = 2024,
+        cb = TRUE,
+        resolution = "20m"
+      ) |>
+        dplyr::filter(!(.data$STATEFP %in% c("72", "60", "66", "69", "78"))) |>
         sf::st_transform(crs = epsg)
-
     } else {
       stop("Congress number greater than 119 is not yet supported.", call. = FALSE)
     }
 
     dplyr::mutate(sf_obj,
-                  congress = ci,
-                  year = if (ci == 119) 2024L else year)
+      congress = ci,
+      year = if (ci == 119) 2024L else year
+    )
   }
 
   dplyr::bind_rows(lapply(congress, load_one))

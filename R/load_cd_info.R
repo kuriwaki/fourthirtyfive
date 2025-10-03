@@ -16,12 +16,11 @@
 #'
 #' @export
 load_cd_info <- function(year = NULL, congress = NULL) {
-
   if (!is.null(year)) {
     congress <- year_to_cong(year)
-    } else if (!is.null(congress)) {
+  } else if (!is.null(congress)) {
     year <- cong_to_firstyear(congress)
-    }
+  }
 
   # one dataset
   load_one <- function(y) {

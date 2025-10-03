@@ -18,7 +18,7 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:119}.rds")))) {
   }
 
   for (c in 113:118) {
-    yr = 2*c + 1786 + 1
+    yr <- 2 * c + 1786 + 1
     tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
       write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
   }
@@ -61,22 +61,24 @@ shp_dot_func <- function(source = c("lewis", "census"),
           distinct(),
         by = "STATEFP"
       ) |>
-      mutate(dist = str_remove({{cd_col}}, "^0+"))
+      mutate(dist = str_remove({{ cd_col }}, "^0+"))
   }
   # common operations
   centroids <- cd_sf |>
     filter(statename != "District of Columbia") |>
-    mutate(cd = ccesMRPprep::to_cd(statename, dist),
-           dist = NULL, statename = NULL,
-           # fix entries for at large states in the census
-           cd = sub("-NA$", "-01", cd)) |>
+    mutate(
+      cd = ccesMRPprep::to_cd(statename, dist),
+      dist = NULL, statename = NULL,
+      # fix entries for at large states in the census
+      cd = sub("-NA$", "-01", cd)
+    ) |>
     geomander::st_centerish() |>
     mutate(
       centroid = geometry,
       x = st_coordinates(centroid)[, 1],
       y = st_coordinates(centroid)[, 2],
       radius = circ_radius
-      )
+    )
 
   # layout optimization and layout cost function to minimize overlap and
   # total displacement.
