@@ -2,9 +2,9 @@
 #' @param congress integer or numeric vector
 #' @return integer vector of start years
 #' @examples
-#' cong_to_firstyear(1)     # 1789
-#' cong_to_firstyear(109)   # 2005
-#' cong_to_firstyear(c(108,109)) # 2003 2005
+#' cong_to_firstyear(1) # 1789
+#' cong_to_firstyear(109) # 2005
+#' cong_to_firstyear(c(108, 109)) # 2003 2005
 #' @export
 cong_to_firstyear <- function(congress) {
   if (!is.numeric(congress)) stop("Congress must be an integer.", call. = FALSE)

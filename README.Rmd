@@ -52,7 +52,6 @@ shp_dot_2023 |>
   geom_sf(data = shp_states) +
   geom_sf(size = 1, alpha = 0.5) +
   theme_void()
-
 ```
 
 
@@ -61,8 +60,8 @@ We are currently working on providing **hexmaps** (i.e., maps that present CDs a
 ```{r}
 library(donnermap) # remotes::install_github("kuriwaki/donnermap")
 
-ggplot(cd_shp) + 
-  geom_sf() + 
+ggplot(cd_shp) +
+  geom_sf() +
   theme_void() +
   labs(caption = "Map Source: http://dkel.ec/map")
 ```
@@ -75,11 +74,11 @@ We do not store actual CD shapefiles, but we provide a function to draw these fr
 ```{r}
 cd_shps <- load_cd_shps(c = 118)
 
-cd_shps |> 
+cd_shps |>
   # remove Alaska and Hawaii for now
-  dplyr::filter(!STATEFP %in% c("15", "02")) |>  
+  dplyr::filter(!STATEFP %in% c("15", "02")) |>
   ggplot() +
-  geom_sf() + 
+  geom_sf() +
   theme_void()
 ```
 

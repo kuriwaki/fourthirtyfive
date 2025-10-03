@@ -17,7 +17,6 @@
 #'
 #' @export
 load_shp_dot <- function(year = NULL, congress = NULL) {
-
   if (!is.null(year)) {
     congress <- year_to_cong(year)
   } else if (!is.null(congress)) {
@@ -35,11 +34,11 @@ load_shp_dot <- function(year = NULL, congress = NULL) {
 
     if (!exists(obj, envir = environment(), inherits = FALSE)) {
       stop(sprintf("Year not available.", obj),
-           call. = FALSE)
+        call. = FALSE
+      )
     }
 
     obj <- get(obj, envir = environment())
-
   }
 
   lst <- lapply(year, one)
@@ -58,7 +57,9 @@ load_shp_dot <- function(year = NULL, congress = NULL) {
 #' @examples
 #' shp_dot_years
 #' @export
-shp_dot_years <- c("shp_dot_2005", "shp_dot_2007", "shp_dot_2009",
-                   "shp_dot_2011", "shp_dot_2013", "shp_dot_2015",
-                   "shp_dot_2017", "shp_dot_2019", "shp_dot_2021",
-                   "shp_dot_2023", "shp_dot_2025")
+shp_dot_years <- c(
+  "shp_dot_2005", "shp_dot_2007", "shp_dot_2009",
+  "shp_dot_2011", "shp_dot_2013", "shp_dot_2015",
+  "shp_dot_2017", "shp_dot_2019", "shp_dot_2021",
+  "shp_dot_2023", "shp_dot_2025"
+)
