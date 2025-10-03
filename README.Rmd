@@ -47,11 +47,17 @@ We are building several types of maps. First, the **dotmap** is where one CD is 
 library(sf)
 library(ggplot2)
 
-shp_dot_2023 |>
+load_shp_dot(2023) |>
   ggplot() +
   geom_sf(data = shp_states) +
   geom_sf(size = 1, alpha = 0.5) +
   theme_void()
+```
+
+For now, the output of each function for recent years is stored as a package dataset as well:
+
+```{r}
+shp_dot_2023
 ```
 
 
@@ -89,8 +95,15 @@ Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-
 
 
 ```{r}
+load_cd_info(2007)
+```
+
+This can be loaded as an object too, for now:
+
+```{r, eval = FALSE}
 info_2007
 ```
+
 
 
 ## Data format

@@ -2,7 +2,7 @@
 % Please edit documentation in R/load_shp_dot.R
 \name{load_shp_dot}
 \alias{load_shp_dot}
-\title{Load dot-map point datasets}
+\title{Load Dodged CD centroids}
 \usage{
 load_shp_dot(year = NULL, congress = NULL)
 }
@@ -15,15 +15,29 @@ load_shp_dot(year = NULL, congress = NULL)
 An sf object (single year) or sf/tibble (multiple years).
 }
 \description{
-This function returns one or more of the \verb{shp_dot_*} datasets.
+Loads shapefile of coordinates. Each row contains a coordinate of the
+centroid of the CD, slightly dodged so that points in dense places do
+not overlap.
 }
 \examples{
 # load one dataset
-load_shp_dot(year = 2011)
+load_shp_dot(year = 2011) # is equivalent to loading `shp_dot_2011`
 load_shp_dot(congress = 109)
 
 # load multiple datasets
 load_shp_dot(year = c(2005, 2009, 2011))
 load_shp_dot(congress = c(109, 110))
 
+# plot points combined with state outline
+load_shp_dot(year = 2005) |>
+  ggplot() +
+  geom_sf(data = shp_states) +
+  geom_sf(size = 1, alpha = 0.5)
+
+# can also use ggforce::geom_circle, extracting x,y coordinates from geom and
+# setting a radius e.g. to 150000
+
+}
+\author{
+Zoya Ahmer, Shiro Kuriwaki, Cory McCartan
 }

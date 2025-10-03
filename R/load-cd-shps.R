@@ -17,7 +17,6 @@
 #' @source Shapefiles from 2012 onwards taken from US Census, `tigris` package.
 #'  Shapefiles from early congresses are taken from Jeffrey B. Lewis,
 #'  historical congressional district shapefiles.
-#'
 #' @examples
 #' library(sf)
 #' library(ggplot2)
@@ -78,7 +77,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
 
     dplyr::mutate(sf_obj,
       congress = ci,
-      year = if_else(ci == 119, 2024L, year)
+      year = ifelse(ci == 119, 2024L, year)
     )
   }
 

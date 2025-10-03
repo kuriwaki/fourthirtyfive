@@ -7,8 +7,10 @@
 #' cong_to_firstyear(c(108, 109)) # 2003 2005
 #' @export
 cong_to_firstyear <- function(congress) {
-  if (!is.numeric(congress)) stop("Congress must be an integer.", call. = FALSE)
-  1789L + 2L * (congress - 1L)
+  if (!is.integer(as.integer(congress)))
+    stop("Congress must be an integer.", call. = FALSE)
+
+  1789L + 2L * (as.integer(congress) - 1L)
 }
 
 #' Convert year of Congress to Congressional session
