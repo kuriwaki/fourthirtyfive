@@ -67,16 +67,3 @@ load_shp_dot <- function(year = NULL, congress = NULL) {
     dplyr::bind_rows(lst)
   }
 }
-
-#' List all available years for shp_dot datasets in data/
-#'
-#' @return Vector of years for which `shp_dot_*` works
-#' @examples
-#' shp_dot_years
-#' @export
-shp_dot_years <- c(
-  "shp_dot_2005", "shp_dot_2007", "shp_dot_2009",
-  "shp_dot_2011", "shp_dot_2013", "shp_dot_2015",
-  "shp_dot_2017", "shp_dot_2019", "shp_dot_2021",
-  "shp_dot_2023", "shp_dot_2025"
-)
