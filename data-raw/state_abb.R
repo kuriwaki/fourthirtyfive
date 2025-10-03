@@ -1,6 +1,6 @@
 # internal state abb variable
 #' @keywords internal
-state.abb <- c(
+state_abb <- c(
   "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
   "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
   "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
@@ -9,4 +9,4 @@ state.abb <- c(
 )
 
 # save variable
-usethis::use_data(state.abb, internal = TRUE, overwrite = TRUE)
+usethis::use_data(state_abb, internal = TRUE, overwrite = TRUE)

@@ -16,7 +16,7 @@ integer vector of start years
 Convert Congressional session to the start year of that Congress
 }
 \examples{
-cong_to_firstyear(1)     # 1789
-cong_to_firstyear(109)   # 2005
-cong_to_firstyear(c(108,109)) # 2003 2005
+cong_to_firstyear(1) # 1789
+cong_to_firstyear(109) # 2005
+cong_to_firstyear(c(108, 109)) # 2003 2005
 }

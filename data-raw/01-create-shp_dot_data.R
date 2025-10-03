@@ -13,7 +13,7 @@ circ_radius <- 18000
 if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:119}.rds")))) {
   for (c in 109:112) {
     utils::data("state", package = "datasets", envir = environment())
-    map_df(state.abb, \(x) geomander::get_lewis(state = x, congress = c), .progress = TRUE) |>
+    map_df(state_abb, \(x) geomander::get_lewis(state = x, congress = c), .progress = TRUE) |>
       write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
   }
 

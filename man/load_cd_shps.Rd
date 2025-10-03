@@ -44,7 +44,7 @@ cd109 <- load_cd_shps(congress = 109)
 cd108 <- load_cd_shps(year = 2003)
 
 # Load the 109th and 110th Congress shapefile
-cd109_110 <- load_cd_shps(congress = c(109,110))
+cd109_110 <- load_cd_shps(congress = c(109, 110))
 
 # Create a map with cd boundaries
 cd109 |>
