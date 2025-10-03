@@ -96,8 +96,6 @@ these from either the Census or Jeff Lewis’s historical shapefiles.
 
 ``` r
 cd_shps <- load_cd_shps(c = 118)
-#>   |                                                                              |                                                                      |   0%  |                                                                              |======================================================================| 100%
-#> HTTP download failed, trying FTP as fallback...
 
 cd_shps |>
   # remove Alaska and Hawaii for now
