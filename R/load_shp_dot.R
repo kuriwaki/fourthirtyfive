@@ -33,6 +33,7 @@
 #' # setting a radius e.g. to 150000
 #'
 #' @export
+
 load_shp_dot <- function(year = NULL, congress = NULL) {
   if (!is.null(year)) {
     congress <- year_to_cong(year)
@@ -47,7 +48,7 @@ load_shp_dot <- function(year = NULL, congress = NULL) {
     obj <- paste0("shp_dot_", y)
 
     # load from data/ (works when package is installed)
-    utils::data(list = obj, package = "cdmap", envir = environment())
+    utils::data(list = obj, package = "fourthirtyfive", envir = environment())
 
     if (!exists(obj, envir = environment(), inherits = FALSE)) {
       stop(sprintf("Year not available.", obj),

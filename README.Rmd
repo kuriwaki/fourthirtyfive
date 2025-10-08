@@ -13,23 +13,23 @@ knitr::opts_chunk$set(
 )
 ```
 
-# cdmap
+# fourthirtyfive
 
 Maintainer: Shiro Kuriwaki
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/kuriwaki/cdmap/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kuriwaki/cdmap/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-cdmap is a package that provides shapefiles and other data for congressional districts, 2006-2025. 
+fourthirtyfive is a package that provides shapefiles and other data for congressional districts, 2006-2025. 
 
 ## Installation
 
-You can install the development version of cdmap from [GitHub](https://github.com/) with:
+You can install the development version of fourthirtyfive from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-remotes::install_github("kuriwaki/cdmap")
+remotes::install_github("kuriwaki/fourthirtyfive")
 ```
 
 
@@ -38,7 +38,7 @@ remotes::install_github("kuriwaki/cdmap")
 The main output of the package are datasets which comes pre-loaded with the package.
 
 ```{r example}
-library(cdmap)
+library(fourthirtyfive)
 ```
 
 

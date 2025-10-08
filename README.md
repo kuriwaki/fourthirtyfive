@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# cdmap
+# fourthirtyfive
 
 Maintainer: Shiro Kuriwaki
 
@@ -9,17 +9,17 @@ Maintainer: Shiro Kuriwaki
 
 <!-- badges: end -->
 
-cdmap is a package that provides shapefiles and other data for
+fourthirtyfive is a package that provides shapefiles and other data for
 congressional districts, 2006-2025.
 
 ## Installation
 
-You can install the development version of cdmap from
+You can install the development version of fourthirtyfive from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-remotes::install_github("kuriwaki/cdmap")
+remotes::install_github("kuriwaki/fourthirtyfive")
 ```
 
 ## Example
@@ -28,7 +28,7 @@ The main output of the package are datasets which comes pre-loaded with
 the package.
 
 ``` r
-library(cdmap)
+library(fourthirtyfive)
 ```
 
 We are building several types of maps. First, the **dotmap** is where

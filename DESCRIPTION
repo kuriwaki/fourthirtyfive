@@ -1,4 +1,4 @@
-Package: cdmap
+Package: fourthirtyfive
 Title: Shapefiles for visualizing congressional districts
 Version: 0.0.0.9000
 Authors@R: 
@@ -20,6 +20,8 @@ Imports:
     purrr,
     tigris,
     rlang,
+    stringr,
+    ccesMRPprep,
     geomander (>= 2.4.0)
 Depends: 
     R (>= 3.5)

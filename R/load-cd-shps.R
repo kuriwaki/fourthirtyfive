@@ -76,8 +76,8 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
     }
 
     dplyr::mutate(sf_obj,
-      congress = ci,
-      year = ifelse(ci == 119, 2024L, year)
+                  congress = ci,
+                  year = ifelse(ci == 119, 2024L, year)
     )
   }
 
