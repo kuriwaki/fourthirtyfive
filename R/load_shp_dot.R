@@ -84,6 +84,9 @@ load_shp_dot <- function(year = NULL, congress = NULL) {
 #'  Coordinates from early Congresses taken from Jeffrey B. Lewis, historical congressional
 #'  district shapefiles
 #'
+#' @aliases shp_dot_2005 shp_dot_2007 shp_dot_2009 shp_dot_2011 shp_dot_2013
+#' @aliases shp_dot_2015 shp_dot_2017 shp_dot_2019 shp_dot_2021 shp_dot_2023 shp_dot_2025
+#'
 #' @examples
 #' library(sf)
 #' library(ggplot2)
@@ -98,3 +101,4 @@ load_shp_dot <- function(year = NULL, congress = NULL) {
 #'
 #' # can also use ggforce::geom_circle, extracting x,y coordinates from geom and
 #' # setting a radius e.g. to 150000
+NULL

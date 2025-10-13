@@ -30,28 +30,6 @@ info_20** column from 2013 onwards are taken from "cd_info" in the
 package (See Source for full citation). info_20** from earlier years (2005–2011)
 were manually coded in Daily Kos style.}
 }
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
-
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 435 rows and 3 columns.
 }
 \source{
 2005-2011 descriptive names: Zachary Donnini.
@@ -80,29 +58,6 @@ PA 2016 descriptive names: Shiro Kuriwaki and Lara Putnam.
 Also see Cha, Kuriwaki, and Snyder, 2024,
 "Candidates in American General Elections", \url{https://doi.org/10.7910/DVN/DGDRDT},
 Harvard Dataverse, for congressional candidate's (instead of President's) vote totals.
-}
-\usage{
-info_2005
-
-info_2007
-
-info_2009
-
-info_2011
-
-info_2013
-
-info_2015
-
-info_2017
-
-info_2019
-
-info_2021
-
-info_2023
-
-info_2025
 }
 \description{
 A 435-row table, per each Congress, with descriptive names for each CD.

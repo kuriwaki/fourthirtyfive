@@ -132,32 +132,9 @@ load_cd_info <- function(year = NULL, congress = NULL) {
 #'    "Candidates in American General Elections", \url{https://doi.org/10.7910/DVN/DGDRDT},
 #'    Harvard Dataverse, for congressional candidate's (instead of President's) vote totals.
 #'
+#' @aliases info_2005 info_2007 info_2009 info_2011 info_2013
+#' @aliases info_2015 info_2017 info_2019 info_2021 info_2023 info_2025
+#'
 #' @examples
 #' head(info_2005)
 NULL
-
-#' @name info
-NULL
-
-#' @rdname info
-"info_2005"
-#' @rdname info
-"info_2007"
-#' @rdname info
-"info_2009"
-#' @rdname info
-"info_2011"
-#' @rdname info
-"info_2013"
-#' @rdname info
-"info_2015"
-#' @rdname info
-"info_2017"
-#' @rdname info
-"info_2019"
-#' @rdname info
-"info_2021"
-#' @rdname info
-"info_2023"
-#' @rdname info
-"info_2025"
