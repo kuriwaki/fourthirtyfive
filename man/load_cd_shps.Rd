@@ -32,8 +32,6 @@ Download CD Shapes
 \details{
 Download shapefiles (\code{sf} objects) for U.S. congressional districts for a
 given Congress number (1-119th).
-Download shapefiles for U.S. congressional districts for a
-given Congress number (109-119th).
 }
 \examples{
 library(sf)

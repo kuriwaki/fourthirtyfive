@@ -68,7 +68,7 @@ load_cd_info <- function(year = NULL, congress = NULL) {
   # one dataset
   load_one <- function(y) {
     nm <- paste0("info_", y)
-    utils::data(list = nm, package = "cdmap", envir = environment())
+    utils::data(list = nm, package = "fourthirtyfive", envir = environment())
     if (!exists(nm, envir = environment(), inherits = FALSE)) {
       stop(sprintf("`%s` not found in package data. Check available years.", nm), call. = FALSE)
     }

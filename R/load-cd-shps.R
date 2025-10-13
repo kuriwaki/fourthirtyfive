@@ -2,8 +2,6 @@
 #'
 #' Download shapefiles (`sf` objects) for U.S. congressional districts for a
 #' given Congress number (1-119th).
-#' Download shapefiles for U.S. congressional districts for a
-#' given Congress number (109-119th).
 #'
 #' @name load_cd_shps
 #' @title Download CD Shapes
@@ -56,34 +54,20 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
 
     if (ci <= 112) {
       utils::data("state", package = "datasets", envir = environment())
-      sf_obj <- purrr::map_df(state_abb, purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)) |>
-        mutate(geometry = st_make_valid(geometry)) |>
-        st_transform(crs = proj_crs) |>
-        rename(dist = district) |>
-        filter(statename != "District of Columbia") |>
-        mutate(
-          cd = ccesMRPprep::to_cd(statename, dist),
-          dist = NULL, statename = NULL,
-          # fix entries for at large states in the census
-          cd = sub("-NA$", "-01", cd)
-          )
+      sf_obj <- purrr::map_df(state_abb, purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL))
 
     } else if (ci >= 113 && ci <= 118) {
       sf_obj <- tigris::congressional_districts(
         year = year,
         cb = TRUE,
         resolution = "20m"
-      ) |>
-        filter(!(.data$STATEFP %in% c("72", "60", "66", "69", "78"))) |>
-        st_transform(crs = epsg)
+      )
     } else if (ci == 119) {
       sf_obj <- tigris::congressional_districts(
         year = 2024,
         cb = TRUE,
         resolution = "20m"
-      ) |>
-        filter(!(.data$STATEFP %in% c("72", "60", "66", "69", "78"))) |>
-        st_transform(crs = epsg)
+      )
     } else {
       stop("Congress number greater than 119 is not yet supported.", call. = FALSE)
     }
