@@ -1,6 +1,6 @@
-#' Load Dodged CD centroids
+#' @title Load Dodged CD centroids
 #'
-#' Loads shapefile of coordinates. Each row contains a coordinate of the
+#' @description Loads shapefile of coordinates. Each row contains a coordinate of the
 #' centroid of the CD, slightly dodged so that points in dense places do
 #' not overlap.
 #'
@@ -32,6 +32,7 @@
 #' # can also use ggforce::geom_circle, extracting x,y coordinates from geom and
 #' # setting a radius e.g. to 150000
 #'
+#' @name load_shp_dot
 #' @export
 
 load_shp_dot <- function(year = NULL, congress = NULL) {
@@ -68,3 +69,32 @@ load_shp_dot <- function(year = NULL, congress = NULL) {
     dplyr::bind_rows(lst)
   }
 }
+
+#' @title Dotmap: Dodged CD centroids
+#' @name shp_dot
+#' @docType data
+#' @keywords datasets
+#' @description Shapefile of coordinates. Each row contains a coordinate of the centroid of the CD,
+#'  slightly dodged so that points in dense places do not overlap.
+#'
+#' @format Each object is for a particular congress. The year indicates the start
+#'  of that Congress. Each observational is a congressional district, represented by
+#'  a point.
+#' @source Coordinates from 2012 onwards taken from US Census, `tigris` package.
+#'  Coordinates from early Congresses taken from Jeffrey B. Lewis, historical congressional
+#'  district shapefiles
+#'
+#' @examples
+#' library(sf)
+#' library(ggplot2)
+#'
+#' shp_dot_2023
+#'
+#' # plot points combined with state outline
+#' shp_dot_2005 |>
+#'   ggplot() +
+#'   geom_sf(data = shp_states) +
+#'   geom_sf(size = 1, alpha = 0.5)
+#'
+#' # can also use ggforce::geom_circle, extracting x,y coordinates from geom and
+#' # setting a radius e.g. to 150000
