@@ -4,6 +4,4 @@
 .httr-oauth
 .DS_Store
 .quarto
-data-raw/
-*hexmap
-
+/data-raw/hexmap_*/
