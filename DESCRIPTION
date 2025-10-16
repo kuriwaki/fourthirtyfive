@@ -26,6 +26,7 @@ Depends:
     R (>= 3.5)
 Remotes:
     christopherkenny/geomander
+    kuriwaki/ccesMRPprep
 Suggests: 
     ggplot2,
     ccesMRPprep,
