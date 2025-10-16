@@ -36,14 +36,15 @@ shp_hex_2019 <- cd_shp_2019 |>
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
   relocate(cd) |>
-  select(cd, state = STATENAME, geometry)
+  select(cd, geometry)
 
 shp_hex_2021 <- cd_shp_2021 |>
   mutate(
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
-  relocate(cd)
+  relocate(cd) |>
+  select(cd, geometry)
 
 
 shp_hex_2023 <- cd_shp_2023 |>
@@ -51,14 +52,16 @@ shp_hex_2023 <- cd_shp_2023 |>
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
-  relocate(cd)
+  relocate(cd) |>
+  select(cd, geometry)
 
 shp_hex_2025 <- cd_shp_2025 |>
   mutate(
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
-  relocate(cd)
+  relocate(cd) |>
+  select(cd, geometry)
 
 usethis::use_data(shp_hex_2019, overwrite = TRUE)
 usethis::use_data(shp_hex_2021, overwrite = TRUE)
