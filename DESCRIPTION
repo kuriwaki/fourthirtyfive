@@ -29,5 +29,5 @@ Remotes:
     kuriwaki/ccesMRPprep
 Suggests: 
     ggplot2,
-    ccesMRPprep,
+    ccesMRPprep
 LazyData: true
