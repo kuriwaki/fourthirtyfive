@@ -31,24 +31,32 @@ cd_shp_2025 <- read_sf("data-raw/hexmap_2024/HexCDv31/")
 #   plot_layout(nrow = 2, widths = c(0.5, 0.5))
 
 shp_hex_2019 <- cd_shp_2019 |>
-  mutate(cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
-         cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")) |>
+  mutate(
+    cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
+    cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
+  ) |>
   relocate(cd)
 
 shp_hex_2021 <- cd_shp_2021 |>
-  mutate(cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
-         cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")) |>
+  mutate(
+    cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
+    cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
+  ) |>
   relocate(cd)
 
 
 shp_hex_2023 <- cd_shp_2023 |>
-  mutate(cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
-         cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")) |>
+  mutate(
+    cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
+    cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
+  ) |>
   relocate(cd)
 
 shp_hex_2025 <- cd_shp_2025 |>
-  mutate(cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
-         cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")) |>
+  mutate(
+    cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
+    cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
+  ) |>
   relocate(cd)
 
 usethis::use_data(shp_hex_2019, overwrite = TRUE)

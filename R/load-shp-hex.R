@@ -43,7 +43,7 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
 
     if (!exists(obj, envir = environment(), inherits = FALSE)) {
       stop(sprintf("Only years 2021-2025 (116th-119th Congresses) available at this time.", obj),
-           call. = FALSE
+        call. = FALSE
       )
     }
 
