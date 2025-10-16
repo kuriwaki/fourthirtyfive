@@ -1,6 +1,6 @@
 Package: fourthirtyfive
-Title: Shapefiles for visualizing congressional districts
-Version: 0.0.0.9000
+Title: Data and shapefiles for visualizing congressional districts
+Version: 0.0.2.9000
 Authors@R: 
     c(
      person("Shiro", "Kuriwaki", , "shiro.kuriwaki@yale.edu", role = c("aut", "cre"),
@@ -13,7 +13,7 @@ Description: Shapefiles for visualizing congressional districts.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports:
     dplyr,
     sf,
@@ -27,6 +27,5 @@ Depends:
 Suggests: 
     ggplot2
 Remotes:
-    kuriwaki/ccesMRPprep,
     christopherkenny/geomander
 LazyData: true
