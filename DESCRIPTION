@@ -21,13 +21,12 @@ Imports:
     tigris,
     rlang,
     stringr,
-    ccesMRPprep,
     geomander (>= 2.4.0)
 Depends: 
     R (>= 3.5)
-Remotes:
-    christopherkenny/geomander
-    kuriwaki/ccesMRPprep
 Suggests: 
     ggplot2
+Remotes:
+    kuriwaki/ccesMRPprep,
+    christopherkenny/geomander
 LazyData: true
