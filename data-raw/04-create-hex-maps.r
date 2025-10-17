@@ -20,17 +20,6 @@ cd_shp_2021 <- read_sf("data-raw/hexmap_2020/HexCDv21/")
 cd_shp_2023 <- read_sf("data-raw/hexmap_2022/HexCDv30wm/")
 cd_shp_2025 <- read_sf("data-raw/hexmap_2024/HexCDv31wm/")
 
-# map_crs <- function(crs, data) {
-#   st_crs(data) <- crs
-#   ggplot(data) + geom_sf() +
-#     theme_bw() +
-#     labs(title = glue("CRS: {crs}")) +
-#     theme(plot.title = element_text(hjust = 0.5, face = "bold"))
-# }
-#
-# map_crs(4326) + map_crs(3857) + map_crs(4328) + map_crs(3857) +
-#   plot_layout(nrow = 2, widths = c(0.5, 0.5))
-
 shp_hex_2019 <- cd_shp_2019 |>
   mutate(
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
