@@ -40,7 +40,7 @@
 #' @export
 
 load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
-  # normalize
+
   if (!is.null(congress)) {
     congress <- as.integer(congress)
   } else {
@@ -58,21 +58,23 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         mutate(
           geometry = st_make_valid(.data$geometry),
           year = as.integer(cong_to_firstyear(ci))
-        ) |>
+          ) |>
         st_transform(crs = epsg) |>
-        rename(dist = .data$district) |>
+        rename(dist = district) |>
         filter(.data$statename != "District of Columbia") |>
         mutate(
+          st = state_abb[match(.data$statename, state.name)],
           dist_chr = as.character(.data$dist),
           dist_chr = if_else(.data$dist_chr == "" | is.na(.data$dist_chr), "1", .data$dist_chr),
-          cd = paste0(.data$statename, "-", str_pad(.data$dist_chr, 2, pad = "0"))
+          cd = paste0(.data$st, "-", str_pad(.data$dist_chr, 2, pad = "0"))
         ) |>
-        select("year", "cd", "geometry") |>
         mutate(congress = ci) |>
         select("year", "congress", "cd", "geometry")
-    } else if (ci >= 113 && ci <= 118) {
+    } else if (ci >= 113 && ci <= 119) {
+      year_in <- if (ci == 119) 2024L else year
+
       sf_obj <- tigris::congressional_districts(
-        year = year,
+        year = year_in,
         cb = TRUE,
         resolution = "20m"
       ) |>
@@ -86,54 +88,21 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         ) |>
         left_join(
           tigris::fips_codes |>
-            select(STATEFP = .data$state_code, statename = .data$state_name) |>
+            select(STATEFP = .data$state_code, state_abb = state, statename = .data$state_name) |>
             distinct(),
           by = "STATEFP"
         ) |>
-        mutate(dist = str_remove(pick(starts_with("CD"))[[1]], "^0+")) |>
         filter(.data$statename != "District of Columbia") |>
         mutate(
           dist_chr = str_remove(pick(starts_with("CD"))[[1]], "^0+"),
           dist_chr = if_else(.data$dist_chr == "" | is.na(.data$dist_chr), "1", .data$dist_chr),
-          cd = paste0(.data$statename, "-", stringr::str_pad(.data$dist_chr, 2, pad = "0"))
+          cd = paste0(.data$state_abb, "-", stringr::str_pad(.data$dist_chr, 2, pad = "0"))
         ) |>
-        select("year", "cd", "geometry") |>
-        mutate(congress = ci) |>
-        select("year", "congress", "cd", "geometry")
-    } else if (ci == 119) {
-      sf_obj <- tigris::congressional_districts(
-        year = 2024,
-        cb = TRUE,
-        resolution = "20m"
-      ) |>
-        mutate(geometry = st_make_valid(.data$geometry)) |>
-        # remove PR, territories
-        filter(!.data$STATEFP %in% c("72", "60", "66", "69", "78")) |>
-        st_transform(crs = epsg) |>
-        mutate(
-          STATEFP = as.character(.data$STATEFP),
-          year = as.integer(cong_to_firstyear(ci))
-        ) |>
-        left_join(
-          tigris::fips_codes |>
-            select(STATEFP = .data$state_code, statename = .data$state_name) |>
-            distinct(),
-          by = "STATEFP"
-        ) |>
-        mutate(dist = str_remove(pick(starts_with("CD"))[[1]], "^0+")) |>
-        filter(.data$statename != "District of Columbia") |>
-        mutate(
-          dist_chr = str_remove(pick(starts_with("CD"))[[1]], "^0+"),
-          dist_chr = if_else(.data$dist_chr == "" | is.na(.data$dist_chr), "1", .data$dist_chr),
-          cd = paste0(.data$statename, "-", stringr::str_pad(.data$dist_chr, 2, pad = "0"))
-        ) |>
-        select("year", "cd", "geometry") |>
         mutate(congress = ci) |>
         select("year", "congress", "cd", "geometry")
     } else {
       stop("Congress number greater than 119 is not yet supported.", call. = FALSE)
     }
-
     sf_obj |>
       mutate(
         congress = ci,
