@@ -19,8 +19,7 @@
 #'
 #' load_shp_hex(year = 2019) |>
 #'   ggplot() +
-#'   geom_sf(data = shp_states) +
-#'   geom_sf(size = 1, alpha = 0.5)
+#'   geom_sf()
 #'
 #' @name load_shp_hex
 #' @export
