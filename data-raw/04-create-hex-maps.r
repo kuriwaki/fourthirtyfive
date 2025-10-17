@@ -53,6 +53,8 @@ shp_hex_2025 <- cd_shp_2025 |>
   relocate(cd) |>
   select(cd, geometry)
 
+# cd_shp_2023 |> ggplot() + geom_sf()
+
 usethis::use_data(shp_hex_2019, overwrite = TRUE)
 usethis::use_data(shp_hex_2021, overwrite = TRUE)
 usethis::use_data(shp_hex_2023, overwrite = TRUE)
