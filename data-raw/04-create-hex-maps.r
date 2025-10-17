@@ -17,10 +17,10 @@ cd_info_2024
 # https://docs.google.com/spreadsheets/d/13XkF59JKzvw4SeSq5mbgIFrJfYjK4amg9JoQE5e9grQ/edit?gid=1250379179#gid=1250379179
 cd_shp_2019 <- read_sf("data-raw/hexmap_2018/HexCDv20/")
 cd_shp_2021 <- read_sf("data-raw/hexmap_2020/HexCDv21/")
-cd_shp_2023 <- read_sf("data-raw/hexmap_2022/HexCDv30/")
-cd_shp_2025 <- read_sf("data-raw/hexmap_2024/HexCDv31/")
+cd_shp_2023 <- read_sf("data-raw/hexmap_2022/HexCDv30wm/")
+cd_shp_2025 <- read_sf("data-raw/hexmap_2024/HexCDv31wm/")
 
-# map_crs <- function(crs, data = cd_shp) {
+# map_crs <- function(crs, data) {
 #   st_crs(data) <- crs
 #   ggplot(data) + geom_sf() +
 #     theme_bw() +
