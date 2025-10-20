@@ -54,9 +54,6 @@
 #' load_cd_info(year = 2011)
 #' load_cd_info(congress = 109)
 #'
-#' # load multiple datasets
-#' load_cd_info(year = c(2005, 2007, 2009))
-#'
 #' @export
 load_cd_info <- function(year = NULL, congress = NULL) {
   if (!is.null(year)) {

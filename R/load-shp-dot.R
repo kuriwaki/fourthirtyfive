@@ -17,10 +17,6 @@
 #' load_shp_dot(year = 2011) # is equivalent to loading `shp_dot_2011`
 #' load_shp_dot(congress = 109)
 #'
-#' # load multiple datasets
-#' load_shp_dot(year = c(2005, 2009, 2011))
-#' load_shp_dot(congress = c(109, 110))
-#'
 #' # plot points combined with state outline
 #' library(ggplot2)
 #'
