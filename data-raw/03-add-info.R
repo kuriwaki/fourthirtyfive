@@ -1,9 +1,12 @@
+#' @name info
+#' @title Create congressional district info datasets
+
 library(tidyverse)
 library(googlesheets4)
 library(remotes)
 library(ccesMRPprep)
 library(sf)
-library(cdmap)
+library(fourthirtyfive)
 
 # match cd names to 2005-2009 ---
 ## download 2005-2009 and 2018 cd names

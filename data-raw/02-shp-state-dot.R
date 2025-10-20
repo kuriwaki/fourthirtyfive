@@ -1,3 +1,19 @@
+#' @title State map
+#' @name shp_states
+#'
+#' Shapefile of US states with Albers projection. Useful as an outline to dot maps of CDs.
+#'
+#' @seealso \link{shp_dot}
+#' @source Alaska and Hawaii are modified following UrbanInstitute/urbnmapr
+#'
+#' @examples
+#' library(ggplot2)
+#' shp_states |>
+#'   ggplot() +
+#'   geom_sf() +
+#'   geom_sf_text(aes(label = state))
+"shp_states"
+
 library(tidyverse)
 library(tigris)
 library(sf)

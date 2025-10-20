@@ -32,8 +32,6 @@ Download CD Shapes
 \details{
 Download shapefiles (\code{sf} objects) for U.S. congressional districts for a
 given Congress number (1-119th).
-Download shapefiles for U.S. congressional districts for a
-given Congress number (109-119th).
 }
 \examples{
 library(sf)
@@ -42,9 +40,6 @@ library(ggplot2)
 # Load the 109th Congress shapefile
 cd109 <- load_cd_shps(congress = 109)
 cd108 <- load_cd_shps(year = 2003)
-
-# Load the 109th and 110th Congress shapefile
-cd109_110 <- load_cd_shps(congress = c(109, 110))
 
 # Create a map with cd boundaries
 cd109 |>

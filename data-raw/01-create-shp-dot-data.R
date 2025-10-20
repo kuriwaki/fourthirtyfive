@@ -1,3 +1,6 @@
+#' @name dotmap
+#' @title Create dodged CD centroids
+
 library(tidyverse)
 library(sf)
 library(tigris)
@@ -44,7 +47,6 @@ shp_dot_func <- function(source = c("lewis", "census"),
     cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
       mutate(geometry = st_make_valid(geometry)) |>
       st_transform(crs = proj_crs) |>
-      as.data.frame() |>
       rename(dist = district)
   }
 

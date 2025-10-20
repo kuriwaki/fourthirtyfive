@@ -1,1 +1,3 @@
 *.html
+data/info_*.rda
+data/shp_dot_*.rda
