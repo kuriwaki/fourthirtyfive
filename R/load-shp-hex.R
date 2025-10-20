@@ -1,11 +1,16 @@
-#' @title Load Daily Kos Elections Cartogram
+#' @title Load Daily Kos / Downballot Elections Cartogram
 #'
-#' @description Loads Daily Kos Elections cartogram shapefile of coordinates for each district.
+#' @description Loads Daily Kos Elections cartogram shapefile of each district.
 #'
-#' @param year Integer vector of years from 2019-2025.
+#' @param year Integer vector of years. Currently accepts 2019-2025.
 #' @param congress Integer vector of Congress numbers from the 109th-119th Congress.
 #'
-#' @return An sf object (single year) or sf/tibble (multiple years).
+#' @details Years indicate the year of the January in which the Congress starts.
+#'  For example, to get shapefiles for the 2022 election, set `year = 2023`.
+#'
+#' @author Daniel Donner
+#' @source https://the-db.co/maps
+#' @return An sf dataframe with 435 rows
 #'
 #' @examples
 #' # load one dataset
@@ -16,7 +21,8 @@
 #'
 #' load_shp_hex(year = 2019) |>
 #'   ggplot() +
-#'   geom_sf()
+#'   geom_sf() +
+#'   theme_void()
 #'
 #' @name load_shp_hex
 #' @export
@@ -30,6 +36,7 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
 
   year <- as.integer(year)
   if (anyNA(year)) stop("`year` must be integer years like 2011 or 2005:2009.", call. = FALSE)
+  if (any(year %% 2 == 0)) stop("As of now, only odd years for the start of each Congress are available.", call. = FALSE)
 
   one <- function(y) {
     obj <- paste0("shp_hex_", y)
@@ -38,9 +45,7 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
     utils::data(list = obj, package = "fourthirtyfive", envir = environment())
 
     if (!exists(obj, envir = environment(), inherits = FALSE)) {
-      stop(sprintf("Only years 2021-2025 (116th-119th Congresses) available at this time.", obj),
-        call. = FALSE
-      )
+      stop("Only years 2021-2025 (116th-119th Congresses) available at this time.", call. = FALSE)
     }
 
     obj <- get(obj, envir = environment())
