@@ -57,7 +57,7 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
 }
 
 #' @title Hexmap: Daily Kos Elections Cartogram
-#' @name load_shp_hex
+#' @name shp_hex
 #' @docType data
 #' @keywords datasets
 #' @description Loads Daily Kos Elections cartogram shapefile of coordinates for each district.
