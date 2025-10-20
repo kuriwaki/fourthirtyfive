@@ -36,16 +36,12 @@ Loads Daily Kos Elections cartogram shapefile of coordinates for each district.
 # load one dataset
 load_shp_hex(year = 2019)
 
-# load multiple datasets
-load_shp_hex(year = c(2019, 2021, 2023))
-
 # plot points combined with state outline
 library(ggplot2)
 
 load_shp_hex(year = 2019) |>
   ggplot() +
-  geom_sf(data = shp_states) +
-  geom_sf(size = 1, alpha = 0.5)
+  geom_sf()
 
 library(sf)
 library(ggplot2)

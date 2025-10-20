@@ -57,11 +57,10 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
           year = as.integer(cong_to_firstyear(ci))
           ) |>
         st_transform(crs = epsg) |>
-        rename(dist = district) |>
         filter(.data$statename != "District of Columbia") |>
         mutate(
-          st = state_abb[match(.data$statename, state.name)],
-          dist_chr = as.character(.data$dist),
+          st = datasets::state.abb[match(.data$statename, datasets::state.name)],
+          dist_chr = as.character(.data$district),
           dist_chr = if_else(.data$dist_chr == "" | is.na(.data$dist_chr), "1", .data$dist_chr),
           cd = paste0(.data$st, "-", str_pad(.data$dist_chr, 2, pad = "0"))
         ) |>
@@ -85,7 +84,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         ) |>
         left_join(
           tigris::fips_codes |>
-            select(STATEFP = .data$state_code, state_abb = state, statename = .data$state_name) |>
+            select(STATEFP = .data$state_code, state_abb = .data$state, statename = .data$state_name) |>
             distinct(),
           by = "STATEFP"
         ) |>
