@@ -73,7 +73,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         select("year", "congress", "cd", "geometry")
 
       # AK and HI
-      akhi_sf <- get_urbn_map("states", sf = TRUE) |>
+      akhi_sf <- urbnmapr::get_urbn_map("states", sf = TRUE) |>
         filter(state_abbv %in% c("AK", "HI")) |>
         mutate(
           geometry = case_when(
@@ -126,7 +126,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         select("year", "congress", "cd", "geometry")
 
       # AK and HI
-      akhi_sf <- get_urbn_map("states", sf = TRUE) |>
+      akhi_sf <- urbnmapr::get_urbn_map("states", sf = TRUE) |>
         filter(state_abbv %in% c("AK", "HI")) |>
         mutate(
           geometry = case_when(
