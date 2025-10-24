@@ -21,6 +21,8 @@ Imports:
     tigris,
     rlang,
     stringr,
+    urbnmapr,
+    tibble,
     geomander (>= 2.4.0)
 Depends: 
     R (>= 3.5)

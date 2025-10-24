@@ -25,3 +25,9 @@ year_to_cong <- function(year) {
   if (!is.numeric(year)) stop("`year` must be numeric/integer.", call. = FALSE)
   as.integer((as.integer(year) - 1789) %/% 2 + 1)
 }
+
+# Rotation function to transform the geometry of Hawaii and Alaska on the U.S. map
+# https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) {
+  matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
+}

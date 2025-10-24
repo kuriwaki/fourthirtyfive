@@ -22,9 +22,6 @@ library(urbnmapr)
 # Parameters ----
 proj_crs <- 5070
 
-# https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
-rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
-
 # 48 states
 shp_states <- tigris::states(cb = TRUE, resolution = "20m") |>
   select(statename = NAME, state = STUSPS, geometry) |>

@@ -30,17 +30,16 @@
 #'
 #' @importFrom utils data
 #' @importFrom rlang .data
-#' @importFrom sf st_transform st_make_valid st_crs
+#' @importFrom sf st_transform st_make_valid st_crs st_simplify st_as_sf
 #' @importFrom stringr str_remove str_pad
-#' @importFrom dplyr filter mutate rename select left_join distinct bind_rows pick starts_with if_else
+#' @importFrom dplyr filter mutate rename select left_join distinct bind_rows pick starts_with if_else case_when
+#' @importFrom tibble tibble
 #' @importFrom urbnmapr get_urbn_map
 #' @return An sf object with CD boundaries for the requested Congress.
 #' @export
 
 # Parameter
 # https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
-rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
-
 load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
 
   if (!is.null(congress)) {
@@ -73,15 +72,15 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         select("year", "congress", "cd", "geometry")
 
       # AK and HI
-      akhi_sf <- urbnmapr::get_urbn_map("states", sf = TRUE) |>
-        filter(state_abbv %in% c("AK", "HI")) |>
+      akhi_sf <- get_urbn_map("states", sf = TRUE) |>
+        filter(.data$state_abbv %in% c("AK", "HI")) |>
         mutate(
           geometry = case_when(
-            state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
+            .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
             TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
           ) |> st_simplify()
         ) |>
-        select(state_abbv, geometry)
+        select(.data$state_abbv, .data$geometry)
 
       akhi_sf <- tibble(
         cd = c("AK-00", "HI-01", "HI-02"),
@@ -112,7 +111,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         ) |>
         left_join(
           tigris::fips_codes |>
-            select(STATEFP = state_code, state_abb = state, statename = state_name) |>
+            select(STATEFP = .data$state_code, state_abb = .data$state, statename = .data$state_name) |>
             distinct(),
           by = "STATEFP"
         ) |>
@@ -126,15 +125,15 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         select("year", "congress", "cd", "geometry")
 
       # AK and HI
-      akhi_sf <- urbnmapr::get_urbn_map("states", sf = TRUE) |>
-        filter(state_abbv %in% c("AK", "HI")) |>
+      akhi_sf <- get_urbn_map("states", sf = TRUE) |>
+        filter(.data$state_abbv %in% c("AK", "HI")) |>
         mutate(
           geometry = case_when(
-            state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
+            .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
             TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
           ) |> st_simplify()
         ) |>
-        select(state_abbv, geometry)
+        select(.data$state_abbv, .data$geometry)
 
       akhi_sf <- tibble(
         cd = c("AK-01", "HI-01", "HI-02"),
