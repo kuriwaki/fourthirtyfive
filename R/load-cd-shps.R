@@ -30,11 +30,16 @@
 #'
 #' @importFrom utils data
 #' @importFrom rlang .data
-#' @importFrom sf st_transform st_make_valid
+#' @importFrom sf st_transform st_make_valid st_crs
 #' @importFrom stringr str_remove str_pad
 #' @importFrom dplyr filter mutate rename select left_join distinct bind_rows pick starts_with if_else
+#' @importFrom urbnmapr get_urbn_map
 #' @return An sf object with CD boundaries for the requested Congress.
 #' @export
+
+# Parameter
+# https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
+rot <- function(a) matrix(c(cos(a), sin(a), -sin(a), cos(a)), 2, 2)
 
 load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
 
@@ -55,9 +60,9 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         mutate(
           geometry = st_make_valid(.data$geometry),
           year = as.integer(cong_to_firstyear(ci))
-          ) |>
+        ) |>
         st_transform(crs = epsg) |>
-        filter(.data$statename != "District of Columbia") |>
+        filter(!.data$statename %in% c("District of Columbia")) |>
         mutate(
           st = datasets::state.abb[match(.data$statename, datasets::state.name)],
           dist_chr = as.character(.data$district),
@@ -66,6 +71,29 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         ) |>
         mutate(congress = ci) |>
         select("year", "congress", "cd", "geometry")
+
+      # AK and HI
+      akhi_sf <- get_urbn_map("states", sf = TRUE) |>
+        filter(state_abbv %in% c("AK", "HI")) |>
+        mutate(
+          geometry = case_when(
+            state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
+            TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
+          ) |> st_simplify()
+        ) |>
+        select(state_abbv, geometry)
+
+      akhi_sf <- tibble(
+        cd = c("AK-00", "HI-01", "HI-02"),
+        geometry = c(
+          akhi_sf$geometry[akhi_sf$state_abbv == "AK"],
+          rep(akhi_sf$geometry[akhi_sf$state_abbv == "HI"], 2)
+        )
+      ) |>
+        st_as_sf(crs = 5070)
+
+      sf_obj$geometry[match(akhi_sf$cd, sf_obj$cd)] <- akhi_sf$geometry
+
     } else if (ci >= 113 && ci <= 119) {
       year_in <- if (ci == 119) 2024L else year
 
@@ -75,7 +103,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         resolution = "20m"
       ) |>
         mutate(geometry = st_make_valid(.data$geometry)) |>
-        # remove PR, territories
+        # remove PR, territories, AK, HI
         filter(!.data$STATEFP %in% c("72", "60", "66", "69", "78")) |>
         st_transform(crs = epsg) |>
         mutate(
@@ -84,7 +112,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         ) |>
         left_join(
           tigris::fips_codes |>
-            select(STATEFP = .data$state_code, state_abb = .data$state, statename = .data$state_name) |>
+            select(STATEFP = state_code, state_abb = state, statename = state_name) |>
             distinct(),
           by = "STATEFP"
         ) |>
@@ -96,14 +124,39 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         ) |>
         mutate(congress = ci) |>
         select("year", "congress", "cd", "geometry")
+
+      # AK and HI
+      akhi_sf <- get_urbn_map("states", sf = TRUE) |>
+        filter(state_abbv %in% c("AK", "HI")) |>
+        mutate(
+          geometry = case_when(
+            state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
+            TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
+          ) |> st_simplify()
+        ) |>
+        select(state_abbv, geometry)
+
+      akhi_sf <- tibble(
+        cd = c("AK-01", "HI-01", "HI-02"),
+        geometry = c(
+          akhi_sf$geometry[akhi_sf$state_abbv == "AK"],
+          rep(akhi_sf$geometry[akhi_sf$state_abbv == "HI"], 2)
+        )
+      ) |>
+        st_as_sf(crs = 5070)
+
+      sf_obj$geometry[match(akhi_sf$cd, sf_obj$cd)] <- akhi_sf$geometry
+
     } else {
       stop("Congress number greater than 119 is not yet supported.", call. = FALSE)
     }
-    sf_obj |>
+
+    sf_obj <- sf_obj |>
       mutate(
         congress = ci,
         year = if (ci == 119) 2024L else year
       )
+
   }
 
   bind_rows(lapply(congress, load_one))
