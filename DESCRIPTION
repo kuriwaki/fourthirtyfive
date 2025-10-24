@@ -29,5 +29,6 @@ Depends:
 Suggests: 
     ggplot2
 Remotes:
+    UrbanInstitute/urbnmapr,
     christopherkenny/geomander
 LazyData: true
