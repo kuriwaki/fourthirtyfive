@@ -82,8 +82,6 @@ We do not store actual CD shapefiles, but we provide a function to draw these fr
 cd_shps <- load_cd_shps(c = 118)
 
 cd_shps |>
-  # remove Alaska and Hawaii for now
-  dplyr::filter(!STATEFP %in% c("15", "02")) |>
   ggplot() +
   geom_sf() +
   theme_void()

@@ -7,6 +7,7 @@ Maintainer: Shiro Kuriwaki
 
 <!-- badges: start -->
 
+[![R-CMD-check](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 fourthirtyfive is a package that provides shapefiles and other data for
@@ -96,10 +97,13 @@ these from either the Census or Jeff Lewis’s historical shapefiles.
 
 ``` r
 cd_shps <- load_cd_shps(c = 118)
+#>   |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   3%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |========                                                              |  11%  |                                                                              |==========                                                            |  14%  |                                                                              |============                                                          |  17%  |                                                                              |===============                                                       |  22%  |                                                                              |=================                                                     |  24%  |                                                                              |===================                                                   |  27%  |                                                                              |====================                                                  |  29%  |                                                                              |=======================                                               |  33%  |                                                                              |=========================                                             |  36%  |                                                                              |============================                                          |  41%  |                                                                              |=============================                                         |  42%  |                                                                              |===============================                                       |  44%  |                                                                              |==================================                                    |  48%  |                                                                              |====================================                                  |  52%  |                                                                              |======================================                                |  54%  |                                                                              |==========================================                            |  59%  |                                                                              |============================================                          |  63%  |                                                                              |===============================================                       |  68%  |                                                                              |==================================================                    |  72%  |                                                                              |=====================================================                 |  76%  |                                                                              |========================================================              |  80%  |                                                                              |===========================================================           |  84%  |                                                                              |==============================================================        |  88%  |                                                                              |================================================================      |  92%  |                                                                              |===================================================================   |  96%  |                                                                              |======================================================================| 100%
+#> old-style crs object detected; please recreate object with a recent sf::st_crs()
+#> Warning in CPL_crs_from_input(x): GDAL Message 1: CRS EPSG:2163 is deprecated.
+#> Its non-deprecated replacement EPSG:9311 will be used instead. To use the
+#> original CRS, set the OSR_USE_NON_DEPRECATED configuration option to NO.
 
 cd_shps |>
-  # remove Alaska and Hawaii for now
-  dplyr::filter(!STATEFP %in% c("15", "02")) |>
   ggplot() +
   geom_sf() +
   theme_void()
@@ -123,7 +127,7 @@ load_cd_info(2007)
 #>  4   110 AL-03 East-central Alabama                          
 #>  5   110 AL-04 North-central Alabama                         
 #>  6   110 AL-05 Northern Alabama                              
-#>  7   110 AL-06 Birmingham and Tuscaloose suburbs             
+#>  7   110 AL-06 Birmingham and Tuscaloosa suburbs             
 #>  8   110 AL-07 Birmingham, Tuscaloosa, and western Black Belt
 #>  9   110 AR-01 Northeastern Arkansas                         
 #> 10   110 AR-02 Greater Little Rock                           
