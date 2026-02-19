@@ -32,5 +32,5 @@ Suggests:
 Remotes:
     UrbanInstitute/urbnmapr,
     christopherkenny/geomander,
-    kuriwaki/donner-map
+    kuriwaki/donnermap
 LazyData: true
