@@ -23,6 +23,8 @@ Loads Daily Kos Elections cartogram shapefile of each district.
 \details{
 Years indicate the year of the January in which the Congress starts.
 For example, to get shapefiles for the 2022 election, set \code{year = 2023}.
+donnermap::cd_shp is the 116th congressional shapefile (2019-2021).
+116th sf is used for 2016: Between the 2016 and 2020 data, PA changed their districts, but did not add/remove any.
 }
 \examples{
 # load one dataset
