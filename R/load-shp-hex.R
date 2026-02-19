@@ -38,23 +38,23 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
   year <- as.integer(year)
   if (anyNA(year)) stop("`year` must be integer years like 2011 or 2005:2009.", call. = FALSE)
   if (any(year %% 2 == 0)) stop("As of now, only odd years for the start of each Congress are available.", call. = FALSE)
+
   one <- function(y) {
     if (y %in% c(2015L, 2019L, 2021L)) {
       return(donnermap::cd_shp)
     }
     obj <- paste0("shp_hex_", y)
-    # load from data/ (works when package is installed)
     utils::data(list = obj, package = "fourthirtyfive", envir = environment())
     if (!exists(obj, envir = environment(), inherits = FALSE)) {
-      stop("Only years 2015, 2019, 2023, and 2025 are available at this time.", call. = FALSE)
+      stop("Only years 2015, 2019, 2021, 2023, and 2025 are available at this time.", call. = FALSE)
     }
     get(obj, envir = environment())
   }
+
   lst <- lapply(year, one)
   if (length(year) == 1L) {
     lst[[1]]
   } else {
-    # bind rows across years
     dplyr::bind_rows(lst)
   }
 }
