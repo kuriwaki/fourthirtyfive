@@ -23,7 +23,6 @@ Imports:
     stringr,
     urbnmapr,
     tibble,
-    donnermap,
     geomander (>= 2.4.0)
 Depends: 
     R (>= 3.5)

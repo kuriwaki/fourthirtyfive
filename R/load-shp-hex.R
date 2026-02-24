@@ -7,8 +7,8 @@
 #'
 #' @details Years indicate the year of the January in which the Congress starts.
 #'  For example, to get shapefiles for the 2022 election, set `year = 2023`.
-#'  donnermap::cd_shp is the 116th congressional shapefile (2019-2021).
-#'  116th sf is used for 2016: Between the 2016 and 2020 data, PA changed their districts, but did not add/remove any.
+#'  The 116th Congress hex layout (from `donnermap`) is used for 2015 and 2021 as well:
+#'  between the 2016 and 2020 data, PA changed their districts but did not add/remove any.
 #'
 #' @author Daniel Donner
 #' @source https://the-db.co/maps
@@ -40,9 +40,6 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
   if (any(year %% 2 == 0)) stop("As of now, only odd years for the start of each Congress are available.", call. = FALSE)
 
   one <- function(y) {
-    if (y %in% c(2015L, 2019L, 2021L)) {
-      return(donnermap::cd_shp)
-    }
     obj <- paste0("shp_hex_", y)
     utils::data(list = obj, package = "fourthirtyfive", envir = environment())
     if (!exists(obj, envir = environment(), inherits = FALSE)) {

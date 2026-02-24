@@ -30,7 +30,7 @@
 #'
 #' @importFrom utils data
 #' @importFrom rlang .data
-#' @importFrom sf st_transform st_make_valid st_crs st_simplify st_as_sf
+#' @importFrom sf st_transform st_make_valid st_crs st_as_sf
 #' @importFrom stringr str_remove str_pad
 #' @importFrom dplyr filter mutate rename select left_join distinct bind_rows pick starts_with if_else case_when
 #' @importFrom tibble tibble
@@ -78,7 +78,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
           geometry = case_when(
             .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
             TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
-          ) |> st_simplify()
+          )
         ) |>
         select(.data$state_abbv, .data$geometry)
 
@@ -131,7 +131,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
           geometry = case_when(
             .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
             TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
-          ) |> st_simplify()
+          )
         ) |>
         select(.data$state_abbv, .data$geometry)
 

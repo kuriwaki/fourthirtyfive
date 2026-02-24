@@ -46,3 +46,18 @@ usethis::use_data(shp_hex_2019, overwrite = TRUE)
 usethis::use_data(shp_hex_2021, overwrite = TRUE)
 usethis::use_data(shp_hex_2023, overwrite = TRUE)
 usethis::use_data(shp_hex_2025, overwrite = TRUE)
+
+# 2015 (114th) and updated 2019/2021 from donnermap::cd_shp
+# donnermap::cd_shp uses the 116th Congress hex layout (cd already formatted)
+shp_hex_2015 <- donnermap::cd_shp |>
+  dplyr::transmute(cong = 114L, cd = cd)
+
+shp_hex_2019 <- donnermap::cd_shp |>
+  dplyr::transmute(cong = 116L, cd = cd)
+
+shp_hex_2021 <- donnermap::cd_shp |>
+  dplyr::transmute(cong = 117L, cd = cd)
+
+usethis::use_data(shp_hex_2015, overwrite = TRUE)
+usethis::use_data(shp_hex_2019, overwrite = TRUE)
+usethis::use_data(shp_hex_2021, overwrite = TRUE)
