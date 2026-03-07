@@ -8,7 +8,7 @@
 \alias{shp_hex_2021}
 \alias{shp_hex_2023}
 \alias{shp_hex_2025}
-\title{Hexmap: Daily Kos Elections Cartogram}
+\title{Hexmap: Daily Kos / Downballot Elections Cartogram}
 \format{
 Each object is for a particular year. The year indicates the start
 of that Congress. Each observational is a congressional district, represented by
@@ -18,7 +18,7 @@ a cartogram.
 Coordinates are from The Downballot's maps database.
 }
 \description{
-Loads Daily Kos Elections cartogram shapefile of coordinates for each district.
+Loads Daily Kos / Downballot Elections cartogram shapefile of coordinates for each district.
 }
 \examples{
 library(sf)

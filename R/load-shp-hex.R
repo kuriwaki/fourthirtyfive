@@ -7,7 +7,9 @@
 #'
 #' @details Years indicate the year of the January in which the Congress starts.
 #'  For example, to get shapefiles for the 2022 election, set `year = 2023`.
-#'  The 116th Congress hex layout (from `donnermap`) is used for 2015 and 2021 as well:
+#'
+#'
+#' @note For 2015 to 2021, we use the same shapefile (Downballot's v2.1wm), but note that
 #'  between the 2016 and 2020 data, PA changed their districts but did not add/remove any.
 #'
 #' @author Daniel Donner
@@ -56,11 +58,11 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
   }
 }
 
-#' @title Hexmap: Daily Kos Elections Cartogram
+#' @title Hexmap: Daily Kos / Downballot Elections Cartogram
 #' @name shp_hex
 #' @docType data
 #' @keywords datasets
-#' @description Loads Daily Kos Elections cartogram shapefile of coordinates for each district.
+#' @description Loads Daily Kos / Downballot Elections cartogram shapefile of coordinates for each district.
 #'
 #' @format Each object is for a particular year. The year indicates the start
 #'  of that Congress. Each observational is a congressional district, represented by
