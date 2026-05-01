@@ -23,7 +23,7 @@ Imports:
     stringr,
     urbnmapr,
     tibble,
-    geomander (>= 2.4.0)
+    geomander (>= 2.5.3)
 Depends: 
     R (>= 3.5)
 Suggests: 

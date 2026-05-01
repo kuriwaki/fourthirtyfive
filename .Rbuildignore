@@ -8,3 +8,5 @@ explore/
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^\.positai$
+^\.claude$
