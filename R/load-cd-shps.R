@@ -64,7 +64,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         filter(!.data$statename %in% c("District of Columbia")) |>
         mutate(
           st = datasets::state.abb[match(.data$statename, datasets::state.name)],
-          dist_chr = as.character(.data$district),
+          dist_chr = stringr::str_remove(as.character(.data$district), "^0+"),
           dist_chr = if_else(.data$dist_chr == "" | is.na(.data$dist_chr), "1", .data$dist_chr),
           cd = paste0(.data$st, "-", str_pad(.data$dist_chr, 2, pad = "0"))
         ) |>
@@ -83,7 +83,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
         select(.data$state_abbv, .data$geometry)
 
       akhi_sf <- tibble(
-        cd = c("AK-00", "HI-01", "HI-02"),
+        cd = c("AK-01", "HI-01", "HI-02"),
         geometry = c(
           akhi_sf$geometry[akhi_sf$state_abbv == "AK"],
           rep(akhi_sf$geometry[akhi_sf$state_abbv == "HI"], 2)

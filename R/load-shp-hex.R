@@ -69,7 +69,7 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
 #'  a cartogram.
 #' @source Coordinates are from The Downballot's maps database.
 #'
-#' @aliases shp_hex_2015 shp_hex_2019 shp_hex_2021 shp_hex_2023 shp_hex_2025
+#' @aliases shp_hex_2015 shp_hex_2017 shp_hex_2019 shp_hex_2021 shp_hex_2023 shp_hex_2025
 #'
 #' @examples
 #' library(sf)
