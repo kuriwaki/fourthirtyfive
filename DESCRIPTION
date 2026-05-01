@@ -30,6 +30,5 @@ Suggests:
     ggplot2
 Remotes:
     UrbanInstitute/urbnmapr,
-    christopherkenny/geomander,
-    kuriwaki/donnermap
+    christopherkenny/geomander
 LazyData: true

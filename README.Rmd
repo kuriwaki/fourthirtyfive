@@ -62,16 +62,17 @@ shp_dot_2023
 ```
 
 
-We are currently working on providing **hexmaps** (i.e., maps that present CDs as combinations of hexagons) for all years. A 2016-era version of these versions are provided in <https://github.com/kuriwaki/donnermap> and the Downballot links recorded there.
+We also provide **hexmaps** (i.e., maps that present CDs as combinations of hexagons) for all years. These are sourced from the Downballot's hex map shapefiles (<https://the-db.co/maps>).
 
 ```{r}
-library(donnermap) # remotes::install_github("kuriwaki/donnermap")
-
-ggplot(cd_shp) +
+load_shp_hex(2023) |>
+  ggplot() +
   geom_sf() +
   theme_void() +
-  labs(caption = "Map Source: http://dkel.ec/map")
+  labs(caption = "Map Source: https://the-db.co/maps")
 ```
+
+Note: An earlier version of these hex maps was provided in the [`donnermap`](https://github.com/kuriwaki/donnermap) package. Those shapefiles used unprojected coordinates that do not match the coordinate system of the other hex maps here. The hex maps in `fourthirtyfive` use the projected Web Mercator versions (`wm` suffix) from the Downballot.
 
 
 
