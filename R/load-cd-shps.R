@@ -91,7 +91,9 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
       ) |>
         st_as_sf(crs = 5070)
 
-      sf_obj$geometry[match(akhi_sf$cd, sf_obj$cd)] <- akhi_sf$geometry
+      sf_obj <- sf_obj |> filter(!grepl("^(AK|HI)-", .data$cd))
+      akhi_sf <- mutate(akhi_sf, year = year, congress = ci)
+      sf_obj <- bind_rows(sf_obj, akhi_sf)
 
     } else if (ci >= 113 && ci <= 119) {
       year_in <- if (ci == 119) 2024L else year
