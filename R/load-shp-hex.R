@@ -2,15 +2,16 @@
 #'
 #' @description Loads Daily Kos Elections cartogram shapefile of each district.
 #'
-#' @param year Integer vector of years. Currently accepts 2019-2025.
-#' @param congress Integer vector of Congress numbers from the 109th-119th Congress.
+#' @param year Integer vector of years. Currently accepts 2013-2025.
+#' @param congress Integer vector of Congress numbers from the 113th-119th Congress.
 #'
 #' @details Years indicate the year of the January in which the Congress starts.
 #'  For example, to get shapefiles for the 2022 election, set `year = 2023`.
 #'
 #'
-#' @note For 2015 to 2021, we use the same shapefile (Downballot's v2.1wm), but note that
+#' @note For 2013 to 2021, we use the same shapefile (Downballot's v2.1wm), but note that
 #'  between the 2016 and 2020 data, PA changed their districts but did not add/remove any.
+#'  Between the 2012-14 and 2016 data, FL, NC, VA did mid-cycle redistricting.
 #'
 #' @author Daniel Donner
 #' @source https://the-db.co/maps
@@ -45,7 +46,7 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
     obj <- paste0("shp_hex_", y)
     utils::data(list = obj, package = "fourthirtyfive", envir = environment())
     if (!exists(obj, envir = environment(), inherits = FALSE)) {
-      stop("Only years 2015, 2019, 2021, 2023, and 2025 are available at this time.", call. = FALSE)
+      stop("Only odd yearsbetween 2013-2025 are available at this time.", call. = FALSE)
     }
     get(obj, envir = environment())
   }
@@ -69,7 +70,7 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
 #'  a cartogram.
 #' @source Coordinates are from The Downballot's maps database.
 #'
-#' @aliases shp_hex_2015 shp_hex_2017 shp_hex_2019 shp_hex_2021 shp_hex_2023 shp_hex_2025
+#' @aliases shp_hex_2013 shp_hex_2015 shp_hex_2017 shp_hex_2019 shp_hex_2021 shp_hex_2023 shp_hex_2025
 #'
 #' @examples
 #' library(sf)
