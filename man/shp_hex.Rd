@@ -3,6 +3,7 @@
 \docType{data}
 \name{shp_hex}
 \alias{shp_hex}
+\alias{shp_hex_2013}
 \alias{shp_hex_2015}
 \alias{shp_hex_2017}
 \alias{shp_hex_2019}
