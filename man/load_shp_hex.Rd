@@ -10,9 +10,9 @@ https://the-db.co/maps
 load_shp_hex(year = NULL, congress = NULL)
 }
 \arguments{
-\item{year}{Integer vector of years. Currently accepts 2019-2025.}
+\item{year}{Integer vector of years. Currently accepts 2013-2025.}
 
-\item{congress}{Integer vector of Congress numbers from the 109th-119th Congress.}
+\item{congress}{Integer vector of Congress numbers from the 113th-119th Congress.}
 }
 \value{
 An sf dataframe with 435 rows
@@ -25,8 +25,9 @@ Years indicate the year of the January in which the Congress starts.
 For example, to get shapefiles for the 2022 election, set \code{year = 2023}.
 }
 \note{
-For 2015 to 2021, we use the same shapefile (Downballot's v2.1wm), but note that
+For 2013 to 2021, we use the same shapefile (Downballot's v2.1wm), but note that
 between the 2016 and 2020 data, PA changed their districts but did not add/remove any.
+Between the 2012-14 and 2016 data, FL, NC, VA did mid-cycle redistricting.
 }
 \examples{
 # load one dataset
