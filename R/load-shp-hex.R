@@ -46,7 +46,7 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
     obj <- paste0("shp_hex_", y)
     utils::data(list = obj, package = "fourthirtyfive", envir = environment())
     if (!exists(obj, envir = environment(), inherits = FALSE)) {
-      stop("Only odd yearsbetween 2013-2025 are available at this time.", call. = FALSE)
+      stop("Only odd years between 2013-2025 are available at this time.", call. = FALSE)
     }
     get(obj, envir = environment())
   }
