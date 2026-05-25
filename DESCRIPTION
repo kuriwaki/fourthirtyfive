@@ -30,5 +30,6 @@ Suggests:
     ggplot2
 Remotes:
     UrbanInstitute/urbnmapr,
-    christopherkenny/geomander
+    christopherkenny/geomander,
+    CoryMcCartan/hexmap
 LazyData: true
