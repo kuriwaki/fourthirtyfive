@@ -4,15 +4,17 @@
 \alias{load_shp_hex}
 \title{Load Daily Kos / Downballot Elections Cartogram}
 \source{
-https://the-db.co/maps
+2013–2025: \url{https://the-db.co/maps}. 2005-2011: created with
+\href{https://github.com/CoryMcCartan/hexmap}{CoryMcCartan/hexmap} using
+district boundaries from Jeffrey B. Lewis's historical shapefiles.
 }
 \usage{
 load_shp_hex(year = NULL, congress = NULL)
 }
 \arguments{
-\item{year}{Integer vector of years. Currently accepts 2013-2025.}
+\item{year}{Integer vector of years from 2005-2025.}
 
-\item{congress}{Integer vector of Congress numbers from the 113th-119th Congress.}
+\item{congress}{Integer vector of Congress numbers from the 109th-119th Congress.}
 }
 \value{
 An sf dataframe with 435 rows
@@ -28,6 +30,11 @@ For example, to get shapefiles for the 2022 election, set \code{year = 2023}.
 For 2013 to 2021, we use the same shapefile (Downballot's v2.1wm), but note that
 between the 2016 and 2020 data, PA changed their districts but did not add/remove any.
 Between the 2012-14 and 2016 data, FL, NC, VA did mid-cycle redistricting.
+The 2005-2011 hexmap is created using Cory McCartan's
+\href{https://github.com/CoryMcCartan/hexmap}{hexmap} package that assigns hex units into districts
+by a redistricting algorithm. The same hexmap (the 111th Congress / 2009 districts) is reused
+for all of 2005-2011, since the number of districts per state was constant over the
+2000-census apportionment decade.
 }
 \examples{
 # load one dataset
@@ -43,5 +50,5 @@ load_shp_hex(year = 2019) |>
 
 }
 \author{
-Daniel Donner
+Daniel Donner (2013–2025 shapefiles); Cory McCartan (2005-2011 hexmap generation)
 }

@@ -62,7 +62,7 @@ shp_dot_2023
 ```
 
 
-We also provide **hexmaps** (i.e., maps that present CDs as combinations of hexagons) for all years. These are sourced from the Downballot's hex map shapefiles (<https://the-db.co/maps>).
+We also provide **hexmaps** (i.e., maps that present CDs as combinations of hexagons) for all years. The 2013-2025 maps are sourced from the Downballot's hex map shapefiles (<https://the-db.co/maps>). The 2005-2011 maps are generated with Cory McCartan's [hexmap](https://github.com/CoryMcCartan/hexmap) package.
 
 ```{r}
 load_shp_hex(2023) |>
