@@ -118,4 +118,22 @@ shp_hex_2009 <- state_hex2 |>
     ) |>
     arrange(cd)
 
+# match coordinate system to the Daily Kos district maps ----
+# the hexmap above is built in Albers (ESRI:102003); rescale it (uniform, no warp)
+# onto the standard Daily Kos extent and relabel its CRS so 2009 lines up with the
+# shp_hex_2013-2025 objects (Mercator_2SP) built in 04-create-hex-maps.r
+ref <- read_sf("data-raw/hexmap_2020/HexCDv21wm/")
+src_bb <- st_bbox(shp_hex_2009)
+ref_bb <- st_bbox(ref)
+scale_to_dk <- unname(min(
+    (ref_bb["xmax"] - ref_bb["xmin"]) / (src_bb["xmax"] - src_bb["xmin"]),
+    (ref_bb["ymax"] - ref_bb["ymin"]) / (src_bb["ymax"] - src_bb["ymin"])
+))
+src_ctr <- c(mean(src_bb[c("xmin", "xmax")]), mean(src_bb[c("ymin", "ymax")]))
+ref_ctr <- c(mean(ref_bb[c("xmin", "xmax")]), mean(ref_bb[c("ymin", "ymax")]))
+
+geom_dk <- (st_geometry(shp_hex_2009) - src_ctr) * scale_to_dk + ref_ctr
+st_crs(geom_dk) <- st_crs(ref)
+shp_hex_2009 <- st_set_geometry(shp_hex_2009, geom_dk)
+
 usethis::use_data(shp_hex_2009, overwrite = TRUE)
