@@ -3,7 +3,10 @@
 \docType{data}
 \name{shp_hex}
 \alias{shp_hex}
+\alias{shp_hex_2005}
+\alias{shp_hex_2007}
 \alias{shp_hex_2009}
+\alias{shp_hex_2011}
 \alias{shp_hex_2013}
 \alias{shp_hex_2015}
 \alias{shp_hex_2017}
@@ -19,7 +22,7 @@ a cartogram.
 }
 \source{
 2013–2025 coordinates are from The Downballot's maps database.
-2009 (\code{shp_hex_2009}) is created through \href{https://github.com/CoryMcCartan/hexmap}{CoryMcCartan/hexmap}.
+2005-2011 (\code{shp_hex_2005} through \code{shp_hex_2011}) are created through \href{https://github.com/CoryMcCartan/hexmap}{CoryMcCartan/hexmap}.
 }
 \description{
 Loads Daily Kos / Downballot Elections cartogram shapefile of coordinates for each district.
