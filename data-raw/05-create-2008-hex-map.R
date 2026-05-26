@@ -114,7 +114,7 @@ shp_hex_2009 <- state_hex2 |>
     transmute(
         cong = 111L,
         cd   = glue("{state}-{str_pad(district, width = 2, pad = '0')}"),
-        cd   = str_replace(cd, "-[A-Z][A-Z]$", "-01")
+        cd   = str_replace(cd, "-(00|AL)$", "-01")
     ) |>
     arrange(cd)
 
