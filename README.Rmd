@@ -15,13 +15,19 @@ knitr::opts_chunk$set(
 
 # fourthirtyfive
 
-Maintainer: Shiro Kuriwaki
-
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-fourthirtyfive is a package that provides shapefiles and other data for congressional districts, 2006-2025. 
+
+Maintainer: Shiro Kuriwaki
+
+Contributors: Zoya Ahmer, Zachary Donnini, Cory McCartan
+
+Copyright holders: Downballot (some data)
+
+
+`fourthirtyfive` is a package that provides shapefiles and other data for the 435 congressional districts, gathering good ideas from various authors. The current data cover 2006-2025.
 
 ## Installation
 
@@ -78,10 +84,15 @@ Note: An earlier version of these hex maps was provided in the [`donnermap`](htt
 
 We do not store actual CD shapefiles, but we provide a function to draw these from either the Census or Jeff Lewis's historical shapefiles.
 
+```{r, include = FALSE}
+suppressMessages(cd_shps <- load_cd_shps(c = 118))
+```
+
+```{r, eval=FALSE}
+cd_shps <- load_cd_shps(c = 118)
+```
 
 ```{r}
-cd_shps <- load_cd_shps(c = 118)
-
 cd_shps |>
   ggplot() +
   geom_sf() +
@@ -90,8 +101,8 @@ cd_shps |>
 
 
 We also provide a dataset of the **descriptive names** of each district (e.g., calling AZ-01 in the 110th congressional district "Phoenix exurbs, Prescott, and Flagstaff"). 
-These are inspired by [Daily
-Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts).
+These use [Daily
+Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts) namings. Zachary Donnini named 2008-2010 congressional districts.
 
 
 ```{r}

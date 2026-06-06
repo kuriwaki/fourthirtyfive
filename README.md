@@ -3,15 +3,20 @@
 
 # fourthirtyfive
 
-Maintainer: Shiro Kuriwaki
-
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-fourthirtyfive is a package that provides shapefiles and other data for
-congressional districts, 2006-2025.
+Maintainer: Shiro Kuriwaki
+
+Contributors: Zoya Ahmer, Zachary Donnini, Cory McCartan
+
+Copyright holders: Downballot (some data)
+
+`fourthirtyfive` is a package that provides shapefiles and other data
+for the 435 congressional districts, gathering good ideas from various
+authors. The current data cover 2006-2025.
 
 ## Installation
 
@@ -49,7 +54,7 @@ load_shp_dot(2023) |>
   theme_void()
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
 
 For now, the output of each function for recent years is stored as a
 package dataset as well:
@@ -77,8 +82,8 @@ shp_dot_2023
 
 We also provide **hexmaps** (i.e., maps that present CDs as combinations
 of hexagons) for all years. The 2013-2025 maps are sourced from the
-Downballot’s hex map shapefiles (<https://the-db.co/maps>). The 2005-2011
-maps are generated with Cory McCartan’s
+Downballot’s hex map shapefiles (<https://the-db.co/maps>). The
+2005-2011 maps are generated with Cory McCartan’s
 [hexmap](https://github.com/CoryMcCartan/hexmap) package.
 
 ``` r
@@ -89,7 +94,7 @@ load_shp_hex(2023) |>
   labs(caption = "Map Source: https://the-db.co/maps")
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-4-1.png" alt="" width="100%" />
 
 Note: An earlier version of these hex maps was provided in the
 [`donnermap`](https://github.com/kuriwaki/donnermap) package. Those
@@ -102,24 +107,22 @@ these from either the Census or Jeff Lewis’s historical shapefiles.
 
 ``` r
 cd_shps <- load_cd_shps(c = 118)
-#>   |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   2%  |                                                                              |=====                                                                 |   6%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |==========                                                            |  14%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  17%  |                                                                              |==============                                                        |  19%  |                                                                              |=================                                                     |  24%  |                                                                              |=================                                                     |  25%  |                                                                              |====================                                                  |  29%  |                                                                              |=====================                                                 |  30%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  35%  |                                                                              |===========================                                           |  38%  |                                                                              |============================                                          |  41%  |                                                                              |===============================                                       |  45%  |                                                                              |=================================                                     |  47%  |                                                                              |==================================                                    |  48%  |                                                                              |====================================                                  |  52%  |                                                                              |==========================================                            |  59%  |                                                                              |============================================                          |  63%  |                                                                              |===============================================                       |  68%  |                                                                              |==================================================                    |  72%  |                                                                              |=====================================================                 |  76%  |                                                                              |========================================================              |  80%  |                                                                              |===========================================================           |  84%  |                                                                              |==============================================================        |  88%  |                                                                              |================================================================      |  92%  |                                                                              |===================================================================   |  96%  |                                                                              |======================================================================| 100%
-#> old-style crs object detected; please recreate object with a recent sf::st_crs()
-#> Warning in CPL_crs_from_input(x): GDAL Message 1: CRS EPSG:2163 is deprecated.
-#> Its non-deprecated replacement EPSG:9311 will be used instead. To use the
-#> original CRS, set the OSR_USE_NON_DEPRECATED configuration option to NO.
+```
 
+``` r
 cd_shps |>
   ggplot() +
   geom_sf() +
   theme_void()
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" />
 
 We also provide a dataset of the **descriptive names** of each district
 (e.g., calling AZ-01 in the 110th congressional district “Phoenix
-exurbs, Prescott, and Flagstaff”). These are inspired by [Daily
-Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts).
+exurbs, Prescott, and Flagstaff”). These use [Daily
+Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts)
+namings. Zachary Donnini named 2008-2010 congressional districts.
 
 ``` r
 load_cd_info(2007)
