@@ -9,12 +9,16 @@
 district boundaries from Jeffrey B. Lewis's historical shapefiles.
 }
 \usage{
-load_shp_hex(year = NULL, congress = NULL)
+load_shp_hex(year = NULL, congress = NULL, map_2026 = NULL)
 }
 \arguments{
-\item{year}{Integer vector of years from 2005-2025.}
+\item{year}{Integer vector of years from 2005-2025, or 2026.}
 
 \item{congress}{Integer vector of Congress numbers from the 109th-119th Congress.}
+
+\item{map_2026}{Which 2026 hexmap to use, \code{"a"} or \code{"b"}; see Details. Only
+relevant when \code{year} includes 2026. Defaults to \code{NULL}, in which case the
+function will message about the two options and use \code{"b"}.}
 }
 \value{
 An sf dataframe with 435 rows
@@ -25,6 +29,12 @@ Loads Daily Kos Elections cartogram shapefile of each district.
 \details{
 Years indicate the year of the January in which the Congress starts.
 For example, to get shapefiles for the 2022 election, set \code{year = 2023}.
+
+2026 is a special case: several states redrew districts mid-decade ahead of
+the 2026 elections, so two hexmaps are available for that year. \code{map_2026 = "a"}
+keeps the same (pre-redistricting) districts as \code{shp_hex_2025}. \code{map_2026 = "b"}
+reflects the new district lines adopted for 2026 in CA, FL, NC, OH, TN, UT, and TX
+(AL, LA, and MO are unchanged under either option).
 }
 \note{
 For 2013 to 2021, we use the same shapefile (Downballot's v2.1wm), but note that
@@ -39,6 +49,12 @@ for all of 2005-2011, since the number of districts per state was constant over 
 \examples{
 # load one dataset
 load_shp_hex(year = 2019)
+
+# 2026 has two options; this messages about them and uses "b"
+load_shp_hex(year = 2026)
+
+# choose explicitly
+load_shp_hex(year = 2026, map_2026 = "a")
 
 # plot points combined with state outline
 library(ggplot2)

@@ -14,6 +14,8 @@
 \alias{shp_hex_2021}
 \alias{shp_hex_2023}
 \alias{shp_hex_2025}
+\alias{shp_hex_2026a}
+\alias{shp_hex_2026b}
 \title{Hexmap: Daily Kos / Downballot Elections Cartogram}
 \format{
 Each object is for a particular year. The year indicates the start

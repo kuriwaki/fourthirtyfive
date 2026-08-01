@@ -12,6 +12,7 @@ library(sf)
 cd_shp_2019 <- cd_shp_2021 <- read_sf("data-raw/hexmap_2020/HexCDv21wm/")
 cd_shp_2023 <- read_sf("data-raw/hexmap_2022/HexCDv30wm/")
 cd_shp_2025 <- read_sf("data-raw/hexmap_2024/HexCDv31wm/")
+cd_shp_2026 <- read_sf("data-raw/hexmap_2026/HexCDv32wm")
 
 shp_hex_2019 <- cd_shp_2019 |>
   transmute(
@@ -46,6 +47,22 @@ shp_hex_2025 <- cd_shp_2025 |>
   ) |>
   arrange(cd)
 
+## 2026: two hexmaps are available because some states redrew districts
+## mid-decade for the 2026 elections (CA, FL, NC, OH, TN, UT, TX), while
+## others did not (AL, LA, MO).
+## - shp_hex_2026a: same districts as shp_hex_2025 (pre-redistricting)
+## - shp_hex_2026b: updated districts reflecting the 2026 redistricting
+shp_hex_2026a <- shp_hex_2025
+
+shp_hex_2026b <- cd_shp_2026 |>
+  mutate(STATEAB = if_else(STATEAB == "01", "AL", STATEAB)) |>
+  transmute(
+    cong = 119,
+    cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
+    cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
+  ) |>
+  arrange(cd)
+
 ## Use older version for now
 ### Between the 2012-14 and 2016 data, FL, NC, VA changed their districts
 ### Between the 2016 and 2018 data, PA changed their districts
@@ -63,4 +80,6 @@ usethis::use_data(shp_hex_2019, overwrite = TRUE)
 usethis::use_data(shp_hex_2021, overwrite = TRUE)
 usethis::use_data(shp_hex_2023, overwrite = TRUE)
 usethis::use_data(shp_hex_2025, overwrite = TRUE)
+usethis::use_data(shp_hex_2026a, overwrite = TRUE)
+usethis::use_data(shp_hex_2026b, overwrite = TRUE)
 
