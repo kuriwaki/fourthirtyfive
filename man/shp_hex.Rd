@@ -14,8 +14,7 @@
 \alias{shp_hex_2021}
 \alias{shp_hex_2023}
 \alias{shp_hex_2025}
-\alias{shp_hex_2026a}
-\alias{shp_hex_2026b}
+\alias{shp_hex_2027}
 \title{Hexmap: Daily Kos / Downballot Elections Cartogram}
 \format{
 Each object is for a particular year. The year indicates the start
@@ -23,7 +22,7 @@ of that Congress. Each observational is a congressional district, represented by
 a cartogram.
 }
 \source{
-2013–2025 coordinates are from The Downballot's maps database.
+2013–2027 coordinates are from The Downballot's maps database.
 2005-2011 (\code{shp_hex_2005} through \code{shp_hex_2011}) are created through \href{https://github.com/CoryMcCartan/hexmap}{CoryMcCartan/hexmap}.
 }
 \description{

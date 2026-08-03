@@ -47,17 +47,14 @@ shp_hex_2025 <- cd_shp_2025 |>
   ) |>
   arrange(cd)
 
-## 2026: two hexmaps are available because some states redrew districts
-## mid-decade for the 2026 elections (CA, FL, NC, OH, TN, UT, TX), while
-## others did not (AL, LA, MO).
-## - shp_hex_2026a: same districts as shp_hex_2025 (pre-redistricting)
-## - shp_hex_2026b: updated districts reflecting the 2026 redistricting
-shp_hex_2026a <- shp_hex_2025
-
-shp_hex_2026b <- cd_shp_2026 |>
+## shp_hex_2027: reflects district lines redrawn mid-decade ahead of the 2026
+## elections (CA, FL, NC, OH, TN, UT, TX changed; AL, LA, MO unchanged). Named
+## 2027, not 2026, because these districts elect the members who take their
+## seats in the 120th Congress, which starts January 2027.
+shp_hex_2027 <- cd_shp_2026 |>
   mutate(STATEAB = if_else(STATEAB == "01", "AL", STATEAB)) |>
   transmute(
-    cong = 119,
+    cong = 120,
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
@@ -80,6 +77,5 @@ usethis::use_data(shp_hex_2019, overwrite = TRUE)
 usethis::use_data(shp_hex_2021, overwrite = TRUE)
 usethis::use_data(shp_hex_2023, overwrite = TRUE)
 usethis::use_data(shp_hex_2025, overwrite = TRUE)
-usethis::use_data(shp_hex_2026a, overwrite = TRUE)
-usethis::use_data(shp_hex_2026b, overwrite = TRUE)
+usethis::use_data(shp_hex_2027, overwrite = TRUE)
 
