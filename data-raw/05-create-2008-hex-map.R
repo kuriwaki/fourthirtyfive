@@ -110,7 +110,7 @@ for (i in seq_len(nrow(d_states))) {
 }
 
 # format and save ----
-shp_hex_2009 <- state_hex2 |>
+cd_shp_hex_2009 <- state_hex2 |>
     transmute(
         cong = 111L,
         cd   = glue("{state}-{str_pad(district, width = 2, pad = '0')}"),
@@ -121,9 +121,9 @@ shp_hex_2009 <- state_hex2 |>
 # match coordinate system to the Daily Kos district maps ----
 # the hexmap above is built in Albers (ESRI:102003); rescale it (uniform, no warp)
 # onto the standard Daily Kos extent and relabel its CRS so 2009 lines up with the
-# shp_hex_2013-2025 objects (Mercator_2SP) built in 04-create-hex-maps.r
+# cd_shp_hex_2013-2025 objects (Mercator_2SP) built in 04-create-hex-maps.r
 ref <- read_sf("data-raw/hexmap_2020/HexCDv21wm/")
-src_bb <- st_bbox(shp_hex_2009)
+src_bb <- st_bbox(cd_shp_hex_2009)
 ref_bb <- st_bbox(ref)
 scale_to_dk <- unname(min(
     (ref_bb["xmax"] - ref_bb["xmin"]) / (src_bb["xmax"] - src_bb["xmin"]),
@@ -132,15 +132,15 @@ scale_to_dk <- unname(min(
 src_ctr <- c(mean(src_bb[c("xmin", "xmax")]), mean(src_bb[c("ymin", "ymax")]))
 ref_ctr <- c(mean(ref_bb[c("xmin", "xmax")]), mean(ref_bb[c("ymin", "ymax")]))
 
-geom_dk <- (st_geometry(shp_hex_2009) - src_ctr) * scale_to_dk + ref_ctr
+geom_dk <- (st_geometry(cd_shp_hex_2009) - src_ctr) * scale_to_dk + ref_ctr
 st_crs(geom_dk) <- st_crs(ref)
-shp_hex_2009 <- st_set_geometry(shp_hex_2009, geom_dk)
+cd_shp_hex_2009 <- st_set_geometry(cd_shp_hex_2009, geom_dk)
 # reuse the 111th-Congress hexmap for the rest of the 2000-apportionment decade
-shp_hex_2005 <- shp_hex_2009 |> mutate(cong = 109L)
-shp_hex_2007 <- shp_hex_2009 |> mutate(cong = 110L)
-shp_hex_2011 <- shp_hex_2009 |> mutate(cong = 112L)
+cd_shp_hex_2005 <- cd_shp_hex_2009 |> mutate(cong = 109L)
+cd_shp_hex_2007 <- cd_shp_hex_2009 |> mutate(cong = 110L)
+cd_shp_hex_2011 <- cd_shp_hex_2009 |> mutate(cong = 112L)
 
-usethis::use_data(shp_hex_2005, overwrite = TRUE)
-usethis::use_data(shp_hex_2007, overwrite = TRUE)
-usethis::use_data(shp_hex_2009, overwrite = TRUE)
-usethis::use_data(shp_hex_2011, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2005, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2007, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2009, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2011, overwrite = TRUE)

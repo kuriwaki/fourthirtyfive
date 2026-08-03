@@ -37,7 +37,7 @@ if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:119}.rds")))) {
 #' @param source get from Lewis data or Census tigris
 #' @param c congress number
 #' @param cd_col unquoted name of the variable
-shp_dot_func <- function(source = c("lewis", "census"),
+cd_shp_dot_func <- function(source = c("lewis", "census"),
                          c,
                          cd_col = NULL) {
   source <- match.arg(source)
@@ -138,27 +138,27 @@ shp_dot_func <- function(source = c("lewis", "census"),
 }
 
 # Run function to create dataset for each Congress ----
-shp_dot_2005 <- shp_dot_func("lewis", 109)
-shp_dot_2007 <- shp_dot_func("lewis", 110)
-shp_dot_2009 <- shp_dot_func("lewis", 111)
-shp_dot_2011 <- shp_dot_func("lewis", 112)
-shp_dot_2013 <- shp_dot_func("census", 113, CD113FP)
-shp_dot_2015 <- shp_dot_func("census", 114, CD114FP)
-shp_dot_2017 <- shp_dot_func("census", 115, CD115FP)
-shp_dot_2019 <- shp_dot_func("census", 116, CD116FP)
-shp_dot_2021 <- shp_dot_func("census", 117, CD116FP)
-shp_dot_2023 <- shp_dot_func("census", 118, CD118FP)
-shp_dot_2025 <- shp_dot_func("census", 119, CD119FP)
+cd_shp_dot_2005 <- cd_shp_dot_func("lewis", 109)
+cd_shp_dot_2007 <- cd_shp_dot_func("lewis", 110)
+cd_shp_dot_2009 <- cd_shp_dot_func("lewis", 111)
+cd_shp_dot_2011 <- cd_shp_dot_func("lewis", 112)
+cd_shp_dot_2013 <- cd_shp_dot_func("census", 113, CD113FP)
+cd_shp_dot_2015 <- cd_shp_dot_func("census", 114, CD114FP)
+cd_shp_dot_2017 <- cd_shp_dot_func("census", 115, CD115FP)
+cd_shp_dot_2019 <- cd_shp_dot_func("census", 116, CD116FP)
+cd_shp_dot_2021 <- cd_shp_dot_func("census", 117, CD116FP)
+cd_shp_dot_2023 <- cd_shp_dot_func("census", 118, CD118FP)
+cd_shp_dot_2025 <- cd_shp_dot_func("census", 119, CD119FP)
 
 # Write ---
-usethis::use_data(shp_dot_2005, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2007, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2009, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2011, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2013, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2015, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2017, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2019, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2021, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2023, overwrite = TRUE, compress = "xz")
-usethis::use_data(shp_dot_2025, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2005, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2007, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2009, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2011, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2013, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2015, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2017, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2019, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2021, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2023, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_dot_2025, overwrite = TRUE, compress = "xz")

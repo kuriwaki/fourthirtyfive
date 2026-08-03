@@ -1,18 +1,18 @@
 #' @title State map
-#' @name shp_states
+#' @name cd_shp_states
 #'
 #' Shapefile of US states with Albers projection. Useful as an outline to dot maps of CDs.
 #'
-#' @seealso \link{shp_dot}
+#' @seealso \link{cd_shp_dot}
 #' @source Alaska and Hawaii are modified following UrbanInstitute/urbnmapr
 #'
 #' @examples
 #' library(ggplot2)
-#' shp_states |>
+#' cd_shp_states |>
 #'   ggplot() +
 #'   geom_sf() +
 #'   geom_sf_text(aes(label = state))
-"shp_states"
+"cd_shp_states"
 
 library(tidyverse)
 library(tigris)
@@ -23,7 +23,7 @@ library(urbnmapr)
 proj_crs <- 5070
 
 # 48 states
-shp_states <- tigris::states(cb = TRUE, resolution = "20m") |>
+cd_shp_states <- tigris::states(cb = TRUE, resolution = "20m") |>
   select(statename = NAME, state = STUSPS, geometry) |>
   filter(!state %in% c("HI", "AK", "PR")) |>
   arrange(state) |>
@@ -50,7 +50,7 @@ akhi_sf <- tibble(
 
 
 # combine
-shp_states <- shp_states |>
+cd_shp_states <- cd_shp_states |>
   bind_rows(akhi_sf)
 
-usethis::use_data(shp_states, overwrite = TRUE, compress = "xz")
+usethis::use_data(cd_shp_states, overwrite = TRUE, compress = "xz")

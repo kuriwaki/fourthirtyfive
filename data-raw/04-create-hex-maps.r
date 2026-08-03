@@ -13,7 +13,7 @@ cd_shp_2019 <- cd_shp_2021 <- read_sf("data-raw/hexmap_2020/HexCDv21wm/")
 cd_shp_2023 <- read_sf("data-raw/hexmap_2022/HexCDv30wm/")
 cd_shp_2025 <- read_sf("data-raw/hexmap_2024/HexCDv31wm/")
 
-shp_hex_2019 <- cd_shp_2019 |>
+cd_shp_hex_2019 <- cd_shp_2019 |>
   transmute(
     cong = 116,
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
@@ -21,7 +21,7 @@ shp_hex_2019 <- cd_shp_2019 |>
   ) |>
   arrange(cd)
 
-shp_hex_2021 <- cd_shp_2021 |>
+cd_shp_hex_2021 <- cd_shp_2021 |>
   transmute(
     cong = 117,
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
@@ -29,7 +29,7 @@ shp_hex_2021 <- cd_shp_2021 |>
   ) |>
   arrange(cd)
 
-shp_hex_2023 <- cd_shp_2023 |>
+cd_shp_hex_2023 <- cd_shp_2023 |>
   transmute(
     cong = 118,
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
@@ -37,7 +37,7 @@ shp_hex_2023 <- cd_shp_2023 |>
   ) |>
   arrange(cd)
 
-shp_hex_2025 <- cd_shp_2025 |>
+cd_shp_hex_2025 <- cd_shp_2025 |>
   mutate(STATEAB = if_else(STATEAB == "01", "AL", STATEAB)) |>
   transmute(
     cong = 119,
@@ -49,18 +49,18 @@ shp_hex_2025 <- cd_shp_2025 |>
 ## Use older version for now
 ### Between the 2012-14 and 2016 data, FL, NC, VA changed their districts
 ### Between the 2016 and 2018 data, PA changed their districts
-shp_hex_2013 <- shp_hex_2019 |>
+cd_shp_hex_2013 <- cd_shp_hex_2019 |>
   mutate(cong = 113)
-shp_hex_2015 <- shp_hex_2019 |>
+cd_shp_hex_2015 <- cd_shp_hex_2019 |>
   mutate(cong = 114)
-shp_hex_2017 <- shp_hex_2019 |>
+cd_shp_hex_2017 <- cd_shp_hex_2019 |>
   mutate(cong = 115)
 
-usethis::use_data(shp_hex_2013, overwrite = TRUE)
-usethis::use_data(shp_hex_2015, overwrite = TRUE)
-usethis::use_data(shp_hex_2017, overwrite = TRUE)
-usethis::use_data(shp_hex_2019, overwrite = TRUE)
-usethis::use_data(shp_hex_2021, overwrite = TRUE)
-usethis::use_data(shp_hex_2023, overwrite = TRUE)
-usethis::use_data(shp_hex_2025, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2013, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2015, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2017, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2019, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2021, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2023, overwrite = TRUE)
+usethis::use_data(cd_shp_hex_2025, overwrite = TRUE)
 

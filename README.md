@@ -47,9 +47,9 @@ library(sf)
 #> Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
 library(ggplot2)
 
-load_shp_dot(2023) |>
+load_cd_shp_dot(2023) |>
   ggplot() +
-  geom_sf(data = shp_states) +
+  geom_sf(data = cd_shp_states) +
   geom_sf(size = 1, alpha = 0.5) +
   theme_void()
 ```
@@ -60,7 +60,7 @@ For now, the output of each function for recent years is stored as a
 package dataset as well:
 
 ``` r
-shp_dot_2023
+cd_shp_dot_2023
 #> Simple feature collection with 435 features and 2 fields
 #> Geometry type: POINT
 #> Dimension:     XY
@@ -87,7 +87,7 @@ Downballot’s hex map shapefiles (<https://the-db.co/maps>). The
 [hexmap](https://github.com/CoryMcCartan/hexmap) package.
 
 ``` r
-load_shp_hex(2023) |>
+load_cd_shp_hex(2023) |>
   ggplot() +
   geom_sf() +
   theme_void() +
@@ -106,7 +106,7 @@ We do not store actual CD shapefiles, but we provide a function to draw
 these from either the Census or Jeff Lewis’s historical shapefiles.
 
 ``` r
-cd_shps <- load_cd_shps(c = 118)
+cd_shps <- load_cd_shp(c = 118)
 ```
 
 ``` r
@@ -125,7 +125,7 @@ Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-
 namings. Zachary Donnini named 2008-2010 congressional districts.
 
 ``` r
-load_cd_info(2007)
+load_cd_name(2007)
 #> # A tibble: 435 × 3
 #>     cong cd    cd_description                                
 #>    <dbl> <chr> <chr>                                         
@@ -145,12 +145,12 @@ load_cd_info(2007)
 This can be loaded as an object too, for now:
 
 ``` r
-info_2007
+cd_name_2007
 ```
 
 ## Data format
 
-We name the datasets (`shp_dot_**`, `info_**`) by the year of the
+We name the datasets (`cd_shp_dot_**`, `cd_name_**`) by the year of the
 congress.
 
 | Object    | Congress | Years in Session | Year Elected | Year up for Election |

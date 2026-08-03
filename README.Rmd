@@ -54,9 +54,9 @@ We are building several types of maps. First, the **dotmap** is where one CD is 
 library(sf)
 library(ggplot2)
 
-load_shp_dot(2023) |>
+load_cd_shp_dot(2023) |>
   ggplot() +
-  geom_sf(data = shp_states) +
+  geom_sf(data = cd_shp_states) +
   geom_sf(size = 1, alpha = 0.5) +
   theme_void()
 ```
@@ -64,14 +64,14 @@ load_shp_dot(2023) |>
 For now, the output of each function for recent years is stored as a package dataset as well:
 
 ```{r}
-shp_dot_2023
+cd_shp_dot_2023
 ```
 
 
 We also provide **hexmaps** (i.e., maps that present CDs as combinations of hexagons) for all years. The 2013-2025 maps are sourced from the Downballot's hex map shapefiles (<https://the-db.co/maps>). The 2005-2011 maps are generated with Cory McCartan's [hexmap](https://github.com/CoryMcCartan/hexmap) package.
 
 ```{r}
-load_shp_hex(2023) |>
+load_cd_shp_hex(2023) |>
   ggplot() +
   geom_sf() +
   theme_void() +
@@ -85,11 +85,11 @@ Note: An earlier version of these hex maps was provided in the [`donnermap`](htt
 We do not store actual CD shapefiles, but we provide a function to draw these from either the Census or Jeff Lewis's historical shapefiles.
 
 ```{r, include = FALSE}
-suppressMessages(cd_shps <- load_cd_shps(c = 118))
+suppressMessages(cd_shps <- load_cd_shp(c = 118))
 ```
 
 ```{r, eval=FALSE}
-cd_shps <- load_cd_shps(c = 118)
+cd_shps <- load_cd_shp(c = 118)
 ```
 
 ```{r}
@@ -106,20 +106,20 @@ Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-
 
 
 ```{r}
-load_cd_info(2007)
+load_cd_name(2007)
 ```
 
 This can be loaded as an object too, for now:
 
 ```{r, eval = FALSE}
-info_2007
+cd_name_2007
 ```
 
 
 
 ## Data format
 
-We name the datasets (`shp_dot_**`, `info_**`) by the year of the congress.
+We name the datasets (`cd_shp_dot_**`, `cd_name_**`) by the year of the congress.
 
 |Object | Congress | Years in Session | Year Elected | Year up for Election | 
 |-------|----------|-------|---------------|----------|
