@@ -4,7 +4,7 @@
 \alias{load_shp_hex}
 \title{Load Daily Kos / Downballot Elections Cartogram}
 \source{
-2013–2025: \url{https://the-db.co/maps}. 2005-2011: created with
+2013–2027: \url{https://the-db.co/maps}. 2005-2011: created with
 \href{https://github.com/CoryMcCartan/hexmap}{CoryMcCartan/hexmap} using
 district boundaries from Jeffrey B. Lewis's historical shapefiles.
 }
@@ -12,9 +12,9 @@ district boundaries from Jeffrey B. Lewis's historical shapefiles.
 load_shp_hex(year = NULL, congress = NULL)
 }
 \arguments{
-\item{year}{Integer vector of years from 2005-2025.}
+\item{year}{Integer vector of years from 2005-2027.}
 
-\item{congress}{Integer vector of Congress numbers from the 109th-119th Congress.}
+\item{congress}{Integer vector of Congress numbers from the 109th-120th Congress.}
 }
 \value{
 An sf dataframe with 435 rows
@@ -25,6 +25,11 @@ Loads Daily Kos Elections cartogram shapefile of each district.
 \details{
 Years indicate the year of the January in which the Congress starts.
 For example, to get shapefiles for the 2022 election, set \code{year = 2023}.
+
+\code{shp_hex_2027} reflects district lines redrawn mid-decade ahead of the 2026
+elections.
+These districts elect the members who take their seats in the 120th Congress,
+which starts January 2027.
 }
 \note{
 For 2013 to 2021, we use the same shapefile (Downballot's v2.1wm), but note that
@@ -40,6 +45,9 @@ for all of 2005-2011, since the number of districts per state was constant over 
 # load one dataset
 load_shp_hex(year = 2019)
 
+# districts used for the members entering Congress in January 2027
+load_shp_hex(year = 2027)
+
 # plot points combined with state outline
 library(ggplot2)
 
@@ -50,5 +58,5 @@ load_shp_hex(year = 2019) |>
 
 }
 \author{
-Daniel Donner (2013–2025 shapefiles); Cory McCartan (2005-2011 hexmap generation)
+Daniel Donner (2013–2027 shapefiles); Cory McCartan (2005-2011 hexmap generation)
 }

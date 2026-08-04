@@ -12,6 +12,7 @@ library(sf)
 cd_shp_2019 <- cd_shp_2021 <- read_sf("data-raw/hexmap_2020/HexCDv21wm/")
 cd_shp_2023 <- read_sf("data-raw/hexmap_2022/HexCDv30wm/")
 cd_shp_2025 <- read_sf("data-raw/hexmap_2024/HexCDv31wm/")
+cd_shp_2027 <- read_sf("data-raw/hexmap_2027/HexCDv32wm")
 
 shp_hex_2019 <- cd_shp_2019 |>
   transmute(
@@ -46,6 +47,18 @@ shp_hex_2025 <- cd_shp_2025 |>
   ) |>
   arrange(cd)
 
+## shp_hex_2027: reflects district lines redrawn mid-decade ahead of the 2027  elections
+## Named 2027 because these districts elect the members who take their seats
+## in the 120th Congress, which starts January 2027.
+shp_hex_2027 <- cd_shp_2027 |>
+  mutate(STATEAB = if_else(STATEAB == "01", "AL", STATEAB)) |>
+  transmute(
+    cong = 120,
+    cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
+    cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
+  ) |>
+  arrange(cd)
+
 ## Use older version for now
 ### Between the 2012-14 and 2016 data, FL, NC, VA changed their districts
 ### Between the 2016 and 2018 data, PA changed their districts
@@ -63,4 +76,5 @@ usethis::use_data(shp_hex_2019, overwrite = TRUE)
 usethis::use_data(shp_hex_2021, overwrite = TRUE)
 usethis::use_data(shp_hex_2023, overwrite = TRUE)
 usethis::use_data(shp_hex_2025, overwrite = TRUE)
+usethis::use_data(shp_hex_2027, overwrite = TRUE)
 
