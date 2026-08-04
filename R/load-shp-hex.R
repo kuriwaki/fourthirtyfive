@@ -2,16 +2,16 @@
 #'
 #' @description Loads Daily Kos Elections cartogram shapefile of each district.
 #'
-#' @param year Integer vector of years from 2005-2025, or 2027.
+#' @param year Integer vector of years from 2005-2027.
 #' @param congress Integer vector of Congress numbers from the 109th-120th Congress.
 #'
 #' @details Years indicate the year of the January in which the Congress starts.
 #'  For example, to get shapefiles for the 2022 election, set `year = 2023`.
 #'
 #'  `shp_hex_2027` reflects district lines redrawn mid-decade ahead of the 2026
-#'  elections in CA, FL, NC, OH, TN, UT, and TX (AL, LA, and MO are unchanged).
-#'  It is named 2027, not 2026, because these districts elect the members who
-#'  take their seats in the 120th Congress, which starts January 2027.
+#'  elections.
+#'  These districts elect the members who take their seats in the 120th Congress,
+#'  which starts January 2027.
 #'
 #' @note For 2013 to 2021, we use the same shapefile (Downballot's v2.1wm), but note that
 #'  between the 2016 and 2020 data, PA changed their districts but did not add/remove any.
