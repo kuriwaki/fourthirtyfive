@@ -47,10 +47,9 @@ shp_hex_2025 <- cd_shp_2025 |>
   ) |>
   arrange(cd)
 
-## shp_hex_2027: reflects district lines redrawn mid-decade ahead of the 2027
-## elections (CA, FL, NC, OH, TN, UT, TX changed; AL, LA, MO unchanged). Named
-## 2027, not 2027, because these districts elect the members who take their
-## seats in the 120th Congress, which starts January 2027.
+## shp_hex_2027: reflects district lines redrawn mid-decade ahead of the 2027  elections
+## Named 2027 because these districts elect the members who take their seats
+## in the 120th Congress, which starts January 2027.
 shp_hex_2027 <- cd_shp_2027 |>
   mutate(STATEAB = if_else(STATEAB == "01", "AL", STATEAB)) |>
   transmute(
