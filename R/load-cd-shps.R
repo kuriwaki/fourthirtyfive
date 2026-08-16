@@ -9,6 +9,9 @@
 #' @param congress integer, choose a congress number (1–119) to load (optional).
 #' Optional if `congress` is given.
 #' @param epsg integer EPSG code for output CRS (default 5070).
+#' @param simplify logical. For Lewis-era congresses (≤112), simplify
+#'   boundaries to about Census cartographic `20m` resolution (default `TRUE`).
+#'   Ignored for the 113th Congress onward, which already use `tigris` 20m files.
 #'
 #' @format Each object is the sf for a particular congress. The year indicates
 #'  the start of that congress
@@ -30,27 +33,16 @@
 #'
 #' @importFrom utils data
 #' @importFrom rlang .data
-#' @importFrom sf st_transform st_make_valid st_crs st_as_sf
+#' @importFrom sf st_transform st_make_valid st_crs st_as_sf st_simplify
 #' @importFrom stringr str_remove str_pad
 #' @importFrom dplyr filter mutate rename select left_join distinct bind_rows pick starts_with if_else case_when
 #' @importFrom tibble tibble
 #' @importFrom urbnmapr get_urbn_map
 #' @return An sf object with CD boundaries for the requested Congress.
 #' @export
-
-# Work around geomander::get_lewis() returning NA URLs (e.g. Georgia).
-get_lewis_sf <- function(state, congress) {
-  urls <- geomander::get_lewis(state = state, congress = congress, path_only = TRUE)
-  if (all(is.na(urls))) {
-    warning(sprintf("No Lewis shapefile found for %s (congress %s).", state, congress), call. = FALSE)
-    return(NULL)
-  }
-  sf::read_sf(urls[!is.na(urls)][1])
-}
-
 # Parameter
 # https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
-load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
+load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE) {
 
   if (!is.null(congress)) {
     congress <- as.integer(congress)
@@ -70,6 +62,17 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
           geometry = st_make_valid(.data$geometry),
           year = as.integer(cong_to_firstyear(ci))
         ) |>
+        st_transform(crs = 5070)
+
+      # 5000m in EPSG:5070 matches Census cartographic 20m vertex density
+      if (isTRUE(simplify)) {
+        sf_obj <- mutate(
+          sf_obj,
+          geometry = st_make_valid(st_simplify(.data$geometry, dTolerance = 5000, preserveTopology = TRUE))
+        )
+      }
+
+      sf_obj <- sf_obj |>
         st_transform(crs = epsg) |>
         filter(!.data$statename %in% c("District of Columbia")) |>
         mutate(
@@ -171,4 +174,14 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
   }
 
   bind_rows(lapply(congress, load_one))
+}
+
+# Work around geomander::get_lewis() returning NA URLs (e.g. Georgia).
+get_lewis_sf <- function(state, congress) {
+  urls <- geomander::get_lewis(state = state, congress = congress, path_only = TRUE)
+  if (all(is.na(urls))) {
+    warning(sprintf("No Lewis shapefile found for %s (congress %s).", state, congress), call. = FALSE)
+    return(NULL)
+  }
+  sf::read_sf(urls[!is.na(urls)][1])
 }
