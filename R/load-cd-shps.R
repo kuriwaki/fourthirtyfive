@@ -38,6 +38,23 @@
 #' @return An sf object with CD boundaries for the requested Congress.
 #' @export
 
+# Work around geomander::get_lewis() returning NA URLs (e.g. Georgia).
+get_lewis_sf <- function(state, congress) {
+  urls <- geomander::get_lewis(state = state, congress = congress, path_only = TRUE)
+  urls <- urls[!is.na(urls) & nzchar(urls)]
+  if (length(urls) == 0L) {
+    warning(
+      sprintf(
+        "No Lewis congressional district shapefile found for %s (congress %s).",
+        state, congress
+      ),
+      call. = FALSE
+    )
+    return(NULL)
+  }
+  sf::read_sf(urls[[1L]])
+}
+
 # Parameter
 # https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
 load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
@@ -55,7 +72,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070) {
 
     if (ci <= 112) {
       utils::data("state", package = "datasets", envir = environment())
-      sf_obj <- purrr::map_df(state_abb, purrr::possibly(~ geomander::get_lewis(state = .x, congress = ci), NULL)) |>
+      sf_obj <- purrr::map_df(state_abb, ~ get_lewis_sf(.x, ci)) |>
         mutate(
           geometry = st_make_valid(.data$geometry),
           year = as.integer(cong_to_firstyear(ci))
