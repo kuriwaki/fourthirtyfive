@@ -41,18 +41,11 @@
 # Work around geomander::get_lewis() returning NA URLs (e.g. Georgia).
 get_lewis_sf <- function(state, congress) {
   urls <- geomander::get_lewis(state = state, congress = congress, path_only = TRUE)
-  urls <- urls[!is.na(urls) & nzchar(urls)]
-  if (length(urls) == 0L) {
-    warning(
-      sprintf(
-        "No Lewis congressional district shapefile found for %s (congress %s).",
-        state, congress
-      ),
-      call. = FALSE
-    )
+  if (all(is.na(urls))) {
+    warning(sprintf("No Lewis shapefile found for %s (congress %s).", state, congress), call. = FALSE)
     return(NULL)
   }
-  sf::read_sf(urls[[1L]])
+  sf::read_sf(urls[!is.na(urls)][1])
 }
 
 # Parameter
