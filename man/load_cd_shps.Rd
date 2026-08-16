@@ -13,7 +13,7 @@ Shapefiles from early congresses are taken from Jeffrey B. Lewis,
 historical congressional district shapefiles.
 }
 \usage{
-load_cd_shps(year = NULL, congress = NULL, epsg = 5070)
+load_cd_shps(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE)
 }
 \arguments{
 \item{year}{integer, choose a year to load}
@@ -22,6 +22,10 @@ load_cd_shps(year = NULL, congress = NULL, epsg = 5070)
 Optional if \code{congress} is given.}
 
 \item{epsg}{integer EPSG code for output CRS (default 5070).}
+
+\item{simplify}{logical. For Lewis-era congresses (≤112), simplify
+boundaries to about Census cartographic \verb{20m} resolution (default \code{TRUE}).
+Ignored for the 113th Congress onward, which already use \code{tigris} 20m files.}
 }
 \value{
 An sf object with CD boundaries for the requested Congress.
