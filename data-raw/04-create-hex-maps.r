@@ -12,7 +12,14 @@ library(sf)
 cd_shp_2019 <- cd_shp_2021 <- read_sf("data-raw/hexmap_2020/HexCDv21wm/")
 cd_shp_2023 <- read_sf("data-raw/hexmap_2022/HexCDv30wm/")
 cd_shp_2025 <- read_sf("data-raw/hexmap_2024/HexCDv31wm/")
-cd_shp_2027 <- read_sf("data-raw/hexmap_2027/HexCDv32wm")
+cd_shp_2027 <- read_sf("data-raw/hexmap_2026/HexCDv32wm")
+
+# Standardize Downballot's v3.0 file with other years
+bb_23 <- st_bbox(cd_shp_2023)
+bb_25 <- st_bbox(cd_shp_2025)
+st_geometry(cd_shp_2023) <- st_geometry(cd_shp_2023) +
+  c(bb_25[["xmin"]] - bb_23[["xmin"]], bb_25[["ymin"]] - bb_23[["ymin"]])
+st_crs(cd_shp_2023) <- st_crs(cd_shp_2025)
 
 shp_hex_2019 <- cd_shp_2019 |>
   transmute(
