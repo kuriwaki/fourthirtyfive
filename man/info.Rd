@@ -20,6 +20,7 @@ Each object is for a particular congress. The year indicates the start
 of that Congress. Each observation is a congressional district, which contains a
 unique descriptive name.
 \describe{
+\item{\code{cong}}{Congress number, such as 113 for the Congress beginning in 2013.}
 \item{\code{cd}}{District code. Each row is a a two-letter abbreviation for the
 state followed by a dash, and the district number padded with zeros to the
 left to be of length 2. At-large districts like Delaware are given a "-01"
@@ -64,6 +65,13 @@ A 435-row table, per each Congress, with descriptive names for each CD.
 }
 \examples{
 head(info_2005)
+}
+\seealso{
+\code{\link[=load_cd_info]{load_cd_info()}} to load and stack one or more Congresses.
+See \href{https://github.com/kuriwaki/ccesMRPprep/blob/main/R/datadoc_cd-info.R}{ccesMRPprep's \code{cd_info} documentation}
+for upstream sources, district-boundary history, and related presidential
+election data. Its dataset years refer to election maps; the \verb{info_*} years
+here refer to the start of a Congress.
 }
 \author{
 Zachary Donnini, Shiro Kuriwaki, Daily Kos, Downballot
