@@ -11,6 +11,9 @@ the start of that congress
 Shapefiles from 2012 onwards taken from US Census, \code{tigris} package.
 Shapefiles from early congresses are taken from Jeffrey B. Lewis,
 historical congressional district shapefiles.
+For the 120th Congress, see the Census boundary collection and Missouri
+correction notice:
+\url{https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.html}
 }
 \usage{
 load_cd_shps(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE)
@@ -18,14 +21,16 @@ load_cd_shps(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE)
 \arguments{
 \item{year}{integer, choose a year to load}
 
-\item{congress}{integer, choose a congress number (1–119) to load (optional).
+\item{congress}{integer, choose a congress number (1–120) to load (optional).
 Optional if \code{congress} is given.}
 
 \item{epsg}{integer EPSG code for output CRS (default 5070).}
 
 \item{simplify}{logical. For Lewis-era congresses (≤112), simplify
 boundaries to about Census cartographic \verb{20m} resolution (default \code{TRUE}).
-Ignored for the 113th Congress onward, which already use \code{tigris} 20m files.}
+Ignored for Congresses 113–119, which use Census cartographic \verb{20m} files,
+and the 120th Congress, which retains detailed TIGER/Line boundaries in
+the nine redrawn states and 2025 cartographic boundaries elsewhere.}
 }
 \value{
 An sf object with CD boundaries for the requested Congress.
@@ -35,7 +40,13 @@ Download CD Shapes
 }
 \details{
 Download shapefiles (\code{sf} objects) for U.S. congressional districts for a
-given Congress number (1-119th).
+given Congress number (1-120th).
+
+For 2027 (120th Congress), the 2026 Census TIGER/Line boundaries
+replace the 2025 map in Alabama, California, Florida, Louisiana,
+North Carolina, Ohio, Tennessee, Texas, and Utah. All other states,
+including Missouri, retain their 2025 boundaries. Alaska and Hawaii
+retain their existing inset placement. The returned year is 2027.
 }
 \examples{
 library(sf)
@@ -44,6 +55,11 @@ library(ggplot2)
 # Load the 109th Congress shapefile
 cd109 <- load_cd_shps(congress = 109)
 cd108 <- load_cd_shps(year = 2003)
+
+# Districts used for the Congress starting in January 2027
+\dontrun{
+cd120 <- load_cd_shps(year = 2027)
+}
 
 # Create a map with cd boundaries
 cd109 |>

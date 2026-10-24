@@ -7,9 +7,9 @@
 load_shp_dot(year = NULL, congress = NULL)
 }
 \arguments{
-\item{year}{Integer vector of years from 2005-2025.}
+\item{year}{Integer vector of years from 2005-2027.}
 
-\item{congress}{Integer vector of Congress numbers from the 109th-119th Congress.}
+\item{congress}{Integer vector of Congress numbers from the 109th-120th Congress.}
 }
 \value{
 An sf object (single year) or sf/tibble (multiple years).
@@ -23,6 +23,7 @@ not overlap.
 # load one dataset
 load_shp_dot(year = 2011) # is equivalent to loading `shp_dot_2011`
 load_shp_dot(congress = 109)
+load_shp_dot(year = 2027)
 
 # plot points combined with state outline
 library(ggplot2)

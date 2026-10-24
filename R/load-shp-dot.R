@@ -5,8 +5,8 @@
 #' not overlap.
 #'
 #'
-#' @param year Integer vector of years from 2005-2025.
-#' @param congress Integer vector of Congress numbers from the 109th-119th Congress.
+#' @param year Integer vector of years from 2005-2027.
+#' @param congress Integer vector of Congress numbers from the 109th-120th Congress.
 #'
 #' @author Zoya Ahmer, Shiro Kuriwaki, Cory McCartan
 #'
@@ -16,6 +16,7 @@
 #' # load one dataset
 #' load_shp_dot(year = 2011) # is equivalent to loading `shp_dot_2011`
 #' load_shp_dot(congress = 109)
+#' load_shp_dot(year = 2027)
 #'
 #' # plot points combined with state outline
 #' library(ggplot2)
@@ -80,8 +81,13 @@ load_shp_dot <- function(year = NULL, congress = NULL) {
 #'  Coordinates from early Congresses taken from Jeffrey B. Lewis, historical congressional
 #'  district shapefiles
 #'
+#'  For 2027, we use tigris v.2.3.0 as of October 24 2026 to get the new centers in
+#'  AL, CA, FL, LA, NC, OH, TN, TX, and UT, and reuse the previous cycle's dots
+#'  for other states.
+#'
 #' @aliases shp_dot_2005 shp_dot_2007 shp_dot_2009 shp_dot_2011 shp_dot_2013
 #' @aliases shp_dot_2015 shp_dot_2017 shp_dot_2019 shp_dot_2021 shp_dot_2023 shp_dot_2025
+#' @aliases shp_dot_2027
 #'
 #' @examples
 #' library(sf)

@@ -185,3 +185,45 @@ get_lewis_sf <- function(state, congress) {
   }
   sf::read_sf(urls[!is.na(urls)][1])
 }
+
+# Shared Census input for geographic maps and dot-map generation ----
+redrawn_states_2027 <- c("AL", "CA", "FL", "LA", "NC", "OH", "TN", "TX", "UT")
+
+get_census_cd_sf <- function(congress) {
+  read_map <- function(year, state = NULL, cb = TRUE) {
+    raw <- tigris::congressional_districts(
+      state = state, year = year, cb = cb, resolution = "20m"
+    )
+    district_col <- grep("^CD[0-9]+FP$", names(raw), value = TRUE)
+    stopifnot(length(district_col) == 1L)
+    raw |>
+      mutate(geometry = st_make_valid(.data$geometry), STATEFP = as.character(.data$STATEFP)) |>
+      filter(!.data$STATEFP %in% c("11", "72", "60", "66", "69", "78")) |>
+      st_transform(5070) |>
+      left_join(
+        tigris::fips_codes |>
+          select(STATEFP = "state_code", state_abb = "state") |>
+          distinct(),
+        by = "STATEFP", relationship = "many-to-one"
+      ) |>
+      mutate(
+        dist_chr = str_remove(.data[[district_col]], "^0+"),
+        dist_chr = if_else(.data$dist_chr == "" | is.na(.data$dist_chr), "1", .data$dist_chr),
+        cd = as.character(stringr::str_glue("{state_abb}-{str_pad(dist_chr, 2, pad = '0')}"))
+      ) |>
+      select("cd", "geometry")
+  }
+
+  if (congress == 120L) {
+    baseline <- read_map(2024L)
+    replacements <- read_map(2026L, state = redrawn_states_2027, cb = FALSE)
+    expected <- baseline$cd[substr(baseline$cd, 1, 2) %in% redrawn_states_2027]
+    stopifnot(!anyDuplicated(replacements$cd), setequal(replacements$cd, expected))
+    # Retain 2025 everywhere else, including Missouri's unchanged election map.
+    combined <- baseline
+    sf::st_geometry(combined)[match(replacements$cd, baseline$cd)] <- sf::st_geometry(replacements)
+    stopifnot(nrow(combined) == 435L, !anyDuplicated(combined$cd))
+    return(dplyr::arrange(combined, .data$cd))
+  }
+  read_map(if (congress == 119L) 2024L else as.integer(cong_to_firstyear(congress)))
+}

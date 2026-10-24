@@ -3,84 +3,128 @@
 
 library(tidyverse)
 library(sf)
-library(tigris)
-library(geomander) # for get_lewis
-library(ccesMRPprep) # for to_cd. remotes::install_github("kuriwaki/ccesMRPprep")
 library(glue)
+library(fourthirtyfive)
+
+# Use the working-tree Census reader shared with geographic maps.
+source("R/load-cd-shps.R")
 
 # Parameters ----
 proj_crs <- 5070
 circ_radius <- 18000
 
-# temporary download full shapefiles
-if (!all(file.exists(glue("~/Downloads/tmp_shp_{109:119}.rds")))) {
-  for (c in 109:112) {
-    utils::data("state", package = "datasets", envir = environment())
-    map_df(state_abb, \(x) geomander::get_lewis(state = x, congress = c), .progress = TRUE) |>
-      write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
+# Layout helper ----
+dodge_updated_dots <- function(target_xy, updated, radius = 18000) {
+  # Optimize only the updated dots; all other coordinates remain fixed.
+  # Work in units of the dot radius for numerical stability.
+  target_scaled <- target_xy / radius
+  min_sep <- 2 * 1.02
+
+  positions <- function(par) {
+    xy <- target_scaled
+    xy[updated, ] <- matrix(par, ncol = 2)
+    xy
   }
 
-  for (c in 113:118) {
-    yr <- 2 * c + 1786 + 1
-    tigris::congressional_districts(year = yr, cb = TRUE, resolution = "20m") |>
-      write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
+  loss <- function(par) {
+    xy <- positions(par)
+    distances <- as.matrix(stats::dist(xy))
+    overlap <- pmax(min_sep - distances, 0)
+    sum((xy[updated, ] - target_scaled[updated, ])^2) +
+      1000 * sum(overlap[upper.tri(overlap)]^2)
   }
-  # 2024 shapefile for 119th
-  # the standard year formula does not yet work for this session in `tigris`
-  for (c in 119) {
-    tigris::congressional_districts(year = 2024, cb = TRUE, resolution = "20m") |>
-      write_rds(glue("~/Downloads/tmp_shp_{c}.rds"))
+
+  gradient <- function(par) {
+    xy <- positions(par)
+    distances <- as.matrix(stats::dist(xy))
+    coefficients <- -2000 * pmax(min_sep - distances, 0) /
+      pmax(distances, 1e-8)
+    diag(coefficients) <- 0
+    repulsion <- xy * rowSums(coefficients) - coefficients %*% xy
+    as.vector(
+      2 * (xy[updated, ] - target_scaled[updated, ]) + repulsion[updated, ]
+    )
   }
+
+  fit <- stats::optim(
+    par = as.vector(target_scaled[updated, ]),
+    fn = loss,
+    gr = gradient,
+    method = "L-BFGS-B",
+    control = list(maxit = 1000, factr = 1e7, pgtol = 1e-7)
+  )
+  if (fit$convergence != 0L) {
+    stop(glue::glue("Dot layout did not converge: {fit$message}"))
+  }
+
+  # Assign only updated rows so carried-forward coordinates stay identical.
+  result <- target_xy
+  result[updated, ] <- positions(fit$par)[updated, ] * radius
+  distances <- as.matrix(stats::dist(result))
+  diag(distances) <- Inf
+  if (any(distances[updated, , drop = FALSE] < 2 * radius)) {
+    stop("The updated dots still overlap at the 18 km dot radius.")
+  }
+  result
 }
 
 #' Dodge centroids
 #' @param source get from Lewis data or Census tigris
 #' @param c congress number
-#' @param cd_col unquoted name of the variable
+#' @param previous Optional previous dot map; retain its dots outside redrawn states
 shp_dot_func <- function(source = c("lewis", "census"),
                          c,
-                         cd_col = NULL) {
+                         previous = NULL) {
   source <- match.arg(source)
-
-  if (source == "lewis") {
-    # get district shapefile for a state
-    cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
-      mutate(geometry = st_make_valid(geometry)) |>
-      st_transform(crs = proj_crs) |>
-      rename(dist = district)
+  if (c == 120 && is.null(previous)) {
+    stop("Supply the 2025 dot map as `previous` when building 2027.")
   }
 
-  if (source == "census") {
-    cd_sf <- read_rds(glue("~/Downloads/tmp_shp_{c}.rds")) |>
-      mutate(geometry = st_make_valid(geometry)) |>
-      # remove PR, territories
-      filter(!STATEFP %in% c("72", "60", "66", "69", "78")) |>
-      st_transform(crs = proj_crs) |>
-      mutate(STATEFP = as.character(STATEFP)) |>
-      left_join(
-        tigris::fips_codes |>
-          select(STATEFP = state_code, statename = state_name) |>
-          distinct(),
-        by = "STATEFP"
-      ) |>
-      mutate(dist = str_remove({{ cd_col }}, "^0+"))
+  if (source == "lewis") {
+    cache_path <- glue("~/Downloads/tmp_shp_{c}.rds")
+    districts_raw <- if (file.exists(cache_path)) {
+      read_rds(cache_path)
+    } else {
+      map_df(datasets::state.abb, \(state) geomander::get_lewis(state = state, congress = c))
+    }
+    cd_sf <- districts_raw |>
+      st_make_valid() |>
+      st_transform(proj_crs) |>
+      filter(statename != "District of Columbia") |>
+      transmute(cd = ccesMRPprep::to_cd(statename, district))
+  } else {
+    cd_sf <- get_census_cd_sf(c)
   }
   # common operations
   centroids <- cd_sf |>
-    filter(statename != "District of Columbia") |>
-    mutate(
-      cd = ccesMRPprep::to_cd(statename, dist),
-      dist = NULL, statename = NULL,
-      # fix entries for at large states in the census
-      cd = sub("-NA$", "-01", cd)
-    ) |>
-    geomander::st_centerish() |>
+    mutate(cd = sub("-NA$", "-01", cd)) |>
+    geomander::st_centerish(epsg = proj_crs) |>
     mutate(
       centroid = geometry,
       x = st_coordinates(centroid)[, 1],
       y = st_coordinates(centroid)[, 2],
       radius = circ_radius
     )
+
+  if (!is.null(previous)) {
+    # For 2027, move only districts in the nine redrawn states. Missouri,
+    # Alaska, Hawaii, and every other unchanged state's dots stay fixed.
+    updated <- substr(previous$cd, 1, 2) %in% redrawn_states_2027
+    stopifnot(c == 120, st_crs(previous)$epsg == proj_crs,
+              !anyDuplicated(centroids$cd), setequal(centroids$cd, previous$cd))
+    target_xy <- st_coordinates(previous)
+    target_xy[updated, ] <- st_coordinates(centroids)[match(previous$cd[updated], centroids$cd), ]
+    stopifnot(all(is.finite(target_xy)))
+    layout_xy <- dodge_updated_dots(target_xy, updated, radius = circ_radius)
+    result <- previous |> mutate(cong = c)
+    st_geometry(result)[updated] <- st_geometry(st_as_sf(
+      data.frame(x = layout_xy[updated, 1], y = layout_xy[updated, 2]),
+      coords = c("x", "y"), crs = proj_crs
+    ))
+    stopifnot(nrow(result) == 435L,
+              identical(st_geometry(result)[!updated], st_geometry(previous)[!updated]))
+    return(result)
+  }
 
   # layout optimization and layout cost function to minimize overlap and
   # total displacement.
@@ -115,15 +159,15 @@ shp_dot_func <- function(source = c("lewis", "census"),
 
   # want point geometry
   # only need certain variables to map
-  centroids <- centroids |>
+  dot_points <- centroids |>
     select(cd, geometry, x_opt, y_opt) |>
     arrange(cd) |>
     st_drop_geometry() |>
     st_as_sf(coords = c("x_opt", "y_opt"), crs = proj_crs)
 
   # add ak and hi and shift points to match map
-  ak <- centroids[str_starts(centroids$cd, "AK"), ]
-  hi <- centroids[str_starts(centroids$cd, "HI"), ]
+  ak <- dot_points[str_starts(dot_points$cd, "AK"), ]
+  hi <- dot_points[str_starts(dot_points$cd, "HI"), ]
 
   st_geometry(ak) <- st_geometry(ak) + c(1.15e6, -4.7e6)
   st_geometry(hi) <- st_geometry(hi) + c(5.23e6, -1.48e6)
@@ -131,9 +175,9 @@ shp_dot_func <- function(source = c("lewis", "census"),
   akhi_adjusted <- bind_rows(ak, hi)
   st_crs(akhi_adjusted) <- proj_crs
 
-  centroids[str_starts(centroids$cd, "AK|HI"), ] <- akhi_adjusted
+  dot_points[str_starts(dot_points$cd, "AK|HI"), ] <- akhi_adjusted
 
-  centroids <- centroids |>
+  dot_points |>
     mutate(cong = c, .before = 1)
 }
 
@@ -142,15 +186,16 @@ shp_dot_2005 <- shp_dot_func("lewis", 109)
 shp_dot_2007 <- shp_dot_func("lewis", 110)
 shp_dot_2009 <- shp_dot_func("lewis", 111)
 shp_dot_2011 <- shp_dot_func("lewis", 112)
-shp_dot_2013 <- shp_dot_func("census", 113, CD113FP)
-shp_dot_2015 <- shp_dot_func("census", 114, CD114FP)
-shp_dot_2017 <- shp_dot_func("census", 115, CD115FP)
-shp_dot_2019 <- shp_dot_func("census", 116, CD116FP)
-shp_dot_2021 <- shp_dot_func("census", 117, CD116FP)
-shp_dot_2023 <- shp_dot_func("census", 118, CD118FP)
-shp_dot_2025 <- shp_dot_func("census", 119, CD119FP)
+shp_dot_2013 <- shp_dot_func("census", 113)
+shp_dot_2015 <- shp_dot_func("census", 114)
+shp_dot_2017 <- shp_dot_func("census", 115)
+shp_dot_2019 <- shp_dot_func("census", 116)
+shp_dot_2021 <- shp_dot_func("census", 117)
+shp_dot_2023 <- shp_dot_func("census", 118)
+shp_dot_2025 <- shp_dot_func("census", 119)
+shp_dot_2027 <- shp_dot_func("census", 120, previous = shp_dot_2025)
 
-# Write ---
+# Write ----
 usethis::use_data(shp_dot_2005, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2007, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2009, overwrite = TRUE, compress = "xz")
@@ -162,3 +207,4 @@ usethis::use_data(shp_dot_2019, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2021, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2023, overwrite = TRUE, compress = "xz")
 usethis::use_data(shp_dot_2025, overwrite = TRUE, compress = "xz")
+usethis::use_data(shp_dot_2027, overwrite = TRUE, compress = "xz")
