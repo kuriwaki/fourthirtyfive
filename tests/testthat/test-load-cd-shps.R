@@ -25,10 +25,12 @@ test_that("the 120th Congress updates nine states and preserves the 2025 map els
     dplyr::rename(CD120FP = "CD119FP")
   sf::st_geometry(updated_raw) <- sf::st_geometry(updated_raw) + c(1000, 2000)
   sf::st_crs(updated_raw) <- 5070
-  insets <- baseline_raw[match(c("AK-01", "HI-01"), district_codes), ] |>
-    dplyr::mutate(state_abbv = c("AK", "HI"))
+  insets <- sf::st_sf(
+    cd = c("AK-01", "HI-01", "HI-02"),
+    geometry = sf::st_geometry(baseline_raw)[match(c("AK-01", "HI-01", "HI-02"), district_codes)]
+  )
   local_mocked_bindings(
-    get_urbn_map = function(map, sf) insets,
+    get_cd_insets = function() insets,
     .package = "fourthirtyfive"
   )
 

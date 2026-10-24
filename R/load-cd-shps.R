@@ -55,7 +55,6 @@
 #' @importFrom stringr str_remove str_pad
 #' @importFrom dplyr filter mutate rename select left_join distinct bind_rows pick starts_with if_else case_when
 #' @importFrom tibble tibble
-#' @importFrom urbnmapr get_urbn_map
 #' @return An sf object with CD boundaries for the requested Congress.
 #' @export
 # Parameter
@@ -111,24 +110,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
 
       # AK and HI
       if (is.null(state) || any(state %in% c("AK", "HI"))) {
-        akhi_sf <- get_urbn_map("states", sf = TRUE) |>
-          filter(.data$state_abbv %in% c("AK", "HI")) |>
-          mutate(
-            geometry = case_when(
-              .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
-              TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
-            )
-          ) |>
-          select("state_abbv", "geometry")
-
-        akhi_sf <- tibble(
-          cd = c("AK-01", "HI-01", "HI-02"),
-          geometry = c(
-            akhi_sf$geometry[akhi_sf$state_abbv == "AK"],
-            rep(akhi_sf$geometry[akhi_sf$state_abbv == "HI"], 2)
-          )
-        ) |>
-          st_as_sf(crs = 5070)
+        akhi_sf <- get_cd_insets()
 
         sf_obj <- sf_obj |> filter(!grepl("^(AK|HI)-", .data$cd))
         akhi_sf <- mutate(akhi_sf, year = year, congress = ci)
@@ -144,24 +126,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
 
       # AK and HI
       if (is.null(state) || any(state %in% c("AK", "HI"))) {
-        akhi_sf <- get_urbn_map("states", sf = TRUE) |>
-          filter(.data$state_abbv %in% c("AK", "HI")) |>
-          mutate(
-            geometry = case_when(
-              .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
-              TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
-            )
-          ) |>
-          select("state_abbv", "geometry")
-
-        akhi_sf <- tibble(
-          cd = c("AK-01", "HI-01", "HI-02"),
-          geometry = c(
-            akhi_sf$geometry[akhi_sf$state_abbv == "AK"],
-            rep(akhi_sf$geometry[akhi_sf$state_abbv == "HI"], 2)
-          )
-        ) |>
-          st_as_sf(crs = 5070)
+        akhi_sf <- get_cd_insets()
 
         inset_rows <- match(census_map$cd, akhi_sf$cd)
         census_map$geometry[!is.na(inset_rows)] <- akhi_sf$geometry[inset_rows[!is.na(inset_rows)]]
@@ -187,6 +152,15 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
   }
 
   bind_rows(lapply(congress, load_one))
+}
+
+# Reuse the state map's insets with modern CRS metadata ----
+get_cd_insets <- function() {
+  states <- shp_states
+  sf::st_sf(
+    cd = c("AK-01", "HI-01", "HI-02"),
+    geometry = sf::st_geometry(states)[match(c("AK", "HI", "HI"), states$state)]
+  )
 }
 
 # Simplify assembled 2027 maps and retain them for repeat calls ----
