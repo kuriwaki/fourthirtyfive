@@ -17,6 +17,7 @@
 #' @param cache logical. Cache assembled 2027 maps in the current R session
 #'   (default `TRUE`). Set `FALSE` to rebuild from the boundary inputs.
 #'   Download caching is controlled separately by `options(tigris_use_cache = TRUE)`.
+#' @param state State name, abbreviation, or FIPS code; `NULL` returns all states.
 #'
 #' @details For 2027 (120th Congress), we use the 2026 Census TIGER for
 #'  AL, CA, FL, LA, NC, OH, TN, TX, and UT (with middecade redistricting), and
@@ -59,7 +60,9 @@
 #' @export
 # Parameter
 # https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
-load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE, cache = TRUE) {
+load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE, cache = TRUE, state = NULL) {
+
+  state <- normalize_cd_states(state)
 
   if (!is.null(congress)) {
     congress <- as.integer(congress)
@@ -71,14 +74,15 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
   load_one <- function(ci) {
     ci <- as.integer(ci)
     year <- as.integer(cong_to_firstyear(ci))
-    cache_key <- as.character(isTRUE(simplify))
+    cache_key <- stringr::str_glue("{isTRUE(simplify)}:{paste(state, collapse = ',')}")
     if (ci == 120L && isTRUE(cache) && exists(cache_key, .cd_map_cache, inherits = FALSE)) {
       return(project_cd_map(get(cache_key, .cd_map_cache), epsg))
     }
 
     if (ci <= 112) {
       utils::data("state", package = "datasets", envir = environment())
-      sf_obj <- purrr::map_df(state_abb, ~ get_lewis_sf(.x, ci)) |>
+      requested_states <- if (is.null(state)) state_abb else state
+      sf_obj <- purrr::map_df(requested_states, ~ get_lewis_sf(.x, ci)) |>
         mutate(
           geometry = st_make_valid(.data$geometry),
           year = as.integer(cong_to_firstyear(ci))
@@ -106,55 +110,62 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
         select("year", "congress", "cd", "geometry")
 
       # AK and HI
-      akhi_sf <- get_urbn_map("states", sf = TRUE) |>
-        filter(.data$state_abbv %in% c("AK", "HI")) |>
-        mutate(
-          geometry = case_when(
-            .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
-            TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
+      if (is.null(state) || any(state %in% c("AK", "HI"))) {
+        akhi_sf <- get_urbn_map("states", sf = TRUE) |>
+          filter(.data$state_abbv %in% c("AK", "HI")) |>
+          mutate(
+            geometry = case_when(
+              .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
+              TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
+            )
+          ) |>
+          select("state_abbv", "geometry")
+
+        akhi_sf <- tibble(
+          cd = c("AK-01", "HI-01", "HI-02"),
+          geometry = c(
+            akhi_sf$geometry[akhi_sf$state_abbv == "AK"],
+            rep(akhi_sf$geometry[akhi_sf$state_abbv == "HI"], 2)
           )
         ) |>
-        select("state_abbv", "geometry")
+          st_as_sf(crs = 5070)
 
-      akhi_sf <- tibble(
-        cd = c("AK-01", "HI-01", "HI-02"),
-        geometry = c(
-          akhi_sf$geometry[akhi_sf$state_abbv == "AK"],
-          rep(akhi_sf$geometry[akhi_sf$state_abbv == "HI"], 2)
-        )
-      ) |>
-        st_as_sf(crs = 5070)
-
-      sf_obj <- sf_obj |> filter(!grepl("^(AK|HI)-", .data$cd))
-      akhi_sf <- mutate(akhi_sf, year = year, congress = ci)
-      sf_obj <- bind_rows(sf_obj, akhi_sf)
+        sf_obj <- sf_obj |> filter(!grepl("^(AK|HI)-", .data$cd))
+        akhi_sf <- mutate(akhi_sf, year = year, congress = ci)
+        sf_obj <- bind_rows(sf_obj, akhi_sf) |>
+          filter(is.null(state) | substr(.data$cd, 1, 2) %in% state)
+      }
 
     } else if (ci >= 113 && ci <= 120) {
-      census_map <- get_census_cd_sf(ci) |>
+      census_input <- if (is.null(state)) get_census_cd_sf(ci) else get_census_cd_sf(ci, state = state)
+      census_map <- census_input |>
         mutate(year = if (ci == 119) 2024L else year, congress = ci) |>
         select("year", "congress", "cd", "geometry")
 
       # AK and HI
-      akhi_sf <- get_urbn_map("states", sf = TRUE) |>
-        filter(.data$state_abbv %in% c("AK", "HI")) |>
-        mutate(
-          geometry = case_when(
-            .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
-            TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
+      if (is.null(state) || any(state %in% c("AK", "HI"))) {
+        akhi_sf <- get_urbn_map("states", sf = TRUE) |>
+          filter(.data$state_abbv %in% c("AK", "HI")) |>
+          mutate(
+            geometry = case_when(
+              .data$state_abbv == "AK" ~ geometry + c(-0.3e6, 2.5e6),
+              TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
+            )
+          ) |>
+          select("state_abbv", "geometry")
+
+        akhi_sf <- tibble(
+          cd = c("AK-01", "HI-01", "HI-02"),
+          geometry = c(
+            akhi_sf$geometry[akhi_sf$state_abbv == "AK"],
+            rep(akhi_sf$geometry[akhi_sf$state_abbv == "HI"], 2)
           )
         ) |>
-        select("state_abbv", "geometry")
+          st_as_sf(crs = 5070)
 
-      akhi_sf <- tibble(
-        cd = c("AK-01", "HI-01", "HI-02"),
-        geometry = c(
-          akhi_sf$geometry[akhi_sf$state_abbv == "AK"],
-          rep(akhi_sf$geometry[akhi_sf$state_abbv == "HI"], 2)
-        )
-      ) |>
-        st_as_sf(crs = 5070)
-
-      census_map$geometry[match(akhi_sf$cd, census_map$cd)] <- akhi_sf$geometry
+        inset_rows <- match(census_map$cd, akhi_sf$cd)
+        census_map$geometry[!is.na(inset_rows)] <- akhi_sf$geometry[inset_rows[!is.na(inset_rows)]]
+      }
       output_map <- if (ci == 120L && isTRUE(simplify)) {
         simplify_cd_2027(census_map)
       } else {
@@ -181,12 +192,25 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
 # Simplify assembled 2027 maps and retain them for repeat calls ----
 .cd_map_cache <- new.env(parent = emptyenv())
 
+normalize_cd_states <- function(state) {
+  if (is.null(state)) return(NULL)
+  states <- dplyr::distinct(tigris::fips_codes, .data$state, .data$state_name, .data$state_code)
+  input <- stringr::str_pad(toupper(trimws(as.character(state))), 2, pad = "0")
+  keys <- c(states$state, toupper(states$state_name), states$state_code)
+  abbreviations <- rep(states$state, 3)[match(input, keys)]
+  if (!length(abbreviations) || anyNA(abbreviations)) {
+    stop("`state` must contain valid state names, abbreviations, or FIPS codes.", call. = FALSE)
+  }
+  sort(unique(abbreviations))
+}
+
 project_cd_map <- function(x, epsg) {
   if (sf::st_crs(x) == sf::st_crs(epsg)) x else st_transform(x, epsg)
 }
 
 simplify_cd_2027 <- function(x) {
   updated <- substr(x$cd, 1, 2) %in% redrawn_states_2027
+  if (!any(updated)) return(x)
   # Simplify shared arcs jointly, retaining small districts and the exact
   # geometry of already generalized states, including Missouri and the insets.
   simplified <- rmapshaper::ms_simplify(
@@ -215,7 +239,7 @@ get_lewis_sf <- function(state, congress) {
 # Shared Census input for geographic maps and dot-map generation ----
 redrawn_states_2027 = c("AL", "CA", "FL", "LA", "NC", "OH", "TN", "TX", "UT")
 
-get_census_cd_sf <- function(congress) {
+get_census_cd_sf <- function(congress, state = NULL) {
   loaded_version <- as.character(getNamespaceVersion("tigris"))
   if (congress == 120L && utils::compareVersion(loaded_version, "2.3.0") < 0L) {
     stop(stringr::str_glue(
@@ -248,6 +272,14 @@ get_census_cd_sf <- function(congress) {
   }
 
   if (congress == 120L) {
+    if (!is.null(state)) {
+      updated <- state %in% redrawn_states_2027
+      selected <- bind_rows(
+        if (any(updated)) read_map(2026L, state = state[updated], cb = FALSE),
+        if (any(!updated)) read_map(2024L, state = state[!updated])
+      )
+      return(dplyr::arrange(selected, .data$cd))
+    }
     baseline <- read_map(2024L)
     replacements <- read_map(2026L, state = redrawn_states_2027, cb = FALSE)
     expected <- baseline$cd[substr(baseline$cd, 1, 2) %in% redrawn_states_2027]
@@ -258,5 +290,5 @@ get_census_cd_sf <- function(congress) {
     stopifnot(nrow(combined) == 435L, !anyDuplicated(combined$cd))
     return(dplyr::arrange(combined, .data$cd))
   }
-  read_map(if (congress == 119L) 2024L else as.integer(cong_to_firstyear(congress)))
+  read_map(if (congress == 119L) 2024L else as.integer(cong_to_firstyear(congress)), state = state)
 }

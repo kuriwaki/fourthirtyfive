@@ -21,7 +21,8 @@ load_cd_shps(
   congress = NULL,
   epsg = 5070,
   simplify = TRUE,
-  cache = TRUE
+  cache = TRUE,
+  state = NULL
 )
 }
 \arguments{
@@ -41,6 +42,8 @@ assembling the map. Use \code{FALSE} for full TIGER/Line detail.}
 \item{cache}{logical. Cache assembled 2027 maps in the current R session
 (default \code{TRUE}). Set \code{FALSE} to rebuild from the boundary inputs.
 Download caching is controlled separately by \code{options(tigris_use_cache = TRUE)}.}
+
+\item{state}{State name, abbreviation, or FIPS code; \code{NULL} returns all states.}
 }
 \value{
 An sf object with CD boundaries for the requested Congress.
