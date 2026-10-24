@@ -1,23 +1,34 @@
 #' Download CD Shapes
 #'
 #' Download shapefiles (`sf` objects) for U.S. congressional districts for a
-#' given Congress number (1-119th).
+#' given Congress number (1-120th).
 #'
 #' @name load_cd_shps
 #' @title Download CD Shapes
 #' @param year integer, choose a year to load
-#' @param congress integer, choose a congress number (1–119) to load (optional).
+#' @param congress integer, choose a congress number (1–120) to load (optional).
 #' Optional if `congress` is given.
 #' @param epsg integer EPSG code for output CRS (default 5070).
 #' @param simplify logical. For Lewis-era congresses (≤112), simplify
 #'   boundaries to about Census cartographic `20m` resolution (default `TRUE`).
-#'   Ignored for the 113th Congress onward, which already use `tigris` 20m files.
+#'   Ignored for Congresses 113–119, which use Census cartographic `20m` files,
+#'   and the 120th Congress, which retains detailed TIGER/Line boundaries in
+#'   the nine redrawn states and 2025 cartographic boundaries elsewhere.
+#'
+#' @details For 2027 (120th Congress), the 2026 Census TIGER/Line boundaries
+#'   replace the 2025 map in Alabama, California, Florida, Louisiana,
+#'   North Carolina, Ohio, Tennessee, Texas, and Utah. All other states,
+#'   including Missouri, retain their 2025 boundaries. Alaska and Hawaii
+#'   retain their existing inset placement. The returned year is 2027.
 #'
 #' @format Each object is the sf for a particular congress. The year indicates
 #'  the start of that congress
 #' @source Shapefiles from 2012 onwards taken from US Census, `tigris` package.
 #'  Shapefiles from early congresses are taken from Jeffrey B. Lewis,
 #'  historical congressional district shapefiles.
+#'  For the 120th Congress, see the Census boundary collection and Missouri
+#'  correction notice:
+#'  \url{https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.html}
 #' @examples
 #' library(sf)
 #' library(ggplot2)
@@ -25,6 +36,11 @@
 #' # Load the 109th Congress shapefile
 #' cd109 <- load_cd_shps(congress = 109)
 #' cd108 <- load_cd_shps(year = 2003)
+#'
+#' # Districts used for the Congress starting in January 2027
+#' \dontrun{
+#' cd120 <- load_cd_shps(year = 2027)
+#' }
 #'
 #' # Create a map with cd boundaries
 #' cd109 |>
@@ -93,7 +109,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
             TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
           )
         ) |>
-        select(.data$state_abbv, .data$geometry)
+        select("state_abbv", "geometry")
 
       akhi_sf <- tibble(
         cd = c("AK-01", "HI-01", "HI-02"),
@@ -108,35 +124,9 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
       akhi_sf <- mutate(akhi_sf, year = year, congress = ci)
       sf_obj <- bind_rows(sf_obj, akhi_sf)
 
-    } else if (ci >= 113 && ci <= 119) {
-      year_in <- if (ci == 119) 2024L else year
-
-      sf_obj <- tigris::congressional_districts(
-        year = year_in,
-        cb = TRUE,
-        resolution = "20m"
-      ) |>
-        mutate(geometry = st_make_valid(.data$geometry)) |>
-        # remove PR, territories, AK, HI
-        filter(!.data$STATEFP %in% c("72", "60", "66", "69", "78")) |>
-        st_transform(crs = epsg) |>
-        mutate(
-          STATEFP = as.character(.data$STATEFP),
-          year = as.integer(cong_to_firstyear(ci))
-        ) |>
-        left_join(
-          tigris::fips_codes |>
-            select(STATEFP = .data$state_code, state_abb = .data$state, statename = .data$state_name) |>
-            distinct(),
-          by = "STATEFP"
-        ) |>
-        filter(.data$statename != "District of Columbia") |>
-        mutate(
-          dist_chr = str_remove(pick(starts_with("CD"))[[1]], "^0+"),
-          dist_chr = if_else(.data$dist_chr == "" | is.na(.data$dist_chr), "1", .data$dist_chr),
-          cd = paste0(.data$state_abb, "-", stringr::str_pad(.data$dist_chr, 2, pad = "0"))
-        ) |>
-        mutate(congress = ci) |>
+    } else if (ci >= 113 && ci <= 120) {
+      census_map <- get_census_cd_sf(ci) |>
+        mutate(year = if (ci == 119) 2024L else year, congress = ci) |>
         select("year", "congress", "cd", "geometry")
 
       # AK and HI
@@ -148,7 +138,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
             TRUE ~ (geometry + c(-0.15e6, 2.26e6)) * rot(pi / 16) * 1.2
           )
         ) |>
-        select(.data$state_abbv, .data$geometry)
+        select("state_abbv", "geometry")
 
       akhi_sf <- tibble(
         cd = c("AK-01", "HI-01", "HI-02"),
@@ -159,10 +149,15 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
       ) |>
         st_as_sf(crs = 5070)
 
-      sf_obj$geometry[match(akhi_sf$cd, sf_obj$cd)] <- akhi_sf$geometry
+      census_map$geometry[match(akhi_sf$cd, census_map$cd)] <- akhi_sf$geometry
+      return(if (sf::st_crs(epsg) == sf::st_crs(census_map)) {
+        census_map
+      } else {
+        st_transform(census_map, epsg)
+      })
 
     } else {
-      stop("Congress number greater than 119 is not yet supported.", call. = FALSE)
+      stop("Congress number greater than 120 is not yet supported.", call. = FALSE)
     }
 
     sf_obj <- sf_obj |>
@@ -187,7 +182,7 @@ get_lewis_sf <- function(state, congress) {
 }
 
 # Shared Census input for geographic maps and dot-map generation ----
-redrawn_states_2027 <- c("AL", "CA", "FL", "LA", "NC", "OH", "TN", "TX", "UT")
+redrawn_states_2027 = c("AL", "CA", "FL", "LA", "NC", "OH", "TN", "TX", "UT")
 
 get_census_cd_sf <- function(congress) {
   read_map <- function(year, state = NULL, cb = TRUE) {

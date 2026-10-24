@@ -105,6 +105,10 @@ the projected Web Mercator versions (`wm` suffix) from the Downballot.
 We do not store actual CD shapefiles, but we provide a function to draw
 these from either the Census or Jeff Lewis’s historical shapefiles.
 
+Use `load_cd_shps(year = 2027)` for the 120th Congress. The nine states
+redrawn for the 2026 election use Census's detailed 2026 TIGER/Line boundaries;
+all other states, including Missouri, retain the 2025 map.
+
 ``` r
 cd_shps <- load_cd_shps(c = 118)
 ```
