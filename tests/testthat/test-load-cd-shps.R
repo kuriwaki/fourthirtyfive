@@ -1,5 +1,6 @@
 # Written by Codex
 test_that("the 120th Congress updates nine states and preserves the 2025 map elsewhere", {
+  local_mocked_bindings(.cd_map_cache = new.env(parent = emptyenv()))
   district_codes <- load_cd_info(year = 2025)$cd
   changed_states <- c("AL", "CA", "FL", "LA", "NC", "OH", "TN", "TX", "UT")
   state_codes <- tigris::fips_codes |>
@@ -61,6 +62,11 @@ test_that("the 120th Congress updates nine states and preserves the 2025 map els
     identical(sf::st_geometry(map_2027)[[i]], old_geometry[[i]])
   }, logical(1))
   expect_identical(same_geometry, !updated)
+  reader <- get_census_cd_sf
+  local_mocked_bindings(get_census_cd_sf = function(congress) {
+    if (congress == 120) stop("cache miss")
+    reader(congress)
+  })
   expect_identical(load_cd_shps(congress = 120), map_2027)
 
   map_lonlat <- load_cd_shps(year = 2027, epsg = 4326)
@@ -72,5 +78,36 @@ test_that("the 120th Congress updates nine states and preserves the 2025 map els
   stacked <- load_cd_shps(congress = c(119, 120))
   expect_equal(nrow(stacked), 870L)
   expect_equal(as.integer(table(stacked$congress)), c(435L, 435L))
+  expect_error(load_cd_shps(year = 2027, cache = FALSE), "cache miss")
   expect_error(load_cd_shps(congress = 121), "greater than 120")
+})
+
+test_that("joint simplification preserves shared edges and Missouri exactly", {
+  y <- seq(0, 100000, length.out = 501)
+  edge <- cbind(50000 + sin(y / 5000) * 5000, y)
+  left <- sf::st_polygon(list(rbind(c(0, 0), edge, c(0, 100000), c(0, 0))))
+  right <- sf::st_polygon(list(rbind(
+    edge[1, ], c(100000, 0), c(100000, 100000), edge[nrow(edge):1, ]
+  )))
+  missouri <- sf::st_polygon(list(rbind(
+    c(150000, 0), c(200000, 0), c(200000, 50000), c(150000, 50000), c(150000, 0)
+  )))
+  original <- sf::st_sf(
+    cd = c("AL-01", "AL-02", "MO-01"),
+    geometry = sf::st_sfc(left, right, missouri, crs = 5070)
+  )
+  simplified <- simplify_cd_2027(original)
+  expect_identical(simplified$cd, original$cd)
+  expect_true(all(sf::st_is_valid(simplified)))
+  expect_false(any(sf::st_is_empty(simplified)))
+  expect_true(all(lengths(sf::st_overlaps(simplified)) == 0L))
+  expect_identical(sf::st_geometry(simplified)[[3]], sf::st_geometry(original)[[3]])
+  expect_lt(
+    nrow(sf::st_coordinates(sf::st_cast(simplified, "MULTIPOLYGON"))),
+    nrow(sf::st_coordinates(sf::st_cast(original, "MULTIPOLYGON"))) / 5
+  )
+  difference <- sf::st_sym_difference(
+    sf::st_union(original[1:2, ]), sf::st_union(simplified[1:2, ])
+  )
+  expect_equal(sum(as.numeric(sf::st_area(difference))), 0, tolerance = 1e-6)
 })

@@ -21,3 +21,19 @@ test_that("the shared Census reader handles district fields for Congresses 113 t
     expect_identical(normalized$cd, c("AK-01", "CA-01", "MO-01"))
   }
 })
+
+test_that("2027 reports an outdated loaded tigris before downloading", {
+  old_session_reader <- get_census_cd_sf
+  environment(old_session_reader) <- list2env(
+    list(getNamespaceVersion = function(package) "2.2.1"),
+    parent = environment(get_census_cd_sf)
+  )
+  local_mocked_bindings(
+    congressional_districts = function(...) stop("Download should not be reached"),
+    .package = "tigris"
+  )
+  expect_error(
+    old_session_reader(120L),
+    "this R session has 2.2.1 loaded.*restart R"
+  )
+})

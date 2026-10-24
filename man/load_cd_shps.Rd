@@ -16,7 +16,13 @@ correction notice:
 \url{https://www.census.gov/programs-surveys/decennial-census/about/rdo/congressional-districts.html}
 }
 \usage{
-load_cd_shps(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE)
+load_cd_shps(
+  year = NULL,
+  congress = NULL,
+  epsg = 5070,
+  simplify = TRUE,
+  cache = TRUE
+)
 }
 \arguments{
 \item{year}{integer, choose a year to load}
@@ -28,9 +34,13 @@ Optional if \code{congress} is given.}
 
 \item{simplify}{logical. For Lewis-era congresses (≤112), simplify
 boundaries to about Census cartographic \verb{20m} resolution (default \code{TRUE}).
-Ignored for Congresses 113–119, which use Census cartographic \verb{20m} files,
-and the 120th Congress, which retains detailed TIGER/Line boundaries in
-the nine redrawn states and 2025 cartographic boundaries elsewhere.}
+Ignored for Congresses 113–119, which are hard-coded to use Census cartographic \verb{20m} files.
+For the 120th Congress as of package v0.0.4, we simplify the nine redrawn states together after
+assembling the map. Use \code{FALSE} for full TIGER/Line detail.}
+
+\item{cache}{logical. Cache assembled 2027 maps in the current R session
+(default \code{TRUE}). Set \code{FALSE} to rebuild from the boundary inputs.
+Download caching is controlled separately by \code{options(tigris_use_cache = TRUE)}.}
 }
 \value{
 An sf object with CD boundaries for the requested Congress.
@@ -42,11 +52,9 @@ Download CD Shapes
 Download shapefiles (\code{sf} objects) for U.S. congressional districts for a
 given Congress number (1-120th).
 
-For 2027 (120th Congress), the 2026 Census TIGER/Line boundaries
-replace the 2025 map in Alabama, California, Florida, Louisiana,
-North Carolina, Ohio, Tennessee, Texas, and Utah. All other states,
-including Missouri, retain their 2025 boundaries. Alaska and Hawaii
-retain their existing inset placement. The returned year is 2027.
+For 2027 (120th Congress), we use the 2026 Census TIGER for
+AL, CA, FL, LA, NC, OH, TN, TX, and UT (with middecade redistricting), and
+reuse the previous cycle's dots for all other states.
 }
 \examples{
 library(sf)

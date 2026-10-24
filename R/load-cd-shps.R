@@ -11,15 +11,16 @@
 #' @param epsg integer EPSG code for output CRS (default 5070).
 #' @param simplify logical. For Lewis-era congresses (≤112), simplify
 #'   boundaries to about Census cartographic `20m` resolution (default `TRUE`).
-#'   Ignored for Congresses 113–119, which use Census cartographic `20m` files,
-#'   and the 120th Congress, which retains detailed TIGER/Line boundaries in
-#'   the nine redrawn states and 2025 cartographic boundaries elsewhere.
+#'   Ignored for Congresses 113–119, which are hard-coded to use Census cartographic `20m` files.
+#'   For the 120th Congress as of package v0.0.4, we simplify the nine redrawn states together after
+#'   assembling the map. Use `FALSE` for full TIGER/Line detail.
+#' @param cache logical. Cache assembled 2027 maps in the current R session
+#'   (default `TRUE`). Set `FALSE` to rebuild from the boundary inputs.
+#'   Download caching is controlled separately by `options(tigris_use_cache = TRUE)`.
 #'
-#' @details For 2027 (120th Congress), the 2026 Census TIGER/Line boundaries
-#'   replace the 2025 map in Alabama, California, Florida, Louisiana,
-#'   North Carolina, Ohio, Tennessee, Texas, and Utah. All other states,
-#'   including Missouri, retain their 2025 boundaries. Alaska and Hawaii
-#'   retain their existing inset placement. The returned year is 2027.
+#' @details For 2027 (120th Congress), we use the 2026 Census TIGER for
+#'  AL, CA, FL, LA, NC, OH, TN, TX, and UT (with middecade redistricting), and
+#'  reuse the previous cycle's dots for all other states.
 #'
 #' @format Each object is the sf for a particular congress. The year indicates
 #'  the start of that congress
@@ -58,7 +59,7 @@
 #' @export
 # Parameter
 # https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
-load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE) {
+load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE, cache = TRUE) {
 
   if (!is.null(congress)) {
     congress <- as.integer(congress)
@@ -70,6 +71,10 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
   load_one <- function(ci) {
     ci <- as.integer(ci)
     year <- as.integer(cong_to_firstyear(ci))
+    cache_key <- as.character(isTRUE(simplify))
+    if (ci == 120L && isTRUE(cache) && exists(cache_key, .cd_map_cache, inherits = FALSE)) {
+      return(project_cd_map(get(cache_key, .cd_map_cache), epsg))
+    }
 
     if (ci <= 112) {
       utils::data("state", package = "datasets", envir = environment())
@@ -150,11 +155,13 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
         st_as_sf(crs = 5070)
 
       census_map$geometry[match(akhi_sf$cd, census_map$cd)] <- akhi_sf$geometry
-      return(if (sf::st_crs(epsg) == sf::st_crs(census_map)) {
-        census_map
+      output_map <- if (ci == 120L && isTRUE(simplify)) {
+        simplify_cd_2027(census_map)
       } else {
-        st_transform(census_map, epsg)
-      })
+        census_map
+      }
+      if (ci == 120L && isTRUE(cache)) assign(cache_key, output_map, .cd_map_cache)
+      return(project_cd_map(output_map, epsg))
 
     } else {
       stop("Congress number greater than 120 is not yet supported.", call. = FALSE)
@@ -171,6 +178,30 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
   bind_rows(lapply(congress, load_one))
 }
 
+# Simplify assembled 2027 maps and retain them for repeat calls ----
+.cd_map_cache <- new.env(parent = emptyenv())
+
+project_cd_map <- function(x, epsg) {
+  if (sf::st_crs(x) == sf::st_crs(epsg)) x else st_transform(x, epsg)
+}
+
+simplify_cd_2027 <- function(x) {
+  updated <- substr(x$cd, 1, 2) %in% redrawn_states_2027
+  # Simplify shared arcs jointly, retaining small districts and the exact
+  # geometry of already generalized states, including Missouri and the insets.
+  simplified <- rmapshaper::ms_simplify(
+    x[updated, ], keep = 0.05, keep_shapes = TRUE, snap = FALSE
+  ) |>
+    sf::st_cast("MULTIPOLYGON")
+  stopifnot(
+    !anyDuplicated(simplified$cd), setequal(simplified$cd, x$cd[updated]),
+    all(sf::st_is_valid(simplified)), !any(sf::st_is_empty(simplified))
+  )
+  result <- x
+  sf::st_geometry(result)[updated] <- sf::st_geometry(simplified)[match(x$cd[updated], simplified$cd)]
+  result
+}
+
 # Work around geomander::get_lewis() returning NA URLs (e.g. Georgia).
 get_lewis_sf <- function(state, congress) {
   urls <- geomander::get_lewis(state = state, congress = congress, path_only = TRUE)
@@ -185,6 +216,13 @@ get_lewis_sf <- function(state, congress) {
 redrawn_states_2027 = c("AL", "CA", "FL", "LA", "NC", "OH", "TN", "TX", "UT")
 
 get_census_cd_sf <- function(congress) {
+  loaded_version <- as.character(getNamespaceVersion("tigris"))
+  if (congress == 120L && utils::compareVersion(loaded_version, "2.3.0") < 0L) {
+    stop(stringr::str_glue(
+      "2027 maps require tigris >= 2.3.0; this R session has {loaded_version} loaded. ",
+      "Update tigris, restart R, and reload fourthirtyfive."
+    ), call. = FALSE)
+  }
   read_map <- function(year, state = NULL, cb = TRUE) {
     raw <- tigris::congressional_districts(
       state = state, year = year, cb = cb, resolution = "20m"

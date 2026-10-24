@@ -1,6 +1,6 @@
 Package: fourthirtyfive
 Title: Data and shapefiles for visualizing congressional districts
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: 
     c(
      person("Shiro", "Kuriwaki", , "shiro.kuriwaki@yale.edu", role = c("aut", "cre"),
@@ -21,6 +21,7 @@ Imports:
     purrr,
     tigris (>= 2.3.0),
     rlang,
+    rmapshaper,
     stringr,
     urbnmapr,
     tibble,
