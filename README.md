@@ -18,6 +18,8 @@ Creator / Maintainer: Shiro Kuriwaki
 
 Contributors: Zoya Ahmer, Zachary Donnini, Cory McCartan
 
+Acknowledgements: Christopher T. Kenny and Jens Wiederspohn reviewed the package.
+
 Copyright holders: Downballot (some data)
 
 `fourthirtyfive` is a package that provides shapefiles and other data
@@ -239,14 +241,14 @@ scale may reflect cartographic generalization. The camera control saves
 the current map as a PNG.
 
 Interactive maps require the optional `mapgl` package and a Mapbox public token.
-See the [Mapbox setup guide](https://kuriwaki.github.io/fourthirtyfive/reference/mapbox-setup.html)
+See the [Mapbox setup guide](https://www.shirokuriwaki.com/fourthirtyfive/reference/mapbox-setup.html)
 for installation, token configuration, and usage limits, or run
 `help("mapbox-setup", package = "fourthirtyfive")` in R.
 
 We also provide a dataset of the **descriptive names** of each district
 (e.g., calling AZ-01 in the 110th Congress “Phoenix
 exurbs, Prescott, and Flagstaff”). These use [Daily
-Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts)
+Kos](https://www.dailykos.com/stories/2022/8/8/2113098/community/The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts/)
 names. Zachary Donnini supplied the 2005–2011 names.
 
 ``` r

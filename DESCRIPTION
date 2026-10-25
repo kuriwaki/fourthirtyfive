@@ -1,5 +1,5 @@
 Package: fourthirtyfive
-Title: Data and shapefiles for visualizing congressional districts
+Title: Data and Shapefiles for Visualizing Congressional Districts
 Version: 0.1.0
 Authors@R: 
     c(
@@ -9,10 +9,12 @@ Authors@R:
      person("Zachary", "Donnini", role = "ctb"),
      person("Cory", "McCartan", role = "ctb"),
      person("Daniel", "Donner", role = "ctb"),
+     person("Christopher T.", "Kenny", role = "rev"),
+     person("Jens", "Wiederspohn", role = "rev"),
      person("The Downballot", role = "cph")
      )
 Description: Shapefiles for visualizing congressional districts.
-URL: https://kuriwaki.github.io/fourthirtyfive/,
+URL: https://www.shirokuriwaki.com/fourthirtyfive/,
     https://github.com/kuriwaki/fourthirtyfive
 BugReports: https://github.com/kuriwaki/fourthirtyfive/issues
 License: MIT + file LICENSE
