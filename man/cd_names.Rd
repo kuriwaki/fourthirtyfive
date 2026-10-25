@@ -7,9 +7,11 @@
 cd_names(year = NULL, congress = NULL)
 }
 \arguments{
-\item{year}{Integer vector of years (e.g., \code{2011} or \code{c(2005, 2009, 2011)}).}
+\item{year}{Integer vector of years, such as \code{2025} or \code{c(2025, 2027)}.
+For data accessors, use Congress start years, rather than election years.}
 
-\item{congress}{Integer vector of Congress numbers}
+\item{congress}{Integer vector of Congress numbers, such as \code{119} or
+\code{c(119, 120)}.}
 }
 \value{
 A tibble with 435 rows per requested Congress and columns \code{cong},
@@ -18,6 +20,10 @@ A tibble with 435 rows per requested Congress and columns \code{cong},
 \description{
 Retrieve descriptive geographical names for congressional
 districts in one or more Congresses.
+}
+\details{
+Supply \code{year} or \code{congress}. Bundled district names cover Congresses
+109-120 (start years 2005-2027).
 }
 \examples{
 # load one dataset

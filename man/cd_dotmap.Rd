@@ -7,9 +7,11 @@
 cd_dotmap(year = NULL, congress = NULL)
 }
 \arguments{
-\item{year}{Integer vector of years from 2005-2027.}
+\item{year}{Integer vector of years, such as \code{2025} or \code{c(2025, 2027)}.
+For data accessors, use Congress start years, rather than election years.}
 
-\item{congress}{Integer vector of Congress numbers from the 109th-120th Congress.}
+\item{congress}{Integer vector of Congress numbers, such as \code{119} or
+\code{c(119, 120)}.}
 }
 \value{
 An sf object (single year) or sf/tibble (multiple years).
@@ -18,6 +20,10 @@ An sf object (single year) or sf/tibble (multiple years).
 Loads shapefile of coordinates. Each row contains a coordinate of the
 centroid of the CD, slightly dodged so that points in dense places do
 not overlap.
+}
+\details{
+Supply \code{year} or \code{congress}. Bundled dotmaps cover Congresses
+109-120 (start years 2005-2027).
 }
 \examples{
 # load one dataset

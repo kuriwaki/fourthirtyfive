@@ -6,8 +6,10 @@
 #' not overlap.
 #'
 #'
-#' @param year Integer vector of years from 2005-2027.
-#' @param congress Integer vector of Congress numbers from the 109th-120th Congress.
+#' @inheritParams cd_params
+#'
+#' @details Supply `year` or `congress`. Bundled dotmaps cover Congresses
+#'   109-120 (start years 2005-2027).
 #'
 #' @author Zoya Ahmer, Shiro Kuriwaki, Cory McCartan
 #'

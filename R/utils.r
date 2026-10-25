@@ -1,5 +1,5 @@
 #' Convert Congressional session to the start year of that Congress
-#' @param congress integer or numeric vector
+#' @inheritParams cd_params
 #' @return integer vector of start years
 #' @examples
 #' cong_to_firstyear(1) # 1789
@@ -15,7 +15,9 @@ cong_to_firstyear <- function(congress) {
 }
 
 #' Convert year of Congress to Congressional session
-#' @param year integer or numeric vector of years
+#' @inheritParams cd_params
+#' @details Both years in a two-year congressional session map to the same
+#'   Congress number.
 #' @return integer vector of Congress numbers
 #' @examples
 #' year_to_cong(2003) # 108

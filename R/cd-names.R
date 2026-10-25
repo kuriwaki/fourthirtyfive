@@ -4,8 +4,10 @@
 #' @description Retrieve descriptive geographical names for congressional
 #'   districts in one or more Congresses.
 #'
-#' @param year Integer vector of years (e.g., `2011` or `c(2005, 2009, 2011)`).
-#' @param congress Integer vector of Congress numbers
+#' @inheritParams cd_params
+#'
+#' @details Supply `year` or `congress`. Bundled district names cover Congresses
+#'   109-120 (start years 2005-2027).
 #'
 #' @return A tibble with 435 rows per requested Congress and columns `cong`,
 #'   `cd`, and `cd_description`. Multiple Congresses are stacked by row.

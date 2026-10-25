@@ -3,10 +3,12 @@
 #'
 #' @description Loads Daily Kos Elections cartogram shapefile of each district.
 #'
-#' @param year Integer vector of years from 2005-2027.
-#' @param congress Integer vector of Congress numbers from the 109th-120th Congress.
+#' @inheritParams cd_params
 #'
-#' @details Years indicate the year of the January in which the Congress starts.
+#' @details Supply `year` or `congress`. Bundled hexmaps cover Congresses
+#'   109-120 (start years 2005-2027).
+#'
+#'  Years indicate the year of the January in which the Congress starts.
 #'  For example, to get shapefiles for the 2022 election, set `year = 2023`.
 #'
 #'  `shp_hex_2027` reflects district lines redrawn mid-decade ahead of the 2026

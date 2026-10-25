@@ -5,8 +5,9 @@
 #' Alternative names for [cd_boundaries()], [cd_dotmap()], [cd_hexmap()], and
 #' [cd_names()], with the same arguments and return values.
 #'
-#' @param year,congress See the corresponding `cd_` accessor.
-#' @inheritParams cd_boundaries
+#' @inheritParams cd_params
+#' @details Available periods and state selection follow the corresponding
+#'   `cd_` accessor.
 #' @return The same `sf` object or tibble as the corresponding `cd_` accessor.
 #' @name accessor-aliases
 #' @export

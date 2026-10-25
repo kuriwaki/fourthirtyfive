@@ -5,22 +5,13 @@
 #' given Congress number (1-120th).
 #'
 #' @name cd_boundaries
-#' @param year Integer vector of years. Optional if `congress` is supplied.
-#' @param congress Integer vector of Congress numbers (1–120).
-#'   Optional if `year` is supplied.
-#' @param epsg integer EPSG code for output CRS (default 5070).
-#' @param simplify logical. For Lewis-era congresses (≤112), simplify
-#'   boundaries to about Census cartographic `20m` resolution (default `TRUE`).
-#'   Ignored for Congresses 113–119, which are hard-coded to use Census cartographic `20m` files.
-#'   For the 120th Congress, we simplify the nine redrawn states together after
-#'   assembling the map. Use `FALSE` for full TIGER/Line detail in those nine states;
-#'   all other states retain the previous cycle's cartographic `20m` boundaries.
-#' @param cache logical. Cache assembled 2027 maps in the current R session
-#'   (default `TRUE`). Set `FALSE` to rebuild from the boundary inputs.
-#'   Download caching is controlled separately by `options(tigris_use_cache = TRUE)`.
-#' @param state State name, abbreviation, or FIPS code; `NULL` returns all states.
+#' @inheritParams cd_params
 #'
-#' @details For 2027 (120th Congress), we use the 2026 Census TIGER for
+#' @details Supply `year` or `congress`. Boundaries cover Congresses 1-120
+#'   (start years 1789-2027). Leave `state = NULL` for all states, or supply
+#'   one or more states to select their districts.
+#'
+#'   For 2027 (120th Congress), we use the 2026 Census TIGER for
 #'  AL, CA, FL, LA, NC, OH, TN, TX, and UT (with middecade redistricting), and
 #'  reuse the previous cycle's boundaries for all other states.
 #'

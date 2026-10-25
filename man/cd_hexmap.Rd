@@ -12,9 +12,11 @@ district boundaries from Jeffrey B. Lewis's historical shapefiles.
 cd_hexmap(year = NULL, congress = NULL)
 }
 \arguments{
-\item{year}{Integer vector of years from 2005-2027.}
+\item{year}{Integer vector of years, such as \code{2025} or \code{c(2025, 2027)}.
+For data accessors, use Congress start years, rather than election years.}
 
-\item{congress}{Integer vector of Congress numbers from the 109th-120th Congress.}
+\item{congress}{Integer vector of Congress numbers, such as \code{119} or
+\code{c(119, 120)}.}
 }
 \value{
 An sf dataframe with 435 rows
@@ -23,6 +25,9 @@ An sf dataframe with 435 rows
 Loads Daily Kos Elections cartogram shapefile of each district.
 }
 \details{
+Supply \code{year} or \code{congress}. Bundled hexmaps cover Congresses
+109-120 (start years 2005-2027).
+
 Years indicate the year of the January in which the Congress starts.
 For example, to get shapefiles for the 2022 election, set \code{year = 2023}.
 

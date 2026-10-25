@@ -26,25 +26,30 @@ cd_boundaries(
 )
 }
 \arguments{
-\item{year}{Integer vector of years. Optional if \code{congress} is supplied.}
+\item{year}{Integer vector of years, such as \code{2025} or \code{c(2025, 2027)}.
+For data accessors, use Congress start years, rather than election years.}
 
-\item{congress}{Integer vector of Congress numbers (1–120).
-Optional if \code{year} is supplied.}
+\item{congress}{Integer vector of Congress numbers, such as \code{119} or
+\code{c(119, 120)}.}
 
-\item{epsg}{integer EPSG code for output CRS (default 5070).}
+\item{epsg}{Integer EPSG code for the output coordinate reference system
+(default \code{5070}).}
 
-\item{simplify}{logical. For Lewis-era congresses (≤112), simplify
+\item{simplify}{Logical. For Lewis-era Congresses (1-112), simplify
 boundaries to about Census cartographic \verb{20m} resolution (default \code{TRUE}).
-Ignored for Congresses 113–119, which are hard-coded to use Census cartographic \verb{20m} files.
-For the 120th Congress, we simplify the nine redrawn states together after
-assembling the map. Use \code{FALSE} for full TIGER/Line detail in those nine states;
-all other states retain the previous cycle's cartographic \verb{20m} boundaries.}
+Ignored for Congresses 113-119, which use Census cartographic \verb{20m} files.
+For the 120th Congress, simplify the nine redrawn states together after
+assembling the map. Use \code{FALSE} for full TIGER/Line detail in those nine
+states; all other states retain the previous cycle's cartographic \verb{20m}
+boundaries.}
 
-\item{cache}{logical. Cache assembled 2027 maps in the current R session
+\item{cache}{Logical. Cache assembled 2027 maps in the current R session
 (default \code{TRUE}). Set \code{FALSE} to rebuild from the boundary inputs.
-Download caching is controlled separately by \code{options(tigris_use_cache = TRUE)}.}
+Download caching is controlled separately by
+\code{options(tigris_use_cache = TRUE)}.}
 
-\item{state}{State name, abbreviation, or FIPS code; \code{NULL} returns all states.}
+\item{state}{State names, two-letter abbreviations, or FIPS codes, such as
+\code{"Tennessee"}, \code{"TN"}, or \code{47}.}
 }
 \value{
 An sf object with CD boundaries for the requested Congress.
@@ -54,6 +59,10 @@ Download \code{sf} boundaries for U.S. congressional districts for a
 given Congress number (1-120th).
 }
 \details{
+Supply \code{year} or \code{congress}. Boundaries cover Congresses 1-120
+(start years 1789-2027). Leave \code{state = NULL} for all states, or supply
+one or more states to select their districts.
+
 For 2027 (120th Congress), we use the 2026 Census TIGER for
 AL, CA, FL, LA, NC, OH, TN, TX, and UT (with middecade redistricting), and
 reuse the previous cycle's boundaries for all other states.
