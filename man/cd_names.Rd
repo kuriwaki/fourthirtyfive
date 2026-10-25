@@ -16,7 +16,8 @@ A tibble with 435 rows per requested Congress and columns \code{cong},
 \code{cd}, and \code{cd_description}. Multiple Congresses are stacked by row.
 }
 \description{
-This function returns one or more of the \verb{info_*} datasets
+Retrieve descriptive geographical names for congressional
+districts in one or more Congresses.
 }
 \examples{
 # load one dataset

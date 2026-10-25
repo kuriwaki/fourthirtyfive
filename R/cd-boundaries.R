@@ -12,7 +12,7 @@
 #' @param simplify logical. For Lewis-era congresses (≤112), simplify
 #'   boundaries to about Census cartographic `20m` resolution (default `TRUE`).
 #'   Ignored for Congresses 113–119, which are hard-coded to use Census cartographic `20m` files.
-#'   For the 120th Congress as of package v0.0.4, we simplify the nine redrawn states together after
+#'   For the 120th Congress, we simplify the nine redrawn states together after
 #'   assembling the map. Use `FALSE` for full TIGER/Line detail in those nine states;
 #'   all other states retain the previous cycle's cartographic `20m` boundaries.
 #' @param cache logical. Cache assembled 2027 maps in the current R session

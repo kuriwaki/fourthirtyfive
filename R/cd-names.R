@@ -1,7 +1,8 @@
 # Written by Codex
 #' @title Descriptive congressional district names
 #'
-#' @description This function returns one or more of the `info_*` datasets
+#' @description Retrieve descriptive geographical names for congressional
+#'   districts in one or more Congresses.
 #'
 #' @param year Integer vector of years (e.g., `2011` or `c(2005, 2009, 2011)`).
 #' @param congress Integer vector of Congress numbers
@@ -52,11 +53,13 @@ cd_names <- function(year = NULL, congress = NULL) {
   }
 }
 
-#' @title Congressional District level information
+#' @title Congressional district name datasets
 #' @name info
 #' @docType data
 #' @keywords datasets
-#' @description A 435-row table, per each Congress, with descriptive names for each CD.
+#' @description Bundled tables of descriptive geographical names for
+#'   congressional districts. Each dataset is a 435-row table for one Congress.
+#'   Use [cd_names()] to select and stack tables by year or Congress number.
 #' @keywords internal
 #'
 #' @format Each object is for a particular congress. The year indicates the start

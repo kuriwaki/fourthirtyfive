@@ -1,21 +1,21 @@
 # Written by Codex
-test_that("bundled cd accessors preserve the existing data and date selectors", {
+test_that("bundled cd accessors return the requested datasets", {
   cases <- list(
     list(
       canonical = cd_names,
-      legacy = load_cd_info,
+      alias = load_cd_info,
       earlier = getExportedValue("fourthirtyfive", "info_2005"),
       latest = getExportedValue("fourthirtyfive", "info_2027")
     ),
     list(
       canonical = cd_dotmap,
-      legacy = load_shp_dot,
+      alias = load_shp_dot,
       earlier = getExportedValue("fourthirtyfive", "shp_dot_2005"),
       latest = getExportedValue("fourthirtyfive", "shp_dot_2027")
     ),
     list(
       canonical = cd_hexmap,
-      legacy = load_shp_hex,
+      alias = load_shp_hex,
       earlier = getExportedValue("fourthirtyfive", "shp_hex_2005"),
       latest = getExportedValue("fourthirtyfive", "shp_hex_2027")
     )
@@ -23,7 +23,7 @@ test_that("bundled cd accessors preserve the existing data and date selectors", 
 
   for (case in cases) {
     stacked <- dplyr::bind_rows(case$earlier, case$latest)
-    for (accessor in list(case$canonical, case$legacy)) {
+    for (accessor in list(case$canonical, case$alias)) {
       expect_identical(accessor(year = 2027), case$latest)
       expect_identical(accessor(congress = 120), case$latest)
       expect_identical(accessor(2027), case$latest)
@@ -34,7 +34,7 @@ test_that("bundled cd accessors preserve the existing data and date selectors", 
   }
 })
 
-test_that("the boundary compatibility function forwards every argument", {
+test_that("the boundary alias forwards every argument", {
   local_mocked_bindings(
     cd_boundaries = function(year = NULL, congress = NULL, epsg = 5070,
                              simplify = TRUE, cache = TRUE, state = NULL) {

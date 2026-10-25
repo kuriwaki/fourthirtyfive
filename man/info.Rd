@@ -15,7 +15,7 @@
 \alias{info_2023}
 \alias{info_2025}
 \alias{info_2027}
-\title{Congressional District level information}
+\title{Congressional district name datasets}
 \format{
 Each object is for a particular congress. The year indicates the start
 of that Congress. Each observation is a congressional district, which contains a
@@ -68,7 +68,9 @@ Also see Cha, Kuriwaki, and Snyder, 2024,
 Harvard Dataverse, for congressional candidate's (instead of President's) vote totals.
 }
 \description{
-A 435-row table, per each Congress, with descriptive names for each CD.
+Bundled tables of descriptive geographical names for
+congressional districts. Each dataset is a 435-row table for one Congress.
+Use \code{\link[=cd_names]{cd_names()}} to select and stack tables by year or Congress number.
 }
 \examples{
 head(info_2005)

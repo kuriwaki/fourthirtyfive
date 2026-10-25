@@ -61,9 +61,7 @@ cd_available()
 #> Historical hexmaps for 2005-2011 reuse the generated 2009 map.
 ```
 
-Use `cd_available(quiet = TRUE)` to get just the table. The original
-`load_cd_shps()`, `load_shp_dot()`, `load_shp_hex()`, and
-`load_cd_info()` functions remain available as compatibility wrappers.
+Use `cd_available(quiet = TRUE)` to get just the table.
 
 We are building several types of maps. First, the **dotmap** is where
 one CD is treated as point. We use the centroid of the actual map, and
@@ -84,8 +82,7 @@ cd_dotmap(2023) |>
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
 
-For now, the output of each function for recent years is stored as a
-package dataset as well:
+Dotmaps are also available as bundled datasets:
 
 ``` r
 shp_dot_2023
@@ -177,7 +174,7 @@ cd_names(2007)
 #> # ℹ 425 more rows
 ```
 
-This can be loaded as an object too, for now:
+The same district names are available as a bundled dataset:
 
 ``` r
 info_2007
