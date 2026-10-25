@@ -2,7 +2,7 @@
 % Please edit documentation in R/cd-mapbox.R
 \name{cd_mapbox}
 \alias{cd_mapbox}
-\title{TODO: Finalize the interactive map title}
+\title{Interactive CD map with cities in background}
 \usage{
 cd_mapbox(
   cd = NULL,
@@ -24,29 +24,30 @@ a two-digit district number, such as \code{"TN-09"}. At-large districts use
 \item{state}{State names, two-letter abbreviations, or FIPS codes, such as
 \code{"Tennessee"}, \code{"TN"}, or \code{47}.}
 
-\item{cities}{TODO: Document optional city selection.}
+\item{cities}{A character name like \code{"Memphis"} or \code{"San Bernardino"} to highlight
+in the map.}
 
-\item{zoom_to_cities}{TODO: Document initial map extent.}
+\item{zoom_to_cities}{Default to have mapbox zoom into the city, if specified?
+Defaults to FALSE.}
 
-\item{colors}{TODO: Document Congress colors.}
+\item{colors}{Colors for district lines. Accepts up to three, for different
+Congresses.}
 }
 \value{
 A \code{mapgl} Mapbox HTML widget.
 }
 \description{
-Compare congressional district boundaries on one interactive Mapbox map.
-Display one district or one state, overlay up to three Congresses, and
-optionally highlight up to two incorporated cities in magenta.
+View congressional district boundaries on a interactive Mapbox map.
+Useful for seeing how much a district overlaps with a city, or comapring multiple
+district maps together.
 }
 \details{
 Supply exactly one district with \code{cd} or one state with \code{state},
 and one to three Congress numbers from 1-120 with \code{congress}.
 
-Cities are not displayed unless requested. City outlines use 2026
-Census incorporated-place boundaries, shared across the compared Congresses;
-they do not represent historical municipal boundaries. Geographic detail
-varies by Congress: recent cartographic boundaries are generalized, while
-the 120th-Congress redrawn states use detailed TIGER/Line boundaries.
+City outlines only use 2026
+Census incorporated-place boundaries, shared across the compared Congresses.
+They do not represent historical municipal boundaries.
 Alaska and Hawaii are excluded because the package's boundaries use insets.
 }
 \examples{
@@ -64,5 +65,8 @@ Other congressional district accessors:
 \code{\link[=cd_dotmap]{cd_dotmap()}},
 \code{\link[=cd_hexmap]{cd_hexmap()}},
 \code{\link[=cd_names]{cd_names()}}
+}
+\author{
+Codex
 }
 \concept{congressional district accessors}

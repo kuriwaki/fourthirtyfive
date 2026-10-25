@@ -1,25 +1,27 @@
 # Written by Codex
 
-#' TODO: Finalize the interactive map title
+#' Interactive CD map with cities in background
 #'
-#' Compare congressional district boundaries on one interactive Mapbox map.
-#' Display one district or one state, overlay up to three Congresses, and
-#' optionally highlight up to two incorporated cities in magenta.
+#' View congressional district boundaries on a interactive Mapbox map.
+#' Useful for seeing how much a district overlaps with a city, or comapring multiple
+#' district maps together.
 #'
 #' @inheritParams cd_params
-#' @param cities TODO: Document optional city selection.
-#' @param zoom_to_cities TODO: Document initial map extent.
-#' @param colors TODO: Document Congress colors.
+#' @param cities A character name like `"Memphis"` or `"San Bernardino"` to highlight
+#'  in the map.
+#' @param zoom_to_cities Default to have mapbox zoom into the city, if specified?
+#'  Defaults to FALSE.
+#' @param colors Colors for district lines. Accepts up to three, for different
+#'  Congresses.
 #' @return A `mapgl` Mapbox HTML widget.
 #' @details Supply exactly one district with `cd` or one state with `state`,
 #'   and one to three Congress numbers from 1-120 with `congress`.
 #'
-#'   Cities are not displayed unless requested. City outlines use 2026
-#'   Census incorporated-place boundaries, shared across the compared Congresses;
-#'   they do not represent historical municipal boundaries. Geographic detail
-#'   varies by Congress: recent cartographic boundaries are generalized, while
-#'   the 120th-Congress redrawn states use detailed TIGER/Line boundaries.
+#'   City outlines only use 2026
+#'   Census incorporated-place boundaries, shared across the compared Congresses.
+#'   They do not represent historical municipal boundaries.
 #'   Alaska and Hawaii are excluded because the package's boundaries use insets.
+#'
 #' @seealso [mapbox-setup] for account setup, access tokens, and free usage limits.
 #' @family congressional district accessors
 #' @examples
@@ -29,6 +31,7 @@
 #' }
 #' @importFrom rlang .env
 #' @export
+#' @author Codex
 cd_mapbox <- function(cd = NULL, congress, state = NULL, cities = NULL,
                     zoom_to_cities = FALSE,
                     colors = c("#2166AC", "#D95F02", "#009E73")) {
