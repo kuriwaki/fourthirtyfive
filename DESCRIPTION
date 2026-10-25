@@ -1,6 +1,6 @@
 Package: fourthirtyfive
 Title: Data and shapefiles for visualizing congressional districts
-Version: 0.0.3
+Version: 0.0.4
 Authors@R: 
     c(
      person("Shiro", "Kuriwaki", , "shiro.kuriwaki@yale.edu", role = c("aut", "cre"),
@@ -15,23 +15,24 @@ Description: Shapefiles for visualizing congressional districts.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 Imports:
     dplyr,
     sf,
     purrr,
-    tigris,
+    tigris (>= 2.3.0),
     rlang,
+    rmapshaper,
     stringr,
-    urbnmapr,
     tibble,
     geomander (>= 2.5.3)
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1)
 Suggests: 
-    ggplot2
+    ggplot2,
+    testthat (>= 3.2.0)
+Config/testthat/edition: 3
 Remotes:
-    UrbanInstitute/urbnmapr,
     christopherkenny/geomander,
     CoryMcCartan/hexmap
 LazyData: true
+Config/roxygen2/version: 8.0.0

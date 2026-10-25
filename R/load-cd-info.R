@@ -66,10 +66,12 @@ load_cd_info <- function(year = NULL, congress = NULL) {
 #'    left to be of length 2. At-large districts like Delaware are given a "-01"
 #'    for the district number.}
 #'    \item{`cd_description`}{The unique descriptive name for the district code.
-#'    info_20** column from 2013 onwards are taken from "cd_info" in the
+#'    info_20** column from 2013 through 2025 are taken from "cd_info" in the
 #'    [`ccesMRPprep`](https://github.com/kuriwaki/ccesMRPprep)
 #'    package (See Source for full citation). info_20** from earlier years (2005–2011)
-#'    were manually coded in Daily Kos style.}
+#'    were manually coded in Daily Kos style. `info_2027` was coded in October 2026
+#'    by visual inspection of Wikipedia pages and then checked via GPT using the
+#'    tigris v2.3.0 shapefiles.}
 #'  }
 #' @author Zachary Donnini, Shiro Kuriwaki, Daily Kos, Downballot
 #' @source
@@ -93,6 +95,10 @@ load_cd_info <- function(year = NULL, congress = NULL) {
 #'   * 118th Congress: \url{https://bit.ly/geography_118}
 #'
 #'   PA 2016 descriptive names: Shiro Kuriwaki and Lara Putnam.
+#'   PA 2027 descriptive names: Zoya Ahmer and Jens Wiederspohn
+#'
+#'   2027 manual district names:
+#'   \url{https://bit.ly/4sjkdCA}
 #'
 #'   Also see Cha, Kuriwaki, and Snyder, 2024,
 #'    "Candidates in American General Elections", \url{https://doi.org/10.7910/DVN/DGDRDT},
@@ -106,6 +112,7 @@ load_cd_info <- function(year = NULL, congress = NULL) {
 #'
 #' @aliases info_2005 info_2007 info_2009 info_2011 info_2013
 #' @aliases info_2015 info_2017 info_2019 info_2021 info_2023 info_2025
+#' @aliases info_2027
 #'
 #' @examples
 #' head(info_2005)

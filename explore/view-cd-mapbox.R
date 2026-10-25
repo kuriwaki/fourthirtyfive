@@ -8,7 +8,7 @@ get_cd_geometry <- function(cd, congress) {
     is.character(cd), length(cd) == 1L, !is.na(cd),
     grepl("^[A-Z]{2}-[0-9]{2}$", cd),
     is.numeric(congress), length(congress) == 1L, !is.na(congress),
-    congress == as.integer(congress), congress >= 1, congress <= 119
+    congress == as.integer(congress), congress >= 1, congress <= 120
   )
 
   if (substr(cd, 1, 2) %in% c("AK", "HI")) {
@@ -40,7 +40,9 @@ get_cd_geometry <- function(cd, congress) {
       dplyr::filter(.data$cd == .env$cd)
   } else {
     # Keep the loader's default CRS; filter before converting to longitude/latitude.
-    district_sf <- fourthirtyfive::load_cd_shps(congress = congress) |>
+    district_sf <- fourthirtyfive::load_cd_shps(
+      congress = congress, state = substr(cd, 1, 2), simplify = congress != 120
+    ) |>
       dplyr::filter(.data$cd == .env$cd)
   }
 
@@ -112,6 +114,83 @@ view_mapbox <- function(cd, congress, colors = c("#2166AC", "#D95F02", "#009E73"
     mapgl::add_navigation_control()
 }
 
+# Check 2027 city descriptions ----
+# Blue: one district. Pink: highlighted places. Gray: other places.
+# By default show places in and around the district's map extent. Supply cities to select
+# specific places, including those outside the district; hover for their names.
+view_cd_2027 <- function(cd, cities = NULL, highlight = NULL, zoom_to_cities = FALSE) {
+  stopifnot(is.character(cd), length(cd) == 1L, !is.na(cd), grepl("^[A-Z]{2}-[0-9]{2}$", cd))
+  state <- substr(cd, 1, 2)
+  stopifnot(state %in% c("AL", "CA", "FL", "LA", "NC", "OH", "TN", "TX", "UT"))
+  district <- get_cd_geometry(cd, congress = 120)
+  places_raw <- tigris::places(state = state, year = 2026, cb = FALSE)
+  resolve_names <- function(requested) {
+    available <- unique(places_raw$NAME)
+    vapply(requested, function(name) {
+      matches <- available[tolower(available) == tolower(name)]
+      if (!length(matches)) matches <- available[startsWith(tolower(available), tolower(name))]
+      if (length(matches) != 1L) {
+        stop(glue::glue("'{name}' must match one Census place name in {state}."), call. = FALSE)
+      }
+      matches
+    }, character(1), USE.NAMES = FALSE)
+  }
+  city_names <- resolve_names(cities)
+  highlighted_names <- resolve_names(highlight)
+  places_input <- if (is.null(cities)) places_raw else {
+    dplyr::filter(places_raw, .data$NAME %in% c(city_names, highlighted_names))
+  }
+  places_projected <- places_input |>
+    dplyr::select(NAME, geometry) |>
+    sf::st_transform(5070) |>
+    sf::st_make_valid()
+  nearby <- if (is.null(cities)) {
+    view_area <- sf::st_as_sfc(sf::st_bbox(sf::st_transform(district, 5070))) |>
+      sf::st_buffer(10000)
+    lengths(sf::st_intersects(places_projected, view_area)) > 0L
+  } else {
+    places_projected$NAME %in% city_names
+  }
+  places <- places_projected[nearby | places_projected$NAME %in% highlighted_names, ] |>
+    dplyr::transmute(
+      NAME, city_color = dplyr::if_else(.data$NAME %in% highlighted_names, "#CC338B", "#555555"),
+      geometry
+    ) |>
+    sf::st_transform(4326)
+
+  city_map <- view_mapbox(cd, congress = 120) |>
+    mapgl::add_source(id = "city-boundaries", data = places) |>
+    mapgl::add_fill_layer(
+      id = "city-fills", source = "city-boundaries",
+      fill_color = mapgl::get_column("city_color"), fill_opacity = 0.08,
+      popup = "NAME"
+    ) |>
+    mapgl::add_line_layer(
+      id = "city-outlines", source = "city-boundaries",
+      line_color = mapgl::get_column("city_color"), line_width = 2,
+      tooltip = "NAME"
+    ) |>
+    mapgl::add_legend(
+      legend_title = "City boundaries", values = c("Highlighted places", "Other places"),
+      colors = c("#CC338B", "#555555"), type = "categorical",
+      position = "bottom-left", add = TRUE
+    )
+  focus_places <- if (is.null(cities) && length(highlighted_names)) {
+    dplyr::filter(places, .data$NAME %in% highlighted_names)
+  } else places
+  if (isTRUE(zoom_to_cities) && nrow(focus_places)) mapgl::fit_bounds(city_map, focus_places, padding = 60) else city_map
+}
+
+# Retain the original Utah view and initial zoom ----
+view_utah_2027 <- function(cd, zoom_to_cities = TRUE) {
+  stopifnot(is.character(cd), length(cd) == 1L, !is.na(cd), grepl("^UT-0[1-4]$", cd))
+  view_cd_2027(cd, cities = c(
+    "Salt Lake City", "North Salt Lake", "South Salt Lake", "West Valley City",
+    "West Jordan", "South Jordan", "Millcreek", "Holladay", "Cottonwood Heights",
+    "Sandy", "Draper", "Lehi", "Orem", "Provo"
+  ), highlight = "Salt Lake City", zoom_to_cities = zoom_to_cities)
+}
+
 # Examples: run one at a time in the RStudio console ----
 # options(tigris_use_cache = TRUE)
 # view_mapbox("FL-05", congress = 113)
@@ -123,3 +202,13 @@ view_mapbox <- function(cd, congress, colors = c("#2166AC", "#D95F02", "#009E73"
 # view_mapbox("NC-13", congress = c(113, 115))
 # view_mapbox("NC-13", congress = c(115, 117))
 # district_sf <- get_cd_geometry("NC-13", congress = 117)
+# view_utah_2027("UT-03")
+# view_utah_2027("UT-04")
+# view_utah_2027("UT-01") # Salt Lake City proper is inside this district.
+# view_utah_2027("UT-03", zoom_to_cities = FALSE) # Whole district, including St. George.
+# view_cd_2027("NC-01")
+# view_cd_2027("NC-03", highlight = c("Greenville", "Jacksonville"))
+# view_cd_2027("OH-13", cities = c("Akron", "Canton"), highlight = c("Akron", "Canton"), zoom_to_cities = TRUE)
+# view_cd_2027("OH-10", highlight = c("Dayton", "Middletown"))
+# view_cd_2027("OH-15", highlight = "Columbus", zoom_to_cities = TRUE)
+# view_cd_2027("TN-04", highlight = c("Nashville", "Murfreesboro"))

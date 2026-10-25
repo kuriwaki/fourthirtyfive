@@ -14,6 +14,7 @@
 \alias{shp_dot_2021}
 \alias{shp_dot_2023}
 \alias{shp_dot_2025}
+\alias{shp_dot_2027}
 \title{Dotmap: Dodged CD centroids}
 \format{
 Each object is for a particular congress. The year indicates the start
@@ -24,6 +25,10 @@ a point.
 Coordinates from 2012 onwards taken from US Census, \code{tigris} package.
 Coordinates from early Congresses taken from Jeffrey B. Lewis, historical congressional
 district shapefiles
+
+For 2027, we use tigris v.2.3.0 as of October 24 2026 to get the new centers in
+AL, CA, FL, LA, NC, OH, TN, TX, and UT, and reuse the previous cycle's dots
+for other states.
 }
 \description{
 Shapefile of coordinates. Each row contains a coordinate of the centroid of the CD,
