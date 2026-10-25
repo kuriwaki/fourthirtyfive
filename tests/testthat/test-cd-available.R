@@ -12,7 +12,7 @@ test_that("availability reports each bundled product without fetching maps", {
   expect_s3_class(available, "tbl_df")
   expect_named(available, c("accessor", "year", "congress", "source"))
   expect_setequal(unique(available$accessor), c(
-    "cd_boundaries", "cd_dotmap", "cd_hexmap", "cd_names"
+    "cd_boundaries", "cd_dotmap", "cd_hexmap", "cd_names", "cd_pvi"
   ))
   expect_identical(anyDuplicated(available[c("accessor", "congress")]), 0L)
   expect_identical(available$year, cong_to_firstyear(available$congress))
@@ -24,7 +24,9 @@ test_that("availability reports each bundled product without fetching maps", {
   expect_match(boundaries$source[boundaries$congress == 120L], "mixed")
 
   index_items <- utils::data(package = "fourthirtyfive")$results[, "Item"]
-  prefixes <- c(cd_dotmap = "shp_dot_", cd_hexmap = "shp_hex_", cd_names = "info_")
+  prefixes <- c(
+    cd_dotmap = "shp_dot_", cd_hexmap = "shp_hex_", cd_names = "info_"
+  )
   for (accessor in names(prefixes)) {
     bundled_items <- index_items[startsWith(index_items, prefixes[[accessor]])]
     bundled_years <- as.integer(sub(".*_([0-9]{4}).*", "\\1", bundled_items))
@@ -33,6 +35,16 @@ test_that("availability reports each bundled product without fetching maps", {
       sort(unique(bundled_years))
     )
   }
+  pvi_available <- available[available$accessor == "cd_pvi", ]
+  expect_identical(pvi_available$congress, 106:120)
+  expect_identical(pvi_available$year, seq.int(1999L, 2027L, 2L))
+  expected_counts <- c(412L, rep(0L, 11L), rep(435L, 3L))
+  expect_identical(
+    pvi_available$source,
+    as.character(glue::glue(
+      "The Cook Political Report ({expected_counts}/435 district values; gaps are NA)"
+    ))
+  )
   historical_hexes <- available[
     available$accessor == "cd_hexmap" & available$year <= 2011L,
   ]

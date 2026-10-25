@@ -33,6 +33,7 @@ Imports:
 Depends: 
     R (>= 4.1)
 Suggests: 
+    ggredist,
     ggplot2,
     mapgl (>= 0.5.0),
     patchwork,

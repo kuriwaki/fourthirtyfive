@@ -19,12 +19,13 @@ does not imply that every product uses distinct geometry for every Congress.
 \description{
 Print a compact guide to the package's data functions, their coverage, and
 their sources. Availability of bundled dotmaps, hexmaps, and district names
-is read from the package data index. No maps are downloaded or loaded.
+is read from the package data index. PVI coverage counts are read from the
+bundled PVI table. No maps are downloaded or loaded.
 }
 \details{
 Boundary maps cover Congresses 1 through 120 and are retrieved from
 Lewis's historical congressional district boundaries or the US Census.
-The 120th Congress combines Census boundary vintages. Bundled hexmaps for
+The 120th Congress combines Census boundary releases. Bundled hexmaps for
 2005 through 2011 reuse a map generated for the 111th Congress (2009);
 those maps do not reconstruct every historical boundary change. See the
 individual functions for data sources and limitations.

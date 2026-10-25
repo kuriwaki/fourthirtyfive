@@ -4,6 +4,10 @@ url: https://kuriwaki.github.io/fourthirtyfive/
 template:
   bootstrap: 5
 
+figures:
+  fig.width: 5
+  fig.height: 3
+
 navbar:
   structure:
     left: [intro, reference, coverage, interactive, news]
@@ -25,9 +29,11 @@ navbar:
 
 reference:
 - title: District data functions
-- contents: [cd_available, cd_boundaries, cd_dotmap, cd_hexmap, cd_names, cd_mapbox]
+- contents: [cd_available, cd_boundaries, cd_dotmap, cd_hexmap, cd_names, cd_pvi, cd_mapbox]
+- title: Partisanship helpers
+- contents: [pvi_to_numeric]
 - title: Bundled datasets
-- contents: [shp_dot, shp_hex, shp_states, info]
+- contents: [shp_dot, shp_hex, shp_states, info, pvi]
 - title: Years and Congresses
 - contents: [year_to_cong, cong_to_firstyear]
 - title: Interactive map setup

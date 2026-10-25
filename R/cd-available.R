@@ -4,7 +4,8 @@
 #'
 #' Print a compact guide to the package's data functions, their coverage, and
 #' their sources. Availability of bundled dotmaps, hexmaps, and district names
-#' is read from the package data index. No maps are downloaded or loaded.
+#' is read from the package data index. PVI coverage counts are read from the
+#' bundled PVI table. No maps are downloaded or loaded.
 #'
 #' @param quiet Logical. Set to `TRUE` to suppress the guide and obtain only the
 #'   returned availability table.
@@ -16,7 +17,7 @@
 #'
 #' @details Boundary maps cover Congresses 1 through 120 and are retrieved from
 #'   Lewis's historical congressional district boundaries or the US Census.
-#'   The 120th Congress combines Census boundary vintages. Bundled hexmaps for
+#'   The 120th Congress combines Census boundary releases. Bundled hexmaps for
 #'   2005 through 2011 reuse a map generated for the 111th Congress (2009);
 #'   those maps do not reconstruct every historical boundary change. See the
 #'   individual functions for data sources and limitations.
@@ -43,7 +44,9 @@ cd_available <- function(quiet = FALSE) {
     congress = boundary_congresses,
     source = .cd_available_sources("cd_boundaries", boundary_congresses)
   )
-  prefixes <- c(cd_dotmap = "shp_dot_", cd_hexmap = "shp_hex_", cd_names = "info_")
+  prefixes <- c(
+    cd_dotmap = "shp_dot_", cd_hexmap = "shp_hex_", cd_names = "info_"
+  )
   bundled <- lapply(names(prefixes), function(accessor) {
     years <- .cd_available_years(items, prefixes[[accessor]])
     congresses <- year_to_cong(years)
@@ -55,7 +58,17 @@ cd_available <- function(quiet = FALSE) {
       source = sources
     )
   })
-  available <- dplyr::bind_rows(boundaries, bundled)
+  pvi_data <- .cd_pvi_table()
+  pvi_congresses <- sort(unique(pvi_data$cong[pvi_data$geography == "district"]))
+  pvi_available <- tibble::tibble(
+    accessor = rep("cd_pvi", length(pvi_congresses)),
+    year = cong_to_firstyear(pvi_congresses),
+    congress = pvi_congresses,
+    source = vapply(pvi_congresses, function(congress) {
+      .cd_pvi_source_summary(pvi_data[pvi_data$cong == congress, ])
+    }, character(1))
+  )
+  available <- dplyr::bind_rows(boundaries, bundled, pvi_available)
 
   if (!quiet) {
     cli::cli_h2("Available congressional district data")
@@ -63,9 +76,10 @@ cd_available <- function(quiet = FALSE) {
       cd_boundaries = "Lewis / US Census",
       cd_dotmap = "Lewis / US Census, dodged centroids",
       cd_hexmap = "hexmap / The Downballot",
-      cd_names = "Daily Kos / The Downballot / contributors"
+      cd_names = "Daily Kos / The Downballot / contributors",
+      cd_pvi = "The Cook Political Report; public-source gaps are NA"
     )
-    for (accessor in c("cd_boundaries", names(prefixes))) {
+    for (accessor in c("cd_boundaries", names(prefixes), "cd_pvi")) {
       product <- available[available$accessor == accessor, ]
       if (nrow(product) == 0L) {
         cli::cli_bullets(c("*" = "{.fun {accessor}}: no bundled data."))
@@ -80,6 +94,7 @@ cd_available <- function(quiet = FALSE) {
     }
     cli::cli_text("Years refer to the start of a Congress, not its election year.")
     cli::cli_text("Historical hexmaps for 2005-2011 reuse the generated 2009 map.")
+    cli::cli_text("PVI tables flag unavailable and documented unchanged values; inspect their status column.")
   }
 
   invisible(available)
@@ -100,7 +115,7 @@ cd_available <- function(quiet = FALSE) {
   switch(accessor,
     cd_boundaries = dplyr::case_when(
       congress <= 112L ~ "Lewis historical boundaries",
-      congress == 120L ~ "US Census (mixed boundary vintages)",
+      congress == 120L ~ "US Census (mixed boundary releases)",
       TRUE ~ "US Census"
     ),
     cd_dotmap = dplyr::if_else(
