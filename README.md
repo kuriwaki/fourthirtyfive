@@ -5,7 +5,13 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml)
+[![Dotmap
+coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-coverage/dotmaps.svg)](https://github.com/kuriwaki/fourthirtyfive/tree/main/data)
+[![Hexmap
+coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-coverage/hexmaps.svg)](https://github.com/kuriwaki/fourthirtyfive/tree/main/data)
+[![District-name
+coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-coverage/names.svg)](https://github.com/kuriwaki/fourthirtyfive/tree/main/data)
 <!-- badges: end -->
 
 Maintainer: Shiro Kuriwaki
@@ -16,7 +22,11 @@ Copyright holders: Downballot (some data)
 
 `fourthirtyfive` is a package that provides shapefiles and other data
 for the 435 congressional districts, gathering good ideas from various
-authors. The current data cover 2006-2027.
+authors.
+
+The coverage badges show Congress start years for bundled datasets on
+`main`. Use `cd_available()` for the full guide, including historical
+geographic boundaries.
 
 ## Installation
 
@@ -130,13 +140,6 @@ the projected Web Mercator versions (`wm` suffix) from the Downballot.
 We do not store actual CD shapefiles, but we provide a function to draw
 these from either the Census or Jeff Lewis’s historical shapefiles.
 
-Use `cd_boundaries(year = 2027)` for the 120th Congress. The nine states
-redrawn for the 2026 election use Census’s 2026 TIGER/Line boundaries,
-simplified together for plotting by default; all other states, including
-Missouri, retain the 2025 map. Use `simplify = FALSE` for full detail in
-the nine redrawn states. The assembled 2027 map is cached within the R
-session; use `cache = FALSE` to rebuild it.
-
 ``` r
 cd_shps <- cd_boundaries(congress = 118)
 ```
@@ -149,6 +152,45 @@ cd_shps |>
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" />
+
+Compare Tennessee’s district boundaries for the 119th and 120th
+Congresses. The maps use the same extent and district colors, with the
+119th Congress above the 120th.
+
+``` r
+library(patchwork)
+
+tn_boundaries <- cd_boundaries(congress = c(119, 120), state = "TN")
+tn_extent <- st_bbox(tn_boundaries)
+
+plot_tn <- function(congress_number, title) {
+  tn_boundaries |>
+    dplyr::filter(.data$congress == congress_number) |>
+    ggplot(aes(fill = cd)) +
+    geom_sf(color = "white", linewidth = 0.35) +
+    geom_sf_text(aes(label = stringr::str_remove(cd, "^TN-0?")), size = 3) +
+    scale_fill_brewer(palette = "Set3", guide = "none") +
+    coord_sf(
+      xlim = unname(tn_extent[c("xmin", "xmax")]),
+      ylim = unname(tn_extent[c("ymin", "ymax")]),
+      expand = FALSE
+    ) +
+    labs(title = title) +
+    theme_void() +
+    theme(plot.title = element_text(face = "bold", size = 13))
+}
+
+tn_119 <- plot_tn(119, "119th Congress (2025-2026)")
+tn_120 <- plot_tn(120, "120th Congress (2027-2028)")
+
+(tn_119 / tn_120) +
+  plot_annotation(
+    title = "Tennessee congressional districts",
+    caption = "Source: U.S. Census Bureau via tigris. 119th: 2024 cartographic boundaries;\n120th: 2026 TIGER/Line boundaries, simplified for display. Colors identify district numbers."
+  )
+```
+
+<img src="man/figures/README-tn-boundaries-1.png" alt="" width="100%" />
 
 We also provide a dataset of the **descriptive names** of each district
 (e.g., calling AZ-01 in the 110th congressional district “Phoenix
