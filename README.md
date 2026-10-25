@@ -30,12 +30,40 @@ remotes::install_github("kuriwaki/fourthirtyfive")
 
 ## Example
 
-The main output of the package are datasets which comes pre-loaded with
-the package.
+Use the `cd_` accessors to retrieve district data. Type `cd_` in RStudio
+to discover the family with autocomplete.
 
 ``` r
 library(fourthirtyfive)
 ```
+
+| Accessor          | Returns                                             |
+|-------------------|-----------------------------------------------------|
+| `cd_boundaries()` | Geographic district boundaries as an `sf` object    |
+| `cd_dotmap()`     | Dodged district points as an `sf` object            |
+| `cd_hexmap()`     | District hex cartograms as an `sf` object           |
+| `cd_names()`      | Descriptive geographical district names as a tibble |
+| `cd_available()`  | A CLI summary and an invisible availability table   |
+
+Check the available products and periods without downloading any maps:
+
+``` r
+cd_available()
+#>
+#> ── Available congressional district data ──
+#>
+#> • `cd_boundaries()`: 1789-2027 (Congresses 1-120); Lewis / US Census.
+#> • `cd_dotmap()`: 2005-2027 (Congresses 109-120); Lewis / US Census, dodged centroids.
+#> • `cd_hexmap()`: 2005-2027 (Congresses 109-120); hexmap / The Downballot.
+#> • `cd_names()`: 2005-2027 (Congresses 109-120); Daily Kos / The Downballot /
+#>   contributors.
+#> Years refer to the start of a Congress, not its election year.
+#> Historical hexmaps for 2005-2011 reuse the generated 2009 map.
+```
+
+Use `cd_available(quiet = TRUE)` to get just the table. The original
+`load_cd_shps()`, `load_shp_dot()`, `load_shp_hex()`, and
+`load_cd_info()` functions remain available as compatibility wrappers.
 
 We are building several types of maps. First, the **dotmap** is where
 one CD is treated as point. We use the centroid of the actual map, and
@@ -47,7 +75,7 @@ library(sf)
 #> Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE
 library(ggplot2)
 
-load_shp_dot(2023) |>
+cd_dotmap(2023) |>
   ggplot() +
   geom_sf(data = shp_states) +
   geom_sf(size = 1, alpha = 0.5) +
@@ -87,7 +115,7 @@ Downballot’s hex map shapefiles (<https://the-db.co/maps>). The
 [hexmap](https://github.com/CoryMcCartan/hexmap) package.
 
 ``` r
-load_shp_hex(2023) |>
+cd_hexmap(2023) |>
   ggplot() +
   geom_sf() +
   theme_void() +
@@ -105,15 +133,15 @@ the projected Web Mercator versions (`wm` suffix) from the Downballot.
 We do not store actual CD shapefiles, but we provide a function to draw
 these from either the Census or Jeff Lewis’s historical shapefiles.
 
-Use `load_cd_shps(year = 2027)` for the 120th Congress. The nine states
-redrawn for the 2026 election use Census's 2026 TIGER/Line boundaries,
+Use `cd_boundaries(year = 2027)` for the 120th Congress. The nine states
+redrawn for the 2026 election use Census’s 2026 TIGER/Line boundaries,
 simplified together for plotting by default; all other states, including
-Missouri, retain the 2025 map. Use `simplify = FALSE` for full detail in the
-nine redrawn states. The assembled 2027 map is cached within the R session;
-use `cache = FALSE` to rebuild it.
+Missouri, retain the 2025 map. Use `simplify = FALSE` for full detail in
+the nine redrawn states. The assembled 2027 map is cached within the R
+session; use `cache = FALSE` to rebuild it.
 
 ``` r
-cd_shps <- load_cd_shps(c = 118)
+cd_shps <- cd_boundaries(congress = 118)
 ```
 
 ``` r
@@ -132,7 +160,7 @@ Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-
 namings. Zachary Donnini named 2008-2010 congressional districts.
 
 ``` r
-load_cd_info(2007)
+cd_names(2007)
 #> # A tibble: 435 × 3
 #>     cong cd    cd_description                                
 #>    <dbl> <chr> <chr>                                         

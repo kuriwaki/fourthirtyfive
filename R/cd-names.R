@@ -1,4 +1,5 @@
-#' @title Load congressional district info
+# Written by Codex
+#' @title Descriptive congressional district names
 #'
 #' @description This function returns one or more of the `info_*` datasets
 #'
@@ -16,14 +17,16 @@
 #'
 #' @examples
 #' # load one dataset
-#' load_cd_info(year = 2011)
-#' load_cd_info(congress = 109)
+#' cd_names(year = 2011)
+#' cd_names(congress = 109)
 #'
 #' # stack multiple Congresses
-#' load_cd_info(congress = 109:119)
+#' cd_names(congress = 109:119)
 #'
+#' @family congressional district accessors
+#' @seealso [cd_available()] for supported years and Congresses.
 #' @export
-load_cd_info <- function(year = NULL, congress = NULL) {
+cd_names <- function(year = NULL, congress = NULL) {
   if (!is.null(year)) {
     congress <- year_to_cong(year)
   } else if (!is.null(congress)) {
@@ -104,7 +107,7 @@ load_cd_info <- function(year = NULL, congress = NULL) {
 #'    "Candidates in American General Elections", \url{https://doi.org/10.7910/DVN/DGDRDT},
 #'    Harvard Dataverse, for congressional candidate's (instead of President's) vote totals.
 #'
-#' @seealso [load_cd_info()] to load and stack one or more Congresses.
+#' @seealso [cd_names()] to load and stack one or more Congresses.
 #'   See [ccesMRPprep's `cd_info` documentation](https://github.com/kuriwaki/ccesMRPprep/blob/main/R/datadoc_cd-info.R)
 #'   for upstream sources, district-boundary history, and related presidential
 #'   election data. Its dataset years refer to election maps; the `info_*` years

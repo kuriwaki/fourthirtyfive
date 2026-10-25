@@ -1,13 +1,13 @@
-#' Download CD Shapes
+# Written by Codex
+#' Congressional district boundaries
 #'
-#' Download shapefiles (`sf` objects) for U.S. congressional districts for a
+#' @description Download `sf` boundaries for U.S. congressional districts for a
 #' given Congress number (1-120th).
 #'
-#' @name load_cd_shps
-#' @title Download CD Shapes
-#' @param year integer, choose a year to load
-#' @param congress integer, choose a congress number (1–120) to load (optional).
-#' Optional if `congress` is given.
+#' @name cd_boundaries
+#' @param year Integer vector of years. Optional if `congress` is supplied.
+#' @param congress Integer vector of Congress numbers (1–120).
+#'   Optional if `year` is supplied.
 #' @param epsg integer EPSG code for output CRS (default 5070).
 #' @param simplify logical. For Lewis-era congresses (≤112), simplify
 #'   boundaries to about Census cartographic `20m` resolution (default `TRUE`).
@@ -37,18 +37,18 @@
 #' library(ggplot2)
 #'
 #' # Load the 109th Congress shapefile
-#' cd109 <- load_cd_shps(congress = 109)
-#' cd108 <- load_cd_shps(year = 2003)
+#' \dontrun{
+#' cd109 <- cd_boundaries(congress = 109)
+#' cd108 <- cd_boundaries(year = 2003)
 #'
 #' # Districts used for the Congress starting in January 2027
-#' \dontrun{
-#' cd120 <- load_cd_shps(year = 2027)
-#' }
+#' cd120 <- cd_boundaries(year = 2027)
 #'
 #' # Create a map with cd boundaries
 #' cd109 |>
 #'   ggplot() +
 #'   geom_sf()
+#' }
 #'
 #' @importFrom utils data
 #' @importFrom rlang .data
@@ -57,10 +57,12 @@
 #' @importFrom dplyr filter mutate rename select left_join distinct bind_rows pick starts_with if_else case_when
 #' @importFrom tibble tibble
 #' @return An sf object with CD boundaries for the requested Congress.
+#' @family congressional district accessors
+#' @seealso [cd_available()] for supported years and Congresses.
 #' @export
 # Parameter
 # https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
-load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE, cache = TRUE, state = NULL) {
+cd_boundaries <- function(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE, cache = TRUE, state = NULL) {
 
   state <- normalize_cd_states(state)
 

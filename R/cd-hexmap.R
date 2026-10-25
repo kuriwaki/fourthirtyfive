@@ -1,4 +1,5 @@
-#' @title Load Daily Kos / Downballot Elections Cartogram
+# Written by Codex
+#' @title Congressional district hex maps
 #'
 #' @description Loads Daily Kos Elections cartogram shapefile of each district.
 #'
@@ -30,23 +31,25 @@
 #'
 #' @examples
 #' # load one dataset
-#' load_shp_hex(year = 2019)
+#' cd_hexmap(year = 2019)
 #'
 #' # districts used for the members entering Congress in January 2027
-#' load_shp_hex(year = 2027)
+#' cd_hexmap(year = 2027)
 #'
 #' # plot points combined with state outline
 #' library(ggplot2)
 #'
-#' load_shp_hex(year = 2019) |>
+#' cd_hexmap(year = 2019) |>
 #'   ggplot() +
 #'   geom_sf() +
 #'   theme_void()
 #'
-#' @name load_shp_hex
+#' @name cd_hexmap
+#' @family congressional district accessors
+#' @seealso [cd_available()] for supported years and Congresses.
 #' @export
 
-load_shp_hex <- function(year = NULL, congress = NULL) {
+cd_hexmap <- function(year = NULL, congress = NULL) {
   if (!is.null(year)) {
     congress <- year_to_cong(year)
   } else if (!is.null(congress)) {
