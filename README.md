@@ -16,7 +16,7 @@ Copyright holders: Downballot (some data)
 
 `fourthirtyfive` is a package that provides shapefiles and other data
 for the 435 congressional districts, gathering good ideas from various
-authors. The current data cover 2006-2025.
+authors. The current data cover 2006-2027.
 
 ## Installation
 
@@ -108,9 +108,9 @@ these from either the Census or Jeff Lewis’s historical shapefiles.
 Use `load_cd_shps(year = 2027)` for the 120th Congress. The nine states
 redrawn for the 2026 election use Census's 2026 TIGER/Line boundaries,
 simplified together for plotting by default; all other states, including
-Missouri, retain the 2025 map. Use `simplify = FALSE` for full detail. The
-assembled 2027 map is cached within the R session; use `cache = FALSE` to
-rebuild it.
+Missouri, retain the 2025 map. Use `simplify = FALSE` for full detail in the
+nine redrawn states. The assembled 2027 map is cached within the R session;
+use `cache = FALSE` to rebuild it.
 
 ``` r
 cd_shps <- load_cd_shps(c = 118)
@@ -173,3 +173,4 @@ congress.
 | `**_2021` | 117th    | 2021-2022        | 2020         | 2022                 |
 | `**_2023` | 118th    | 2023-2024        | 2022         | 2024                 |
 | `**_2025` | 119th    | 2025-2026        | 2024         | 2026                 |
+| `**_2027` | 120th    | 2027-2028        | 2026         | 2028                 |

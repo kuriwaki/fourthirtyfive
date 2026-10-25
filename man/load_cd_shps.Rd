@@ -37,7 +37,8 @@ Optional if \code{congress} is given.}
 boundaries to about Census cartographic \verb{20m} resolution (default \code{TRUE}).
 Ignored for Congresses 113–119, which are hard-coded to use Census cartographic \verb{20m} files.
 For the 120th Congress as of package v0.0.4, we simplify the nine redrawn states together after
-assembling the map. Use \code{FALSE} for full TIGER/Line detail.}
+assembling the map. Use \code{FALSE} for full TIGER/Line detail in those nine states;
+all other states retain the previous cycle's cartographic \verb{20m} boundaries.}
 
 \item{cache}{logical. Cache assembled 2027 maps in the current R session
 (default \code{TRUE}). Set \code{FALSE} to rebuild from the boundary inputs.
@@ -57,7 +58,7 @@ given Congress number (1-120th).
 
 For 2027 (120th Congress), we use the 2026 Census TIGER for
 AL, CA, FL, LA, NC, OH, TN, TX, and UT (with middecade redistricting), and
-reuse the previous cycle's dots for all other states.
+reuse the previous cycle's boundaries for all other states.
 }
 \examples{
 library(sf)

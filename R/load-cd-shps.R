@@ -13,7 +13,8 @@
 #'   boundaries to about Census cartographic `20m` resolution (default `TRUE`).
 #'   Ignored for Congresses 113–119, which are hard-coded to use Census cartographic `20m` files.
 #'   For the 120th Congress as of package v0.0.4, we simplify the nine redrawn states together after
-#'   assembling the map. Use `FALSE` for full TIGER/Line detail.
+#'   assembling the map. Use `FALSE` for full TIGER/Line detail in those nine states;
+#'   all other states retain the previous cycle's cartographic `20m` boundaries.
 #' @param cache logical. Cache assembled 2027 maps in the current R session
 #'   (default `TRUE`). Set `FALSE` to rebuild from the boundary inputs.
 #'   Download caching is controlled separately by `options(tigris_use_cache = TRUE)`.
@@ -21,7 +22,7 @@
 #'
 #' @details For 2027 (120th Congress), we use the 2026 Census TIGER for
 #'  AL, CA, FL, LA, NC, OH, TN, TX, and UT (with middecade redistricting), and
-#'  reuse the previous cycle's dots for all other states.
+#'  reuse the previous cycle's boundaries for all other states.
 #'
 #' @format Each object is the sf for a particular congress. The year indicates
 #'  the start of that congress
@@ -156,7 +157,7 @@ load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = T
 
 # Reuse the state map's insets with modern CRS metadata ----
 get_cd_insets <- function() {
-  states <- shp_states
+  states <- getExportedValue("fourthirtyfive", "shp_states")
   sf::st_sf(
     cd = c("AK-01", "HI-01", "HI-02"),
     geometry = sf::st_geometry(states)[match(c("AK", "HI", "HI"), states$state)]
