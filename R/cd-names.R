@@ -85,30 +85,32 @@ cd_names <- function(year = NULL, congress = NULL) {
 #'   2005-2011 descriptive names: Zachary Donnini.
 #'
 #'   Daily Kos, "2008, 2012 results for districts used in **2012, 2014**"
-#'   \url{https://bit.ly/3N4PDZK}
+#'   \url{https://docs.google.com/spreadsheets/d/1xn6nCNM97oFDZ4M-HQgoUT3X4paOiSDsRMSuxbaOBdg/edit}
 #'
-#'   Daily Kos, "2008, 2012, & 2016 results for districts used in **2018**." \url{https://bit.ly/3bXtAPB}
+#'   Daily Kos, "2008, 2012, & 2016 results for districts used in **2018**."
+#'   \url{https://docs.google.com/spreadsheets/d/1zLNAuRqPauss00HDz4XbTH2HqsCzMe0pR8QmD1K8jk8/edit}
 #'
-#'   Daily Kos, "2012, 2016 & 2020 presidential election results for congressional districts in **2020**", \url{https://bit.ly/3DRhPcj}
+#'   Daily Kos, "2012, 2016 & 2020 presidential election results for congressional districts in **2020**",
+#'   \url{https://docs.google.com/spreadsheets/d/1XbUXnI9OyfAuhP5P3vWtMuGc5UJlrhXbzZo3AwMuHtk/edit}
 #'
 #'   Daily Kos, 2020 presidential election results by later congressional districts:
 #'
-#'   * __2022__ congressional districts: \url{https://bit.ly/4gLYnBK}
-#'   * __2024__ congressional districts: \url{https://bit.ly/47KTvZw}
+#'   * __2022__ congressional districts: \url{https://docs.google.com/spreadsheets/d/1CKngqOp8fzU22JOlypoxNsxL6KSAH920Whc-rd7ebuM/edit}
+#'   * __2024__ congressional districts: \url{https://docs.google.com/spreadsheets/d/1Sg4ZZz5FcX7lz-m2xqmYtndaO2uEMSaL7x99AbQOvv8/edit}
 #'
 #'   Daily Kos, congressional district geography and most populous places:
 #'
-#'   * 119th Congress: \url{https://bit.ly/geography_119}\cr
-#'   * 118th Congress: \url{https://bit.ly/geography_118}
+#'   * 119th Congress: \url{https://docs.google.com/spreadsheets/d/12YaBonkqHAjkXhzyKlH2-1t-smZ6J5j76RCBSJEwQHo/edit}\cr
+#'   * 118th Congress: \url{https://docs.google.com/spreadsheets/d/1weoLFu2U5lmxQNcB8pFItGHj1Lb_M2E9Oi48sI4w1vY/edit}
 #'
 #'   PA 2016 descriptive names: Shiro Kuriwaki and Lara Putnam.
 #'   PA 2027 descriptive names: Zoya Ahmer and Jens Wiederspohn
 #'
 #'   2027 manual district names:
-#'   \url{https://bit.ly/4sjkdCA}
+#'   \url{https://docs.google.com/spreadsheets/d/1uxD-dKP1DBj_JLM1dXt-K2r8bHhU6o8IIIXCSFcEwaM/edit}
 #'
 #'   Also see Cha, Kuriwaki, and Snyder, 2024,
-#'    "Candidates in American General Elections", \url{https://doi.org/10.7910/DVN/DGDRDT},
+#'    "Candidates in American General Elections", \doi{10.7910/DVN/DGDRDT},
 #'    Harvard Dataverse, for congressional candidate's (instead of President's) vote totals.
 #'
 #' @seealso [cd_names()] to load and stack one or more Congresses.
