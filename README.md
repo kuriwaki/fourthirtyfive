@@ -232,45 +232,10 @@ boundary detail varies across Congresses, so small differences at street
 scale may reflect cartographic generalization. The camera control saves
 the current map as a PNG.
 
-#### Mapbox setup and free usage
-
-Install the optional mapping package:
-
-``` r
-install.packages("mapgl")
-```
-
-Create a [Mapbox account](https://account.mapbox.com/auth/signup/) and
-copy its public access token (`pk.`) from the [Access Tokens
-page](https://console.mapbox.com/account/access-tokens/). Add the
-following line to your user `.Renviron` file, replace the placeholder,
-and restart R:
-
-``` text
-MAPBOX_PUBLIC_TOKEN="pk.YOUR_PUBLIC_TOKEN"
-```
-
-Check configuration without printing the token:
-
-``` r
-nzchar(Sys.getenv("MAPBOX_PUBLIC_TOKEN"))
-```
-
-As verified on October 25, 2026, Mapbox’s **card-free trial allows 5,000
-map loads per month**. Adding a payment method enables pay as you go,
-with **50,000 free map loads per month and billable overages**. These
-are different account modes; check the [trial
-limits](https://docs.mapbox.com/accounts/guides/signup/) and [current
-pricing](https://www.mapbox.com/pricing).
-
-Each viewer initializes one map, even with three Congress overlays.
-Reloading it creates another load; panning, zooming, and toggling layers
-within it do not. See [Mapbox’s map-load
-definition](https://docs.mapbox.com/mapbox-gl-js/guides/pricing/).
-Monitor usage in the Mapbox Console: notification thresholds [do not cap
-spending](https://docs.mapbox.com/accounts/faq/can-i-set-up-a-cap-for-monthly-spending/).
-For token scopes, publication restrictions, and more setup details, run
-`help("mapbox-setup", package = "fourthirtyfive")`.
+Interactive maps require the optional `mapgl` package and a Mapbox public token.
+See the [Mapbox setup guide](https://kuriwaki.github.io/fourthirtyfive/reference/mapbox-setup.html)
+for installation, token configuration, and usage limits, or run
+`help("mapbox-setup", package = "fourthirtyfive")` in R.
 
 We also provide a dataset of the **descriptive names** of each district
 (e.g., calling AZ-01 in the 110th Congress “Phoenix

@@ -62,7 +62,6 @@ cd_names <- function(year = NULL, congress = NULL) {
 #' @description Bundled tables of descriptive geographical names for
 #'   congressional districts. Each dataset is a 435-row table for one Congress.
 #'   Use [cd_names()] to select and stack tables by year or Congress number.
-#' @keywords internal
 #'
 #' @format Each object is for a particular Congress. The year indicates the start
 #'  of that Congress. Each observation is a congressional district, which contains a

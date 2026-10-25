@@ -86,4 +86,3 @@ here refer to the start of a Congress.
 Zachary Donnini, Shiro Kuriwaki, Daily Kos, Downballot
 }
 \keyword{datasets}
-\keyword{internal}

@@ -12,6 +12,9 @@ Authors@R:
      person("The Downballot", role = "cph")
      )
 Description: Shapefiles for visualizing congressional districts.
+URL: https://kuriwaki.github.io/fourthirtyfive/,
+    https://github.com/kuriwaki/fourthirtyfive
+BugReports: https://github.com/kuriwaki/fourthirtyfive/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
