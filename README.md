@@ -14,7 +14,7 @@ coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-c
 coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-coverage/names.svg)](https://github.com/kuriwaki/fourthirtyfive/tree/main/data)
 <!-- badges: end -->
 
-Maintainer: Shiro Kuriwaki
+Creator / Maintainer: Shiro Kuriwaki
 
 Contributors: Zoya Ahmer, Zachary Donnini, Cory McCartan
 
@@ -23,10 +23,6 @@ Copyright holders: Downballot (some data)
 `fourthirtyfive` is a package that provides shapefiles and other data
 for the 435 congressional districts, gathering good ideas from various
 authors.
-
-The coverage badges show Congress start years for bundled datasets on
-`main`. Use `cd_available()` for the full guide, including historical
-geographic boundaries.
 
 ## Installation
 
@@ -38,32 +34,16 @@ You can install the development version of fourthirtyfive from
 remotes::install_github("kuriwaki/fourthirtyfive")
 ```
 
-## Example
-
-Use the `cd_` accessors to retrieve district data. Type `cd_` in RStudio
-to discover the family with autocomplete.
+Use `cd_available()` for the full coverage and main options:
 
 ``` r
-library(fourthirtyfive)
-```
-
-| Accessor          | Returns                                             |
-|-------------------|-----------------------------------------------------|
-| `cd_boundaries()` | Geographic district boundaries as an `sf` object    |
-| `cd_dotmap()`     | Dodged district points as an `sf` object            |
-| `cd_hexmap()`     | District hex cartograms as an `sf` object           |
-| `cd_names()`      | Descriptive geographical district names as a tibble |
-| `cd_available()`  | A CLI summary and an invisible availability table   |
-
-Check the available products and periods without downloading any maps:
-
-``` r
-cd_available()
-#>
+fourthirtyfive::cd_available()
+#> 
 #> ── Available congressional district data ──
-#>
+#> 
 #> • `cd_boundaries()`: 1789-2027 (Congresses 1-120); Lewis / US Census.
-#> • `cd_dotmap()`: 2005-2027 (Congresses 109-120); Lewis / US Census, dodged centroids.
+#> • `cd_dotmap()`: 2005-2027 (Congresses 109-120); Lewis / US Census, dodged
+#>   centroids.
 #> • `cd_hexmap()`: 2005-2027 (Congresses 109-120); hexmap / The Downballot.
 #> • `cd_names()`: 2005-2027 (Congresses 109-120); Daily Kos / The Downballot /
 #>   contributors.
@@ -71,12 +51,26 @@ cd_available()
 #> Historical hexmaps for 2005-2011 reuse the generated 2009 map.
 ```
 
-Use `cd_available(quiet = TRUE)` to get just the table.
+## Example
 
-We are building several types of maps. First, the **dotmap** is where
-one CD is treated as point. We use the centroid of the actual map, and
-dodge it so that crowded points do not completely overlap with each
-other.
+Use the `cd_` functions to retrieve district data. Type `cd_` in RStudio
+to discover the family with autocomplete.
+
+``` r
+library(fourthirtyfive)
+```
+
+| Function          | Returns                                             |
+|-------------------|-----------------------------------------------------|
+| `cd_boundaries()` | Geographic district boundaries as an `sf` object    |
+| `cd_dotmap()`     | Dodged district points as an `sf` object            |
+| `cd_hexmap()`     | District hex cartograms as an `sf` object           |
+| `cd_names()`      | Descriptive geographical district names as a tibble |
+| `cd_available()`  | A CLI summary and an invisible availability table   |
+
+We provide several types of maps. First, the **dotmap** is where one CD
+is treated as point. We use the centroid of the actual map, and dodge it
+so that crowded points do not completely overlap with each other.
 
 ``` r
 library(sf)

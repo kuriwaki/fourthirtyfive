@@ -8,7 +8,7 @@ cd_names(year = NULL, congress = NULL)
 }
 \arguments{
 \item{year}{Integer vector of years, such as \code{2025} or \code{c(2025, 2027)}.
-For data accessors, use Congress start years, rather than election years.}
+For data functions, use Congress start years, rather than election years.}
 
 \item{congress}{Integer vector of Congress numbers, such as \code{119} or
 \code{c(119, 120)}.}
@@ -41,7 +41,7 @@ for upstream background.
 
 \code{\link[=cd_available]{cd_available()}} for supported years and Congresses.
 
-Other congressional district accessors:
+Other congressional district functions:
 \code{\link[=cd_available]{cd_available()}},
 \code{\link[=cd_boundaries]{cd_boundaries()}},
 \code{\link[=cd_dotmap]{cd_dotmap()}},
@@ -51,4 +51,4 @@ Other congressional district accessors:
 \author{
 Zachary Donnini, Shiro Kuriwaki, Daily Kos, Downballot
 }
-\concept{congressional district accessors}
+\concept{congressional district functions}

@@ -6,7 +6,7 @@
 \alias{load_shp_dot}
 \alias{load_shp_hex}
 \alias{load_cd_info}
-\title{Accessor aliases}
+\title{Function aliases}
 \usage{
 load_cd_shps(
   year = NULL,
@@ -25,7 +25,7 @@ load_cd_info(year = NULL, congress = NULL)
 }
 \arguments{
 \item{year}{Integer vector of years, such as \code{2025} or \code{c(2025, 2027)}.
-For data accessors, use Congress start years, rather than election years.}
+For data functions, use Congress start years, rather than election years.}
 
 \item{congress}{Integer vector of Congress numbers, such as \code{119} or
 \code{c(119, 120)}.}
@@ -50,7 +50,7 @@ Download caching is controlled separately by
 \code{"Tennessee"}, \code{"TN"}, or \code{47}.}
 }
 \value{
-The same \code{sf} object or tibble as the corresponding \code{cd_} accessor.
+The same \code{sf} object or tibble as the corresponding \code{cd_} function.
 }
 \description{
 Alternative names for \code{\link[=cd_boundaries]{cd_boundaries()}}, \code{\link[=cd_dotmap]{cd_dotmap()}}, \code{\link[=cd_hexmap]{cd_hexmap()}}, and
@@ -58,5 +58,5 @@ Alternative names for \code{\link[=cd_boundaries]{cd_boundaries()}}, \code{\link
 }
 \details{
 Available periods and state selection follow the corresponding
-\code{cd_} accessor.
+\code{cd_} function.
 }

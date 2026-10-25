@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 
-Maintainer: Shiro Kuriwaki
+Creator / Maintainer: Shiro Kuriwaki
 
 Contributors: Zoya Ahmer, Zachary Donnini, Cory McCartan
 
@@ -32,8 +32,6 @@ Copyright holders: Downballot (some data)
 
 `fourthirtyfive` is a package that provides shapefiles and other data for the 435 congressional districts, gathering good ideas from various authors.
 
-The coverage badges show Congress start years for bundled datasets on `main`.
-Use `cd_available()` for the full guide, including historical geographic boundaries.
 
 ## Installation
 
@@ -44,16 +42,23 @@ You can install the development version of fourthirtyfive from [GitHub](https://
 remotes::install_github("kuriwaki/fourthirtyfive")
 ```
 
+Use `cd_available()` for the full coverage and main options:
+
+```{r}
+fourthirtyfive::cd_available()
+```
+
+
 
 ## Example
 
-Use the `cd_` accessors to retrieve district data. Type `cd_` in RStudio to discover the family with autocomplete.
+Use the `cd_` functions to retrieve district data. Type `cd_` in RStudio to discover the family with autocomplete.
 
 ```{r example}
 library(fourthirtyfive)
 ```
 
-| Accessor | Returns |
+| Function | Returns |
 |---|---|
 | `cd_boundaries()` | Geographic district boundaries as an `sf` object |
 | `cd_dotmap()` | Dodged district points as an `sf` object |
@@ -61,16 +66,7 @@ library(fourthirtyfive)
 | `cd_names()` | Descriptive geographical district names as a tibble |
 | `cd_available()` | A CLI summary and an invisible availability table |
 
-Check the available products and periods without downloading any maps:
-
-```{r availability}
-cd_available()
-```
-
-Use `cd_available(quiet = TRUE)` to get just the table.
-
-
-We are building several types of maps. First, the **dotmap** is where one CD is treated as point. We use the centroid of the actual map, and dodge it so that crowded points do not completely overlap with each other.
+We provide several types of maps. First, the **dotmap** is where one CD is treated as point. We use the centroid of the actual map, and dodge it so that crowded points do not completely overlap with each other.
 
 ```{r dotmap}
 library(sf)

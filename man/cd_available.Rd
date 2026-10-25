@@ -11,13 +11,13 @@ cd_available(quiet = FALSE)
 returned availability table.}
 }
 \value{
-Invisibly, a tibble with one row per available accessor and Congress,
+Invisibly, a tibble with one row per available function and Congress,
 and columns \code{accessor}, \code{year} (the Congress's starting year), \code{congress},
 and \code{source}. Availability indicates that a dataset can be requested; it
 does not imply that every product uses distinct geometry for every Congress.
 }
 \description{
-Print a compact guide to the package's data accessors, their coverage, and
+Print a compact guide to the package's data functions, their coverage, and
 their sources. Availability of bundled dotmaps, hexmaps, and district names
 is read from the package data index. No maps are downloaded or loaded.
 }
@@ -27,7 +27,7 @@ Lewis's historical congressional district boundaries or the US Census.
 The 120th Congress combines Census boundary vintages. Bundled hexmaps for
 2005 through 2011 reuse a map generated for the 111th Congress (2009);
 those maps do not reconstruct every historical boundary change. See the
-individual accessors for data sources and limitations.
+individual functions for data sources and limitations.
 }
 \examples{
 cd_available()
@@ -36,11 +36,11 @@ subset(available, accessor == "cd_hexmap")
 
 }
 \seealso{
-Other congressional district accessors:
+Other congressional district functions:
 \code{\link[=cd_boundaries]{cd_boundaries()}},
 \code{\link[=cd_dotmap]{cd_dotmap()}},
 \code{\link[=cd_hexmap]{cd_hexmap()}},
 \code{\link[=cd_mapbox]{cd_mapbox()}},
 \code{\link[=cd_names]{cd_names()}}
 }
-\concept{congressional district accessors}
+\concept{congressional district functions}

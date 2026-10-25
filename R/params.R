@@ -2,12 +2,12 @@
 
 #' Shared congressional district parameters
 #'
-#' Common argument definitions inherited by the data accessors and
+#' Common argument definitions inherited by the data functions and
 #' congressional session conversion helpers.
 #'
 #' @name cd_params
 #' @param year Integer vector of years, such as `2025` or `c(2025, 2027)`.
-#'   For data accessors, use Congress start years, rather than election years.
+#'   For data functions, use Congress start years, rather than election years.
 #' @param congress Integer vector of Congress numbers, such as `119` or
 #'   `c(119, 120)`.
 #' @param cd Character district code with a two-letter state abbreviation and

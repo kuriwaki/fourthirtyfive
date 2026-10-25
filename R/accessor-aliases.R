@@ -1,14 +1,14 @@
 # Written by Codex
 
-#' Accessor aliases
+#' Function aliases
 #'
 #' Alternative names for [cd_boundaries()], [cd_dotmap()], [cd_hexmap()], and
 #' [cd_names()], with the same arguments and return values.
 #'
 #' @inheritParams cd_params
 #' @details Available periods and state selection follow the corresponding
-#'   `cd_` accessor.
-#' @return The same `sf` object or tibble as the corresponding `cd_` accessor.
+#'   `cd_` function.
+#' @return The same `sf` object or tibble as the corresponding `cd_` function.
 #' @name accessor-aliases
 #' @export
 load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070,

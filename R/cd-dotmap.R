@@ -33,7 +33,7 @@
 #' # setting a radius e.g. to 150000
 #'
 #' @name cd_dotmap
-#' @family congressional district accessors
+#' @family congressional district functions
 #' @seealso [cd_available()] for supported years and Congresses.
 #' @export
 

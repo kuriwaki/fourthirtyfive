@@ -26,7 +26,7 @@
 #' # stack multiple Congresses
 #' cd_names(congress = 109:119)
 #'
-#' @family congressional district accessors
+#' @family congressional district functions
 #' @seealso [cd_available()] for supported years and Congresses.
 #' @export
 cd_names <- function(year = NULL, congress = NULL) {

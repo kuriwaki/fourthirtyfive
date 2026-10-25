@@ -5,7 +5,7 @@
 \title{Shared congressional district parameters}
 \arguments{
 \item{year}{Integer vector of years, such as \code{2025} or \code{c(2025, 2027)}.
-For data accessors, use Congress start years, rather than election years.}
+For data functions, use Congress start years, rather than election years.}
 
 \item{congress}{Integer vector of Congress numbers, such as \code{119} or
 \code{c(119, 120)}.}
@@ -34,7 +34,7 @@ Download caching is controlled separately by
 \code{options(tigris_use_cache = TRUE)}.}
 }
 \description{
-Common argument definitions inherited by the data accessors and
+Common argument definitions inherited by the data functions and
 congressional session conversion helpers.
 }
 \keyword{internal}

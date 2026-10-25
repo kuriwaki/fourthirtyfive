@@ -48,7 +48,7 @@
 #' @importFrom dplyr filter mutate rename select left_join distinct bind_rows pick starts_with if_else case_when
 #' @importFrom tibble tibble
 #' @return An sf object with CD boundaries for the requested Congress.
-#' @family congressional district accessors
+#' @family congressional district functions
 #' @seealso [cd_available()] for supported years and Congresses.
 #' @export
 # Parameter

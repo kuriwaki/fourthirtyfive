@@ -2,14 +2,14 @@
 
 #' List available congressional district data
 #'
-#' Print a compact guide to the package's data accessors, their coverage, and
+#' Print a compact guide to the package's data functions, their coverage, and
 #' their sources. Availability of bundled dotmaps, hexmaps, and district names
 #' is read from the package data index. No maps are downloaded or loaded.
 #'
 #' @param quiet Logical. Set to `TRUE` to suppress the guide and obtain only the
 #'   returned availability table.
 #'
-#' @return Invisibly, a tibble with one row per available accessor and Congress,
+#' @return Invisibly, a tibble with one row per available function and Congress,
 #'   and columns `accessor`, `year` (the Congress's starting year), `congress`,
 #'   and `source`. Availability indicates that a dataset can be requested; it
 #'   does not imply that every product uses distinct geometry for every Congress.
@@ -19,9 +19,9 @@
 #'   The 120th Congress combines Census boundary vintages. Bundled hexmaps for
 #'   2005 through 2011 reuse a map generated for the 111th Congress (2009);
 #'   those maps do not reconstruct every historical boundary change. See the
-#'   individual accessors for data sources and limitations.
+#'   individual functions for data sources and limitations.
 #'
-#' @family congressional district accessors
+#' @family congressional district functions
 #'
 #' @examples
 #' cd_available()

@@ -23,7 +23,7 @@
 #'   Alaska and Hawaii are excluded because the package's boundaries use insets.
 #'
 #' @seealso [mapbox-setup] for account setup, access tokens, and free usage limits.
-#' @family congressional district accessors
+#' @family congressional district functions
 #' @examples
 #' \dontrun{
 #' cd_mapbox(state = "TN", congress = c(119, 120), cities = "Memphis")

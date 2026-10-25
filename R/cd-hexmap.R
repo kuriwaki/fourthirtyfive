@@ -47,7 +47,7 @@
 #'   theme_void()
 #'
 #' @name cd_hexmap
-#' @family congressional district accessors
+#' @family congressional district functions
 #' @seealso [cd_available()] for supported years and Congresses.
 #' @export
 

@@ -59,7 +59,7 @@ cd_mapbox("TN-09", congress = c(119, 120))
 \seealso{
 \link{mapbox-setup} for account setup, access tokens, and free usage limits.
 
-Other congressional district accessors:
+Other congressional district functions:
 \code{\link[=cd_available]{cd_available()}},
 \code{\link[=cd_boundaries]{cd_boundaries()}},
 \code{\link[=cd_dotmap]{cd_dotmap()}},
@@ -69,4 +69,4 @@ Other congressional district accessors:
 \author{
 Codex
 }
-\concept{congressional district accessors}
+\concept{congressional district functions}

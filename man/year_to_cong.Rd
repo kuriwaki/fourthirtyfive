@@ -8,7 +8,7 @@ year_to_cong(year)
 }
 \arguments{
 \item{year}{Integer vector of years, such as \code{2025} or \code{c(2025, 2027)}.
-For data accessors, use Congress start years, rather than election years.}
+For data functions, use Congress start years, rather than election years.}
 }
 \value{
 integer vector of Congress numbers
