@@ -50,6 +50,7 @@ Other congressional district accessors:
 \code{\link[=cd_available]{cd_available()}},
 \code{\link[=cd_boundaries]{cd_boundaries()}},
 \code{\link[=cd_hexmap]{cd_hexmap()}},
+\code{\link[=cd_mapbox]{cd_mapbox()}},
 \code{\link[=cd_names]{cd_names()}}
 }
 \author{

@@ -18,6 +18,7 @@ Roxygen: list(markdown = TRUE)
 Imports:
     cli,
     dplyr,
+    glue,
     sf,
     purrr,
     tigris (>= 2.3.0),
@@ -30,8 +31,10 @@ Depends:
     R (>= 4.1)
 Suggests: 
     ggplot2,
+    mapgl (>= 0.5.0),
     patchwork,
-    testthat (>= 3.2.0)
+    testthat (>= 3.2.0),
+    withr
 Config/testthat/edition: 3
 Remotes:
     christopherkenny/geomander,
