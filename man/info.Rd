@@ -30,8 +30,9 @@ for the district number.}
 info_20** column from 2013 through 2025 are taken from "cd_info" in the
 \href{https://github.com/kuriwaki/ccesMRPprep}{\code{ccesMRPprep}}
 package (See Source for full citation). info_20** from earlier years (2005–2011)
-were manually coded in Daily Kos style. info_2027 was coded in October 2026
-by visual inspection of Wikipedia pages.}
+were manually coded in Daily Kos style. \code{info_2027} was coded in October 2026
+by visual inspection of Wikipedia pages and then checked via GPT using the
+tigris v2.3.0 shapefiles.}
 }
 }
 \source{
