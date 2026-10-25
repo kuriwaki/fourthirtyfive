@@ -47,8 +47,12 @@ fourthirtyfive::cd_available()
 #> • `cd_hexmap()`: 2005-2027 (Congresses 109-120); hexmap / The Downballot.
 #> • `cd_names()`: 2005-2027 (Congresses 109-120); Daily Kos / The Downballot /
 #>   contributors.
+#> • `cd_pvi()`: 1999-2027 (Congresses 106-120); The Cook Political Report;
+#>   public-source gaps are NA.
 #> Years refer to the start of a Congress, not its election year.
 #> Historical hexmaps for 2005-2011 reuse the generated 2009 map.
+#> PVI tables flag unavailable and documented unchanged values; inspect their status
+#> column.
 ```
 
 ## Example
@@ -66,6 +70,8 @@ library(fourthirtyfive)
 | `cd_dotmap()`     | Dodged district points as an `sf` object            |
 | `cd_hexmap()`     | District hex cartograms as an `sf` object           |
 | `cd_names()`      | Descriptive geographical district names as a tibble |
+| `cd_pvi()`        | Historical Cook PVI labels, with public-source gaps flagged |
+| `pvi_to_numeric()` | Cook PVI labels as signed proportions for either party |
 | `cd_available()`  | A CLI summary and an invisible availability table   |
 
 We provide several types of maps. First, the **dotmap** is where one CD
@@ -266,6 +272,64 @@ The same district names are available as a bundled dataset:
 ``` r
 info_2007
 ```
+
+
+
+
+### Cook PVI
+
+Use `cd_pvi()` to retrieve the data. See `?cd_pvi` for documentation and
+`cd_available()` for coverage.
+
+The map below shows Cook PVI for all 435 districts in the 120th Congress
+(2027–2028), using the district maps for the 2026 election. Red
+indicates a Republican lean and blue a Democratic lean. The legend is in
+PVI points. The optional `ggredist` package supplies the district and
+state outlines, partisan color scale, and legend labels; `midpoint = 0`
+preserves the PVI scale.
+
+PVI data: [The Cook Political
+Report](https://www.cookpolitical.com/races), collected October 25,
+2026. Hex cartogram: [The Downballot](https://the-db.co/maps), via
+`cd_hexmap()`.
+
+``` r
+library(dplyr)
+library(ggplot2)
+
+hex_pvi <- cd_hexmap(year = 2027) |>
+  sf::st_make_valid() |>
+  left_join(
+    cd_pvi(year = 2027) |> select(cong, cd, pvi),
+    by = c("cong", "cd"), relationship = "one-to-one"
+  ) |>
+  mutate(pvi_D = pvi_to_numeric(pvi), state = substr(cd, 1, 2))
+
+ggplot(hex_pvi) +
+  ggredist::geom_district(
+    aes(group = cd, fill = pvi_D), color = "white", linewidth = 0.1
+  ) +
+  ggredist::geom_district(
+    aes(group = state), fill = NA, color = "grey40", linewidth = 0.25,
+    show.legend = FALSE
+  ) +
+  ggredist::scale_fill_party_c(
+    name = "Cook PVI", midpoint = 0, limits = c(-0.4, 0.4),
+    labels = ggredist::label_party_margin(midpoint = 0)
+  ) +
+  ggredist::theme_map(
+    text = element_text(family = "sans", size = 11, color = "black"),
+    legend.position = "bottom",
+    legend.title.position = "top",
+    legend.text = element_text(size = 11, color = "black"),
+    legend.title = element_text(size = 11, color = "black"),
+    legend.key.width = grid::unit(1.2, "cm"),
+    legend.key.height = grid::unit(0.25, "cm"),
+    plot.margin = margin(2, 2, 2, 2)
+  )
+```
+
+<img src="man/figures/README-pvi-hexmap-1.png" alt="2027 House hex map colored by Cook PVI: Republican-leaning districts in red, Democratic-leaning districts in blue, with state outlines." width="100%" />
 
 ## Data format
 
