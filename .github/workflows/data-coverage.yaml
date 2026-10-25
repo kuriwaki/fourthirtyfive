@@ -1,0 +1,70 @@
+# Written by Codex
+name: Data coverage badges
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/**'
+      - '.github/scripts/coverage_badges.py'
+      - '.github/scripts/test_coverage_badges.py'
+      - '.github/workflows/data-coverage.yaml'
+  pull_request:
+    paths:
+      - 'data/**'
+      - '.github/scripts/coverage_badges.py'
+      - '.github/scripts/test_coverage_badges.py'
+      - '.github/workflows/data-coverage.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: data-coverage-${{ github.event_name == 'pull_request' && github.ref || 'main' }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test badge generation
+        run: python3 -m unittest discover -s .github/scripts -p 'test_coverage_badges.py'
+      - name: Generate coverage images
+        run: python3 .github/scripts/coverage_badges.py --output-dir "$RUNNER_TEMP/coverage-badges"
+
+  publish:
+    needs: check
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      BADGE_BRANCH: codex/data-coverage
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Generate badges from main
+        run: python3 .github/scripts/coverage_badges.py --output-dir "$RUNNER_TEMP/coverage-badges"
+      - name: Publish coverage images
+        shell: bash
+        run: |
+          set -euo pipefail
+          remote_branch=$(git ls-remote --heads origin "refs/heads/$BADGE_BRANCH")
+          if [ -n "$remote_branch" ]; then
+            git fetch --depth=1 origin "$BADGE_BRANCH"
+            git switch --create "$BADGE_BRANCH" FETCH_HEAD
+          else
+            git switch --orphan "$BADGE_BRANCH"
+          fi
+          cp "$RUNNER_TEMP/coverage-badges/"*.svg .
+          git add -- dotmaps.svg hexmaps.svg names.svg
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Update data coverage badges'
+          git push origin "HEAD:refs/heads/$BADGE_BRANCH"

@@ -90,7 +90,7 @@ cd_dotmap(2023) |>
   theme_void()
 ```
 
-<img src="man/figures/README-unnamed-chunk-2-1.png" alt="" width="100%" />
+<img src="man/figures/README-dotmap-1.png" alt="" width="100%" />
 
 Dotmaps are also available as bundled datasets:
 
@@ -129,7 +129,7 @@ cd_hexmap(2023) |>
   labs(caption = "Map Source: https://the-db.co/maps")
 ```
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" alt="" width="100%" />
+<img src="man/figures/README-hexmap-1.png" alt="" width="100%" />
 
 Note: An earlier version of these hex maps was provided in the
 [`donnermap`](https://github.com/kuriwaki/donnermap) package. Those
@@ -151,7 +151,7 @@ cd_shps |>
   theme_void()
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" alt="" width="100%" />
+<img src="man/figures/README-boundaries-1.png" alt="" width="100%" />
 
 Compare Tennessee’s district boundaries for the 119th and 120th
 Congresses. The maps use the same extent and district colors, with the
@@ -191,6 +191,89 @@ tn_120 <- plot_tn(120, "120th Congress (2027-2028)")
 ```
 
 <img src="man/figures/README-tn-boundaries-1.png" alt="" width="100%" />
+
+### Interactive comparisons
+
+Use `cd_mapbox()` to overlay one to three Congresses on a single
+interactive map. Select a state or a district, and use the map’s layer
+controls to switch Congresses on and off. City boundaries are absent by
+default; select one or two incorporated cities to highlight only those
+cities in magenta.
+
+Tennessee’s 119th and 120th Congresses, with Memphis highlighted:
+
+``` r
+cd_mapbox(state = "TN", congress = c(119, 120), cities = "Memphis")
+```
+
+<figure>
+<img src="man/figures/README-tn-interactive.png"
+alt="Tennessee with 119th-Congress boundaries in blue, 120th-Congress boundaries in orange, and Memphis in magenta." />
+<figcaption aria-hidden="true">Tennessee with 119th-Congress boundaries
+in blue, 120th-Congress boundaries in orange, and Memphis in
+magenta.</figcaption>
+</figure>
+
+Zoom to Memphis while retaining both Congress layers:
+
+``` r
+cd_mapbox(
+  state = "TN", congress = c(119, 120), cities = "Memphis",
+  zoom_to_cities = TRUE
+)
+```
+
+<figure>
+<img src="man/figures/README-memphis-interactive.png"
+alt="Memphis city boundaries in magenta with the 119th and 120th congressional districts overlaid." />
+<figcaption aria-hidden="true">Memphis city boundaries in magenta with
+the 119th and 120th congressional districts overlaid.</figcaption>
+</figure>
+
+City outlines use the same 2026 Census geography in both views. District
+boundary detail varies across Congresses, so small differences at street
+scale may reflect cartographic generalization. The camera control saves
+the current map as a PNG.
+
+#### Mapbox setup and free usage
+
+Install the optional mapping package:
+
+``` r
+install.packages("mapgl")
+```
+
+Create a [Mapbox account](https://account.mapbox.com/auth/signup/) and
+copy its public access token (`pk.`) from the [Access Tokens
+page](https://console.mapbox.com/account/access-tokens/). Add the
+following line to your user `.Renviron` file, replace the placeholder,
+and restart R:
+
+``` text
+MAPBOX_PUBLIC_TOKEN="pk.YOUR_PUBLIC_TOKEN"
+```
+
+Check configuration without printing the token:
+
+``` r
+nzchar(Sys.getenv("MAPBOX_PUBLIC_TOKEN"))
+```
+
+As verified on October 25, 2026, Mapbox’s **card-free trial allows 5,000
+map loads per month**. Adding a payment method enables pay as you go,
+with **50,000 free map loads per month and billable overages**. These
+are different account modes; check the [trial
+limits](https://docs.mapbox.com/accounts/guides/signup/) and [current
+pricing](https://www.mapbox.com/pricing).
+
+Each viewer initializes one map, even with three Congress overlays.
+Reloading it creates another load; panning, zooming, and toggling layers
+within it do not. See [Mapbox’s map-load
+definition](https://docs.mapbox.com/mapbox-gl-js/guides/pricing/).
+Monitor usage in the Mapbox Console: notification thresholds [do not cap
+spending](https://docs.mapbox.com/accounts/faq/can-i-set-up-a-cap-for-monthly-spending/).
+For token scopes, publication restrictions, and more setup details, run
+`help("mapbox-setup", package = "fourthirtyfive")`.
 
 We also provide a dataset of the **descriptive names** of each district
 (e.g., calling AZ-01 in the 110th congressional district “Phoenix
