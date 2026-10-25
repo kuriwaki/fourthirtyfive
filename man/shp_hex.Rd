@@ -18,7 +18,7 @@
 \title{Hexmap: Daily Kos / Downballot Elections Cartogram}
 \format{
 Each object is for a particular year. The year indicates the start
-of that Congress. Each observational is a congressional district, represented by
+of that Congress. Each observation is a congressional district, represented by
 a cartogram.
 }
 \source{

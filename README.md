@@ -69,7 +69,7 @@ library(fourthirtyfive)
 | `cd_available()`  | A CLI summary and an invisible availability table   |
 
 We provide several types of maps. First, the **dotmap** is where one CD
-is treated as point. We use the centroid of the actual map, and dodge it
+is treated as a point. We use the centroid of the actual map, and dodge it
 so that crowded points do not completely overlap with each other.
 
 ``` r
@@ -110,10 +110,13 @@ shp_dot_2023
 ```
 
 We also provide **hexmaps** (i.e., maps that present CDs as combinations
-of hexagons) for all years. The 2013-2025 maps are sourced from the
-Downballot’s hex map shapefiles (<https://the-db.co/maps>). The
-2005-2011 maps are generated with Cory McCartan’s
-[hexmap](https://github.com/CoryMcCartan/hexmap) package.
+of hexagons) for Congresses starting in 2005–2027. The 2013–2027 maps
+are sourced from the Downballot’s hex map shapefiles
+(<https://the-db.co/maps>). The 2005–2011 maps reuse a 2009 map
+generated with Cory McCartan’s
+[hexmap](https://github.com/CoryMcCartan/hexmap) package. The 2013–2021
+maps also reuse one cartogram, so these historical hexmaps do not
+capture every mid-decade boundary change.
 
 ``` r
 cd_hexmap(2023) |>
@@ -270,10 +273,10 @@ For token scopes, publication restrictions, and more setup details, run
 `help("mapbox-setup", package = "fourthirtyfive")`.
 
 We also provide a dataset of the **descriptive names** of each district
-(e.g., calling AZ-01 in the 110th congressional district “Phoenix
+(e.g., calling AZ-01 in the 110th Congress “Phoenix
 exurbs, Prescott, and Flagstaff”). These use [Daily
 Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts)
-namings. Zachary Donnini named 2008-2010 congressional districts.
+names. Zachary Donnini supplied the 2005–2011 names.
 
 ``` r
 cd_names(2007)

@@ -79,8 +79,8 @@ cd_dotmap <- function(year = NULL, congress = NULL) {
 #' @description Shapefile of coordinates. Each row contains a coordinate of the centroid of the CD,
 #'  slightly dodged so that points in dense places do not overlap.
 #'
-#' @format Each object is for a particular congress. The year indicates the start
-#'  of that Congress. Each observational is a congressional district, represented by
+#' @format Each object is for a particular Congress. The year indicates the start
+#'  of that Congress. Each observation is a congressional district, represented by
 #'  a point.
 #' @source Coordinates from 2012 onwards taken from US Census, `tigris` package.
 #'  Coordinates from early Congresses taken from Jeffrey B. Lewis, historical congressional

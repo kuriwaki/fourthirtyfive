@@ -2,8 +2,8 @@
 
 #' Interactive CD map with cities in background
 #'
-#' View congressional district boundaries on a interactive Mapbox map.
-#' Useful for seeing how much a district overlaps with a city, or comapring multiple
+#' View congressional district boundaries on an interactive Mapbox map.
+#' Useful for seeing how much a district overlaps with a city, or comparing multiple
 #' district maps together.
 #'
 #' @inheritParams cd_params

@@ -17,19 +17,19 @@
 \alias{info_2027}
 \title{Congressional district name datasets}
 \format{
-Each object is for a particular congress. The year indicates the start
+Each object is for a particular Congress. The year indicates the start
 of that Congress. Each observation is a congressional district, which contains a
 unique descriptive name.
 \describe{
 \item{\code{cong}}{Congress number, such as 113 for the Congress beginning in 2013.}
-\item{\code{cd}}{District code. Each row is a a two-letter abbreviation for the
+\item{\code{cd}}{District code. Each row is a two-letter abbreviation for the
 state followed by a dash, and the district number padded with zeros to the
 left to be of length 2. At-large districts like Delaware are given a "-01"
 for the district number.}
 \item{\code{cd_description}}{The unique descriptive name for the district code.
-info_20** column from 2013 through 2025 are taken from "cd_info" in the
+Names in \code{info_2013} through \code{info_2025} are taken from \code{cd_info} in the
 \href{https://github.com/kuriwaki/ccesMRPprep}{\code{ccesMRPprep}}
-package (See Source for full citation). info_20** from earlier years (2005–2011)
+package (see Source for full citation). Names from earlier years (2005–2011)
 were manually coded in Daily Kos style. \code{info_2027} was coded in October 2026
 by visual inspection of Wikipedia pages and then checked via GPT using the
 tigris v2.3.0 shapefiles.}

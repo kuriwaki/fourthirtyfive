@@ -17,8 +17,8 @@
 \alias{shp_dot_2027}
 \title{Dotmap: Dodged CD centroids}
 \format{
-Each object is for a particular congress. The year indicates the start
-of that Congress. Each observational is a congressional district, represented by
+Each object is for a particular Congress. The year indicates the start
+of that Congress. Each observation is a congressional district, represented by
 a point.
 }
 \source{

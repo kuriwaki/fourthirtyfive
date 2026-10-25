@@ -85,7 +85,7 @@ cd_hexmap <- function(year = NULL, congress = NULL) {
 #' @description Loads Daily Kos / Downballot Elections cartogram shapefile of coordinates for each district.
 #'
 #' @format Each object is for a particular year. The year indicates the start
-#'  of that Congress. Each observational is a congressional district, represented by
+#'  of that Congress. Each observation is a congressional district, represented by
 #'  a cartogram.
 #' @source 2013–2027 coordinates are from The Downballot's maps database.
 #'   2005-2011 (\code{shp_hex_2005} through \code{shp_hex_2011}) are created through \href{https://github.com/CoryMcCartan/hexmap}{CoryMcCartan/hexmap}.
