@@ -7,6 +7,8 @@ library(tigris)
 library(geomander)
 library(usethis)
 
+source("data-raw/helpers/clean-hexmap.R")
+
 options(tigris_use_cache = TRUE)
 
 # download 111th Congress district shapefiles (2008 election) ----
@@ -110,7 +112,7 @@ for (i in seq_len(nrow(d_states))) {
 }
 
 # format and save ----
-shp_hex_2009 <- state_hex2 |>
+hex_2009_unscaled <- state_hex2 |>
     transmute(
         cong = 111L,
         cd   = glue("{state}-{str_pad(district, width = 2, pad = '0')}"),
@@ -123,7 +125,7 @@ shp_hex_2009 <- state_hex2 |>
 # onto the standard Daily Kos extent and relabel its CRS so 2009 lines up with the
 # shp_hex_2013-2025 objects (Mercator_2SP) built in 04-create-hex-maps.r
 ref <- read_sf("data-raw/hexmap_2020/HexCDv21wm/")
-src_bb <- st_bbox(shp_hex_2009)
+src_bb <- st_bbox(hex_2009_unscaled)
 ref_bb <- st_bbox(ref)
 scale_to_dk <- unname(min(
     (ref_bb["xmax"] - ref_bb["xmin"]) / (src_bb["xmax"] - src_bb["xmin"]),
@@ -132,9 +134,11 @@ scale_to_dk <- unname(min(
 src_ctr <- c(mean(src_bb[c("xmin", "xmax")]), mean(src_bb[c("ymin", "ymax")]))
 ref_ctr <- c(mean(ref_bb[c("xmin", "xmax")]), mean(ref_bb[c("ymin", "ymax")]))
 
-geom_dk <- (st_geometry(shp_hex_2009) - src_ctr) * scale_to_dk + ref_ctr
+geom_dk <- (st_geometry(hex_2009_unscaled) - src_ctr) * scale_to_dk + ref_ctr
 st_crs(geom_dk) <- st_crs(ref)
-shp_hex_2009 <- st_set_geometry(shp_hex_2009, geom_dk)
+shp_hex_2009 <- hex_2009_unscaled |>
+    st_set_geometry(geom_dk) |>
+    clean_hexmap()
 # reuse the 111th-Congress hexmap for the rest of the 2000-apportionment decade
 shp_hex_2005 <- shp_hex_2009 |> mutate(cong = 109L)
 shp_hex_2007 <- shp_hex_2009 |> mutate(cong = 110L)

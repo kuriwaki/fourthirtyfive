@@ -6,6 +6,8 @@ library(patchwork)
 library(usethis)
 library(sf)
 
+source("data-raw/helpers/clean-hexmap.R")
+
 # raw shps
 # can download these shps from The Downballot maps database
 # https://docs.google.com/spreadsheets/d/13XkF59JKzvw4SeSq5mbgIFrJfYjK4amg9JoQE5e9grQ/edit?gid=1250379179#gid=1250379179
@@ -27,7 +29,8 @@ shp_hex_2019 <- cd_shp_2019 |>
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
-  arrange(cd)
+  arrange(cd) |>
+  clean_hexmap()
 
 shp_hex_2021 <- cd_shp_2021 |>
   transmute(
@@ -35,7 +38,8 @@ shp_hex_2021 <- cd_shp_2021 |>
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
-  arrange(cd)
+  arrange(cd) |>
+  clean_hexmap()
 
 shp_hex_2023 <- cd_shp_2023 |>
   transmute(
@@ -43,7 +47,8 @@ shp_hex_2023 <- cd_shp_2023 |>
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
-  arrange(cd)
+  arrange(cd) |>
+  clean_hexmap()
 
 shp_hex_2025 <- cd_shp_2025 |>
   mutate(STATEAB = if_else(STATEAB == "01", "AL", STATEAB)) |>
@@ -52,7 +57,8 @@ shp_hex_2025 <- cd_shp_2025 |>
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
-  arrange(cd)
+  arrange(cd) |>
+  clean_hexmap()
 
 ## shp_hex_2027: reflects district lines redrawn mid-decade ahead of the 2027  elections
 ## Named 2027 because these districts elect the members who take their seats
@@ -64,7 +70,8 @@ shp_hex_2027 <- cd_shp_2027 |>
     cd = glue("{STATEAB}-{str_pad(CDLABEL, width = 2, pad = '0')}"),
     cd = str_replace(cd, "-[A-Z][A-Z]$", "-01")
   ) |>
-  arrange(cd)
+  arrange(cd) |>
+  clean_hexmap()
 
 ## Use older version for now
 ### Between the 2012-14 and 2016 data, FL, NC, VA changed their districts
@@ -76,12 +83,12 @@ shp_hex_2015 <- shp_hex_2019 |>
 shp_hex_2017 <- shp_hex_2019 |>
   mutate(cong = 115)
 
-usethis::use_data(shp_hex_2013, overwrite = TRUE)
-usethis::use_data(shp_hex_2015, overwrite = TRUE)
-usethis::use_data(shp_hex_2017, overwrite = TRUE)
-usethis::use_data(shp_hex_2019, overwrite = TRUE)
-usethis::use_data(shp_hex_2021, overwrite = TRUE)
-usethis::use_data(shp_hex_2023, overwrite = TRUE)
-usethis::use_data(shp_hex_2025, overwrite = TRUE)
-usethis::use_data(shp_hex_2027, overwrite = TRUE)
+usethis::use_data(shp_hex_2013, overwrite = TRUE, compress = "xz", version = 2)
+usethis::use_data(shp_hex_2015, overwrite = TRUE, compress = "xz", version = 2)
+usethis::use_data(shp_hex_2017, overwrite = TRUE, compress = "xz", version = 2)
+usethis::use_data(shp_hex_2019, overwrite = TRUE, compress = "xz", version = 2)
+usethis::use_data(shp_hex_2021, overwrite = TRUE, compress = "xz", version = 2)
+usethis::use_data(shp_hex_2023, overwrite = TRUE, compress = "xz", version = 2)
+usethis::use_data(shp_hex_2025, overwrite = TRUE, compress = "xz", version = 2)
+usethis::use_data(shp_hex_2027, overwrite = TRUE, compress = "xz", version = 2)
 

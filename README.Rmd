@@ -227,7 +227,6 @@ library(dplyr)
 library(ggplot2)
 
 hex_pvi <- cd_hexmap(year = 2027) |>
-  sf::st_make_valid() |>
   left_join(
     cd_pvi(year = 2027) |> select(cong, cd, pvi),
     by = c("cong", "cd"), relationship = "one-to-one"

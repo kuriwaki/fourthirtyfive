@@ -7,6 +7,8 @@ First public version, released 2026-10-25
   Older `load_*()` functions remain aliases with the same arguments and
   results. 
 - Update data to the districts for the 120th (2027) Congress.
+- Repair gaps between hexmap districts before bundling the data, so state
+  outlines draw without spurious inner borders.
 - Correct FL and NC district names for the 113th and 114th Congresses, and
   NC names for the 117th Congress, using descriptions for the matching maps.
 - Retrieve district or statewide Cook PVI with `cd_pvi()` for Congress start
