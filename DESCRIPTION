@@ -9,9 +9,8 @@ Authors@R:
      person("Zachary", "Donnini", role = "ctb"),
      person("Cory", "McCartan", role = "ctb"),
      person("Daniel", "Donner", role = "ctb"),
-     person("Christopher T.", "Kenny", role = "rev"),
-     person("Jens", "Wiederspohn", role = "rev"),
-     person("The Downballot", role = "cph")
+     person("The Downballot", role = "cph"),
+     person("Cook Political Report", role = "cph")
      )
 Description: Shapefiles for visualizing congressional districts.
 URL: https://www.shirokuriwaki.com/fourthirtyfive/,
