@@ -38,6 +38,10 @@ tigris v2.3.0 shapefiles.}
 \source{
 2005-2011 descriptive names: Zachary Donnini.
 
+Historical FL and NC corrections for the 113th, 114th, and 117th Congresses:
+the \code{2026-10-corrections} tab in
+\url{https://docs.google.com/spreadsheets/d/1D6out76Jblwvs9bwhb-XQM3ctyp2UjnGrttsqGlX_tY/edit}.
+
 Daily Kos, "2008, 2012 results for districts used in \strong{2012, 2014}"
 \url{https://docs.google.com/spreadsheets/d/1xn6nCNM97oFDZ4M-HQgoUT3X4paOiSDsRMSuxbaOBdg/edit}
 
