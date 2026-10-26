@@ -27,9 +27,7 @@ Creator / Maintainer: Shiro Kuriwaki
 
 Contributors: Zoya Ahmer, Zachary Donnini, Cory McCartan
 
-Acknowledgements: Christopher T. Kenny and Jens Wiederspohn reviewed the package.
-
-Copyright holders: Downballot (some data)
+Copyright holders: Downballot and Cook Political Report (some data)
 
 
 `fourthirtyfive` is a package that provides shapefiles and other data for the 435 congressional districts, gathering good ideas from various authors.
