@@ -1,26 +1,17 @@
-#' Download CD Shapes
+# Written by Codex
+#' Congressional district boundaries
 #'
-#' Download shapefiles (`sf` objects) for U.S. congressional districts for a
+#' @description Download `sf` boundaries for U.S. congressional districts for a
 #' given Congress number (1-120th).
 #'
-#' @name load_cd_shps
-#' @title Download CD Shapes
-#' @param year integer, choose a year to load
-#' @param congress integer, choose a congress number (1–120) to load (optional).
-#' Optional if `congress` is given.
-#' @param epsg integer EPSG code for output CRS (default 5070).
-#' @param simplify logical. For Lewis-era congresses (≤112), simplify
-#'   boundaries to about Census cartographic `20m` resolution (default `TRUE`).
-#'   Ignored for Congresses 113–119, which are hard-coded to use Census cartographic `20m` files.
-#'   For the 120th Congress as of package v0.0.4, we simplify the nine redrawn states together after
-#'   assembling the map. Use `FALSE` for full TIGER/Line detail in those nine states;
-#'   all other states retain the previous cycle's cartographic `20m` boundaries.
-#' @param cache logical. Cache assembled 2027 maps in the current R session
-#'   (default `TRUE`). Set `FALSE` to rebuild from the boundary inputs.
-#'   Download caching is controlled separately by `options(tigris_use_cache = TRUE)`.
-#' @param state State name, abbreviation, or FIPS code; `NULL` returns all states.
+#' @name cd_boundaries
+#' @inheritParams cd_params
 #'
-#' @details For 2027 (120th Congress), we use the 2026 Census TIGER for
+#' @details Supply `year` or `congress`. Boundaries cover Congresses 1-120
+#'   (start years 1789-2027). Leave `state = NULL` for all states, or supply
+#'   one or more states to select their districts.
+#'
+#'   For 2027 (120th Congress), we use the 2026 Census TIGER for
 #'  AL, CA, FL, LA, NC, OH, TN, TX, and UT (with middecade redistricting), and
 #'  reuse the previous cycle's boundaries for all other states.
 #'
@@ -37,18 +28,18 @@
 #' library(ggplot2)
 #'
 #' # Load the 109th Congress shapefile
-#' cd109 <- load_cd_shps(congress = 109)
-#' cd108 <- load_cd_shps(year = 2003)
+#' \dontrun{
+#' cd109 <- cd_boundaries(congress = 109)
+#' cd108 <- cd_boundaries(year = 2003)
 #'
 #' # Districts used for the Congress starting in January 2027
-#' \dontrun{
-#' cd120 <- load_cd_shps(year = 2027)
-#' }
+#' cd120 <- cd_boundaries(year = 2027)
 #'
 #' # Create a map with cd boundaries
 #' cd109 |>
 #'   ggplot() +
 #'   geom_sf()
+#' }
 #'
 #' @importFrom utils data
 #' @importFrom rlang .data
@@ -57,10 +48,12 @@
 #' @importFrom dplyr filter mutate rename select left_join distinct bind_rows pick starts_with if_else case_when
 #' @importFrom tibble tibble
 #' @return An sf object with CD boundaries for the requested Congress.
+#' @family congressional district functions
+#' @seealso [cd_available()] for supported years and Congresses.
 #' @export
 # Parameter
 # https://r-spatial.github.io/sf/articles/sf3.html#affine-transformations
-load_cd_shps <- function(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE, cache = TRUE, state = NULL) {
+cd_boundaries <- function(year = NULL, congress = NULL, epsg = 5070, simplify = TRUE, cache = TRUE, state = NULL) {
 
   state <- normalize_cd_states(state)
 

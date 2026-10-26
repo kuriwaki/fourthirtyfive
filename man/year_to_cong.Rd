@@ -7,13 +7,18 @@
 year_to_cong(year)
 }
 \arguments{
-\item{year}{integer or numeric vector of years}
+\item{year}{Integer vector of years, such as \code{2025} or \code{c(2025, 2027)}.
+For data functions, use Congress start years, rather than election years.}
 }
 \value{
 integer vector of Congress numbers
 }
 \description{
 Convert year of Congress to Congressional session
+}
+\details{
+Both years in a two-year congressional session map to the same
+Congress number.
 }
 \examples{
 year_to_cong(2003) # 108

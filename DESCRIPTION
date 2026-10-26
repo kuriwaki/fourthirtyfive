@@ -1,6 +1,6 @@
 Package: fourthirtyfive
-Title: Data and shapefiles for visualizing congressional districts
-Version: 0.0.4
+Title: Data and Shapefiles for Visualizing Congressional Districts
+Version: 0.1.0
 Authors@R: 
     c(
      person("Shiro", "Kuriwaki", , "shiro.kuriwaki@yale.edu", role = c("aut", "cre"),
@@ -9,14 +9,20 @@ Authors@R:
      person("Zachary", "Donnini", role = "ctb"),
      person("Cory", "McCartan", role = "ctb"),
      person("Daniel", "Donner", role = "ctb"),
-     person("The Downballot", role = "cph")
+     person("The Downballot", role = "cph"),
+     person("Cook Political Report", role = "cph")
      )
 Description: Shapefiles for visualizing congressional districts.
+URL: https://www.shirokuriwaki.com/fourthirtyfive/,
+    https://github.com/kuriwaki/fourthirtyfive
+BugReports: https://github.com/kuriwaki/fourthirtyfive/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports:
+    cli,
     dplyr,
+    glue,
     sf,
     purrr,
     tigris (>= 2.3.0),
@@ -28,8 +34,12 @@ Imports:
 Depends: 
     R (>= 4.1)
 Suggests: 
+    ggredist,
     ggplot2,
-    testthat (>= 3.2.0)
+    mapgl (>= 0.5.0),
+    patchwork,
+    testthat (>= 3.2.0),
+    withr
 Config/testthat/edition: 3
 Remotes:
     christopherkenny/geomander,

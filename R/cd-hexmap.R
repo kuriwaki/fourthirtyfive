@@ -1,11 +1,14 @@
-#' @title Load Daily Kos / Downballot Elections Cartogram
+# Written by Codex
+#' @title Congressional district hex maps
 #'
 #' @description Loads Daily Kos Elections cartogram shapefile of each district.
 #'
-#' @param year Integer vector of years from 2005-2027.
-#' @param congress Integer vector of Congress numbers from the 109th-120th Congress.
+#' @inheritParams cd_params
 #'
-#' @details Years indicate the year of the January in which the Congress starts.
+#' @details Supply `year` or `congress`. Bundled hexmaps cover Congresses
+#'   109-120 (start years 2005-2027).
+#'
+#'  Years indicate the year of the January in which the Congress starts.
 #'  For example, to get shapefiles for the 2022 election, set `year = 2023`.
 #'
 #'  `shp_hex_2027` reflects district lines redrawn mid-decade ahead of the 2026
@@ -30,23 +33,25 @@
 #'
 #' @examples
 #' # load one dataset
-#' load_shp_hex(year = 2019)
+#' cd_hexmap(year = 2019)
 #'
 #' # districts used for the members entering Congress in January 2027
-#' load_shp_hex(year = 2027)
+#' cd_hexmap(year = 2027)
 #'
 #' # plot points combined with state outline
 #' library(ggplot2)
 #'
-#' load_shp_hex(year = 2019) |>
+#' cd_hexmap(year = 2019) |>
 #'   ggplot() +
 #'   geom_sf() +
 #'   theme_void()
 #'
-#' @name load_shp_hex
+#' @name cd_hexmap
+#' @family congressional district functions
+#' @seealso [cd_available()] for supported years and Congresses.
 #' @export
 
-load_shp_hex <- function(year = NULL, congress = NULL) {
+cd_hexmap <- function(year = NULL, congress = NULL) {
   if (!is.null(year)) {
     congress <- year_to_cong(year)
   } else if (!is.null(congress)) {
@@ -80,7 +85,7 @@ load_shp_hex <- function(year = NULL, congress = NULL) {
 #' @description Loads Daily Kos / Downballot Elections cartogram shapefile of coordinates for each district.
 #'
 #' @format Each object is for a particular year. The year indicates the start
-#'  of that Congress. Each observational is a congressional district, represented by
+#'  of that Congress. Each observation is a congressional district, represented by
 #'  a cartogram.
 #' @source 2013–2027 coordinates are from The Downballot's maps database.
 #'   2005-2011 (\code{shp_hex_2005} through \code{shp_hex_2011}) are created through \href{https://github.com/CoryMcCartan/hexmap}{CoryMcCartan/hexmap}.

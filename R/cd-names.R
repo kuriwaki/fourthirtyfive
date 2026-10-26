@@ -1,9 +1,13 @@
-#' @title Load congressional district info
+# Written by Codex
+#' @title Descriptive congressional district names
 #'
-#' @description This function returns one or more of the `info_*` datasets
+#' @description Retrieve descriptive geographical names for congressional
+#'   districts in one or more Congresses.
 #'
-#' @param year Integer vector of years (e.g., `2011` or `c(2005, 2009, 2011)`).
-#' @param congress Integer vector of Congress numbers
+#' @inheritParams cd_params
+#'
+#' @details Supply `year` or `congress`. Bundled district names cover Congresses
+#'   109-120 (start years 2005-2027).
 #'
 #' @return A tibble with 435 rows per requested Congress and columns `cong`,
 #'   `cd`, and `cd_description`. Multiple Congresses are stacked by row.
@@ -16,14 +20,16 @@
 #'
 #' @examples
 #' # load one dataset
-#' load_cd_info(year = 2011)
-#' load_cd_info(congress = 109)
+#' cd_names(year = 2011)
+#' cd_names(congress = 109)
 #'
 #' # stack multiple Congresses
-#' load_cd_info(congress = 109:119)
+#' cd_names(congress = 109:119)
 #'
+#' @family congressional district functions
+#' @seealso [cd_available()] for supported years and Congresses.
 #' @export
-load_cd_info <- function(year = NULL, congress = NULL) {
+cd_names <- function(year = NULL, congress = NULL) {
   if (!is.null(year)) {
     congress <- year_to_cong(year)
   } else if (!is.null(congress)) {
@@ -49,26 +55,27 @@ load_cd_info <- function(year = NULL, congress = NULL) {
   }
 }
 
-#' @title Congressional District level information
+#' @title Congressional district name datasets
 #' @name info
 #' @docType data
 #' @keywords datasets
-#' @description A 435-row table, per each Congress, with descriptive names for each CD.
-#' @keywords internal
+#' @description Bundled tables of descriptive geographical names for
+#'   congressional districts. Each dataset is a 435-row table for one Congress.
+#'   Use [cd_names()] to select and stack tables by year or Congress number.
 #'
-#' @format Each object is for a particular congress. The year indicates the start
+#' @format Each object is for a particular Congress. The year indicates the start
 #'  of that Congress. Each observation is a congressional district, which contains a
 #'  unique descriptive name.
 #'  \describe{
 #'    \item{`cong`}{Congress number, such as 113 for the Congress beginning in 2013.}
-#'    \item{`cd`}{District code. Each row is a a two-letter abbreviation for the
+#'    \item{`cd`}{District code. Each row is a two-letter abbreviation for the
 #'    state followed by a dash, and the district number padded with zeros to the
 #'    left to be of length 2. At-large districts like Delaware are given a "-01"
 #'    for the district number.}
 #'    \item{`cd_description`}{The unique descriptive name for the district code.
-#'    info_20** column from 2013 through 2025 are taken from "cd_info" in the
+#'    Names in `info_2013` through `info_2025` are taken from `cd_info` in the
 #'    [`ccesMRPprep`](https://github.com/kuriwaki/ccesMRPprep)
-#'    package (See Source for full citation). info_20** from earlier years (2005–2011)
+#'    package (see Source for full citation). Names from earlier years (2005–2011)
 #'    were manually coded in Daily Kos style. `info_2027` was coded in October 2026
 #'    by visual inspection of Wikipedia pages and then checked via GPT using the
 #'    tigris v2.3.0 shapefiles.}
@@ -77,34 +84,40 @@ load_cd_info <- function(year = NULL, congress = NULL) {
 #' @source
 #'   2005-2011 descriptive names: Zachary Donnini.
 #'
+#'   Historical FL and NC corrections for the 113th, 114th, and 117th Congresses:
+#'   the `2026-10-corrections` tab in
+#'   \url{https://docs.google.com/spreadsheets/d/1D6out76Jblwvs9bwhb-XQM3ctyp2UjnGrttsqGlX_tY/edit}.
+#'
 #'   Daily Kos, "2008, 2012 results for districts used in **2012, 2014**"
-#'   \url{https://bit.ly/3N4PDZK}
+#'   \url{https://docs.google.com/spreadsheets/d/1xn6nCNM97oFDZ4M-HQgoUT3X4paOiSDsRMSuxbaOBdg/edit}
 #'
-#'   Daily Kos, "2008, 2012, & 2016 results for districts used in **2018**." \url{https://bit.ly/3bXtAPB}
+#'   Daily Kos, "2008, 2012, & 2016 results for districts used in **2018**."
+#'   \url{https://docs.google.com/spreadsheets/d/1zLNAuRqPauss00HDz4XbTH2HqsCzMe0pR8QmD1K8jk8/edit}
 #'
-#'   Daily Kos, "2012, 2016 & 2020 presidential election results for congressional districts in **2020**", \url{https://bit.ly/3DRhPcj}
+#'   Daily Kos, "2012, 2016 & 2020 presidential election results for congressional districts in **2020**",
+#'   \url{https://docs.google.com/spreadsheets/d/1XbUXnI9OyfAuhP5P3vWtMuGc5UJlrhXbzZo3AwMuHtk/edit}
 #'
 #'   Daily Kos, 2020 presidential election results by later congressional districts:
 #'
-#'   * __2022__ congressional districts: \url{https://bit.ly/4gLYnBK}
-#'   * __2024__ congressional districts: \url{https://bit.ly/47KTvZw}
+#'   * __2022__ congressional districts: \url{https://docs.google.com/spreadsheets/d/1CKngqOp8fzU22JOlypoxNsxL6KSAH920Whc-rd7ebuM/edit}
+#'   * __2024__ congressional districts: \url{https://docs.google.com/spreadsheets/d/1Sg4ZZz5FcX7lz-m2xqmYtndaO2uEMSaL7x99AbQOvv8/edit}
 #'
 #'   Daily Kos, congressional district geography and most populous places:
 #'
-#'   * 119th Congress: \url{https://bit.ly/geography_119}\cr
-#'   * 118th Congress: \url{https://bit.ly/geography_118}
+#'   * 119th Congress: \url{https://docs.google.com/spreadsheets/d/12YaBonkqHAjkXhzyKlH2-1t-smZ6J5j76RCBSJEwQHo/edit}\cr
+#'   * 118th Congress: \url{https://docs.google.com/spreadsheets/d/1weoLFu2U5lmxQNcB8pFItGHj1Lb_M2E9Oi48sI4w1vY/edit}
 #'
 #'   PA 2016 descriptive names: Shiro Kuriwaki and Lara Putnam.
 #'   PA 2027 descriptive names: Zoya Ahmer and Jens Wiederspohn
 #'
 #'   2027 manual district names:
-#'   \url{https://bit.ly/4sjkdCA}
+#'   \url{https://docs.google.com/spreadsheets/d/1uxD-dKP1DBj_JLM1dXt-K2r8bHhU6o8IIIXCSFcEwaM/edit}
 #'
 #'   Also see Cha, Kuriwaki, and Snyder, 2024,
-#'    "Candidates in American General Elections", \url{https://doi.org/10.7910/DVN/DGDRDT},
+#'    "Candidates in American General Elections", \doi{10.7910/DVN/DGDRDT},
 #'    Harvard Dataverse, for congressional candidate's (instead of President's) vote totals.
 #'
-#' @seealso [load_cd_info()] to load and stack one or more Congresses.
+#' @seealso [cd_names()] to load and stack one or more Congresses.
 #'   See [ccesMRPprep's `cd_info` documentation](https://github.com/kuriwaki/ccesMRPprep/blob/main/R/datadoc_cd-info.R)
 #'   for upstream sources, district-boundary history, and related presidential
 #'   election data. Its dataset years refer to election maps; the `info_*` years

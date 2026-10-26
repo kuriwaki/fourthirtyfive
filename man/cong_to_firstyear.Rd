@@ -7,7 +7,8 @@
 cong_to_firstyear(congress)
 }
 \arguments{
-\item{congress}{integer or numeric vector}
+\item{congress}{Integer vector of Congress numbers, such as \code{119} or
+\code{c(119, 120)}.}
 }
 \value{
 integer vector of start years

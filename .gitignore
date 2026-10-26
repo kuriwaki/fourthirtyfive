@@ -6,3 +6,7 @@
 .quarto
 /data-raw/hexmap_*/
 .positai
+/docs/
+/data-raw/cook-pvi/raw/*.tsv
+/data-raw/cook-pvi/archive-values.csv
+/data-raw/cook-pvi/coverage.csv

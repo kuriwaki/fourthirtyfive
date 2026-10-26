@@ -1,0 +1,42 @@
+# Written by Codex
+url: https://www.shirokuriwaki.com/fourthirtyfive/
+
+template:
+  bootstrap: 5
+
+figures:
+  fig.width: 5
+  fig.height: 3
+
+navbar:
+  structure:
+    left: [intro, reference, coverage, interactive, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get started
+      href: index.html#installation
+    coverage:
+      text: Coverage and sources
+      href: reference/cd_available.html
+    interactive:
+      text: Interactive maps
+      menu:
+      - text: Compare districts
+        href: reference/cd_mapbox.html
+      - text: Mapbox setup
+        href: reference/mapbox-setup.html
+
+reference:
+- title: District data functions
+- contents: [cd_available, cd_boundaries, cd_dotmap, cd_hexmap, cd_names, cd_pvi, cd_mapbox]
+- title: Partisanship helpers
+- contents: [pvi_to_numeric]
+- title: Bundled datasets
+- contents: [shp_dot, shp_hex, shp_states, info, pvi]
+- title: Years and Congresses
+- contents: [year_to_cong, cong_to_firstyear]
+- title: Interactive map setup
+- contents: [mapbox-setup]
+- title: Alternative function names
+- contents: [accessor-aliases]

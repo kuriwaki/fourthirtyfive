@@ -1,12 +1,15 @@
-#' @title Load Dodged CD centroids
+# Written by Codex
+#' @title Congressional district dot maps
 #'
 #' @description Loads shapefile of coordinates. Each row contains a coordinate of the
 #' centroid of the CD, slightly dodged so that points in dense places do
 #' not overlap.
 #'
 #'
-#' @param year Integer vector of years from 2005-2027.
-#' @param congress Integer vector of Congress numbers from the 109th-120th Congress.
+#' @inheritParams cd_params
+#'
+#' @details Supply `year` or `congress`. Bundled dotmaps cover Congresses
+#'   109-120 (start years 2005-2027).
 #'
 #' @author Zoya Ahmer, Shiro Kuriwaki, Cory McCartan
 #'
@@ -14,14 +17,14 @@
 #'
 #' @examples
 #' # load one dataset
-#' load_shp_dot(year = 2011) # is equivalent to loading `shp_dot_2011`
-#' load_shp_dot(congress = 109)
-#' load_shp_dot(year = 2027)
+#' cd_dotmap(year = 2011) # is equivalent to loading `shp_dot_2011`
+#' cd_dotmap(congress = 109)
+#' cd_dotmap(year = 2027)
 #'
 #' # plot points combined with state outline
 #' library(ggplot2)
 #'
-#' load_shp_dot(year = 2005) |>
+#' cd_dotmap(year = 2005) |>
 #'   ggplot() +
 #'   geom_sf(data = shp_states) +
 #'   geom_sf(size = 1, alpha = 0.5)
@@ -29,10 +32,12 @@
 #' # can also use ggforce::geom_circle, extracting x,y coordinates from geom and
 #' # setting a radius e.g. to 150000
 #'
-#' @name load_shp_dot
+#' @name cd_dotmap
+#' @family congressional district functions
+#' @seealso [cd_available()] for supported years and Congresses.
 #' @export
 
-load_shp_dot <- function(year = NULL, congress = NULL) {
+cd_dotmap <- function(year = NULL, congress = NULL) {
   if (!is.null(year)) {
     congress <- year_to_cong(year)
   } else if (!is.null(congress)) {
@@ -74,8 +79,8 @@ load_shp_dot <- function(year = NULL, congress = NULL) {
 #' @description Shapefile of coordinates. Each row contains a coordinate of the centroid of the CD,
 #'  slightly dodged so that points in dense places do not overlap.
 #'
-#' @format Each object is for a particular congress. The year indicates the start
-#'  of that Congress. Each observational is a congressional district, represented by
+#' @format Each object is for a particular Congress. The year indicates the start
+#'  of that Congress. Each observation is a congressional district, represented by
 #'  a point.
 #' @source Coordinates from 2012 onwards taken from US Census, `tigris` package.
 #'  Coordinates from early Congresses taken from Jeffrey B. Lewis, historical congressional

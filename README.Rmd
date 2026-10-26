@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -16,18 +16,22 @@ knitr::opts_chunk$set(
 # fourthirtyfive
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml)
+[![Dotmap coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-coverage/dotmaps.svg)](https://github.com/kuriwaki/fourthirtyfive/tree/main/data)
+[![Hexmap coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-coverage/hexmaps.svg)](https://github.com/kuriwaki/fourthirtyfive/tree/main/data)
+[![District-name coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-coverage/names.svg)](https://github.com/kuriwaki/fourthirtyfive/tree/main/data)
 <!-- badges: end -->
 
 
-Maintainer: Shiro Kuriwaki
+Creator / Maintainer: Shiro Kuriwaki
 
 Contributors: Zoya Ahmer, Zachary Donnini, Cory McCartan
 
-Copyright holders: Downballot (some data)
+Copyright holders: Downballot and Cook Political Report (some data)
 
 
-`fourthirtyfive` is a package that provides shapefiles and other data for the 435 congressional districts, gathering good ideas from various authors. The current data cover 2006-2027.
+`fourthirtyfive` is a package that provides shapefiles and other data for the 435 congressional districts, gathering good ideas from various authors.
+
 
 ## Installation
 
@@ -38,40 +42,56 @@ You can install the development version of fourthirtyfive from [GitHub](https://
 remotes::install_github("kuriwaki/fourthirtyfive")
 ```
 
+Use `cd_available()` for the full coverage and main options:
+
+```{r}
+fourthirtyfive::cd_available()
+```
+
+
 
 ## Example
 
-The main output of the package are datasets which comes pre-loaded with the package.
+Use the `cd_` functions to retrieve district data. Type `cd_` in RStudio to discover the family with autocomplete.
 
 ```{r example}
 library(fourthirtyfive)
 ```
 
+| Function | Returns |
+|---|---|
+| `cd_boundaries()` | Geographic district boundaries as an `sf` object |
+| `cd_dotmap()` | Dodged district points as an `sf` object |
+| `cd_hexmap()` | District hex cartograms as an `sf` object |
+| `cd_names()` | Descriptive geographical district names as a tibble |
+| `cd_pvi()` | Historical Cook PVI labels, with public-source gaps flagged |
+| `pvi_to_numeric()` | Cook PVI labels as signed proportions for either party |
+| `cd_available()` | A CLI summary and an invisible availability table |
 
-We are building several types of maps. First, the **dotmap** is where one CD is treated as point. We use the centroid of the actual map, and dodge it so that crowded points do not completely overlap with each other.
+We provide several types of maps. First, the **dotmap** is where one CD is treated as a point. We use the centroid of the actual map, and dodge it so that crowded points do not completely overlap with each other.
 
-```{r}
+```{r dotmap}
 library(sf)
 library(ggplot2)
 
-load_shp_dot(2023) |>
+cd_dotmap(2023) |>
   ggplot() +
   geom_sf(data = shp_states) +
   geom_sf(size = 1, alpha = 0.5) +
   theme_void()
 ```
 
-For now, the output of each function for recent years is stored as a package dataset as well:
+Dotmaps are also available as bundled datasets:
 
-```{r}
+```{r dotmap-data}
 shp_dot_2023
 ```
 
 
-We also provide **hexmaps** (i.e., maps that present CDs as combinations of hexagons) for all years. The 2013-2025 maps are sourced from the Downballot's hex map shapefiles (<https://the-db.co/maps>). The 2005-2011 maps are generated with Cory McCartan's [hexmap](https://github.com/CoryMcCartan/hexmap) package.
+We also provide **hexmaps** (i.e., maps that present CDs as combinations of hexagons) for Congresses starting in 2005–2027. The 2013–2027 maps are sourced from the Downballot's hex map shapefiles (<https://the-db.co/maps>). The 2005–2011 maps reuse a 2009 map generated with Cory McCartan's [hexmap](https://github.com/CoryMcCartan/hexmap) package. The 2013–2021 maps also reuse one cartogram, so these historical hexmaps do not capture every mid-decade boundary change.
 
-```{r}
-load_shp_hex(2023) |>
+```{r hexmap}
+cd_hexmap(2023) |>
   ggplot() +
   geom_sf() +
   theme_void() +
@@ -84,37 +104,158 @@ Note: An earlier version of these hex maps was provided in the [`donnermap`](htt
 
 We do not store actual CD shapefiles, but we provide a function to draw these from either the Census or Jeff Lewis's historical shapefiles.
 
-Use `load_cd_shps(year = 2027)` for the 120th Congress. The nine states redrawn for the 2026 election use Census's 2026 TIGER/Line boundaries, simplified together for plotting by default; all other states, including Missouri, retain the 2025 map. Use `simplify = FALSE` for full detail in the nine redrawn states. The assembled 2027 map is cached within the R session; use `cache = FALSE` to rebuild it.
-
-```{r, include = FALSE}
-suppressMessages(cd_shps <- load_cd_shps(c = 118))
+```{r load-boundaries, include = FALSE}
+suppressMessages(cd_shps <- cd_boundaries(congress = 118))
 ```
 
-```{r, eval=FALSE}
-cd_shps <- load_cd_shps(c = 118)
+```{r boundaries-example, eval=FALSE}
+cd_shps <- cd_boundaries(congress = 118)
 ```
 
-```{r}
+```{r boundaries}
 cd_shps |>
   ggplot() +
   geom_sf() +
   theme_void()
 ```
 
+Compare Tennessee's district boundaries for the 119th and 120th Congresses.
+The maps use the same extent and district colors, with the 119th Congress above
+the 120th.
 
-We also provide a dataset of the **descriptive names** of each district (e.g., calling AZ-01 in the 110th congressional district "Phoenix exurbs, Prescott, and Flagstaff"). 
-These use [Daily
-Kos](https://www.dailykos.com/stories/2022/8/8/2113098/-The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts) namings. Zachary Donnini named 2008-2010 congressional districts.
+```{r tn-boundaries, fig.width=9, fig.height=6.5, message=FALSE}
+library(patchwork)
 
+tn_boundaries <- cd_boundaries(congress = c(119, 120), state = "TN")
+tn_extent <- st_bbox(tn_boundaries)
 
-```{r}
-load_cd_info(2007)
+plot_tn <- function(congress_number, title) {
+  tn_boundaries |>
+    dplyr::filter(.data$congress == congress_number) |>
+    ggplot(aes(fill = cd)) +
+    geom_sf(color = "white", linewidth = 0.35) +
+    geom_sf_text(aes(label = stringr::str_remove(cd, "^TN-0?")), size = 3) +
+    scale_fill_brewer(palette = "Set3", guide = "none") +
+    coord_sf(
+      xlim = unname(tn_extent[c("xmin", "xmax")]),
+      ylim = unname(tn_extent[c("ymin", "ymax")]),
+      expand = FALSE
+    ) +
+    labs(title = title) +
+    theme_void() +
+    theme(plot.title = element_text(face = "bold", size = 13))
+}
+
+tn_119 <- plot_tn(119, "119th Congress (2025-2026)")
+tn_120 <- plot_tn(120, "120th Congress (2027-2028)")
+
+(tn_119 / tn_120) +
+  plot_annotation(
+    title = "Tennessee congressional districts",
+    caption = "Source: U.S. Census Bureau via tigris. 119th: 2024 cartographic boundaries;\n120th: 2026 TIGER/Line boundaries, simplified for display. Colors identify district numbers."
+  )
 ```
 
-This can be loaded as an object too, for now:
+### Interactive comparisons
 
-```{r, eval = FALSE}
+Use `cd_mapbox()` to overlay one to three Congresses on a single interactive map.
+Select a state or a district, and use the map's layer controls to switch Congresses
+on and off. City boundaries are absent by default; select one or two incorporated
+cities to highlight only those cities in magenta.
+
+Tennessee's 119th and 120th Congresses, with Memphis highlighted:
+
+```{r tn-interactive, eval=FALSE}
+cd_mapbox(state = "TN", congress = c(119, 120), cities = "Memphis")
+```
+
+![Tennessee with 119th-Congress boundaries in blue, 120th-Congress boundaries in orange, and Memphis in magenta.](man/figures/README-tn-interactive.png)
+
+Zoom to Memphis while retaining both Congress layers:
+
+```{r memphis-interactive, eval=FALSE}
+cd_mapbox(
+  state = "TN", congress = c(119, 120), cities = "Memphis",
+  zoom_to_cities = TRUE
+)
+```
+
+![Memphis city boundaries in magenta with the 119th and 120th congressional districts overlaid.](man/figures/README-memphis-interactive.png)
+
+City outlines use the same 2026 Census geography in both views. District boundary
+detail varies across Congresses, so small differences at street scale may reflect
+cartographic generalization. The camera control saves the current map as a PNG.
+
+Interactive maps require the optional `mapgl` package and a Mapbox public token.
+See the [Mapbox setup guide](https://www.shirokuriwaki.com/fourthirtyfive/reference/mapbox-setup.html)
+for installation, token configuration, and usage limits, or run
+`help("mapbox-setup", package = "fourthirtyfive")` in R.
+
+
+We also provide a dataset of the **descriptive names** of each district (e.g., calling AZ-01 in the 110th Congress "Phoenix exurbs, Prescott, and Flagstaff").
+These use [Daily
+Kos](https://www.dailykos.com/stories/2022/8/8/2113098/community/The-Daily-Kos-Elections-naming-guide-to-this-decade-s-new-congressional-districts/) names. Zachary Donnini supplied the 2005–2011 names.
+
+
+```{r district-names}
+cd_names(2007)
+```
+
+The same district names are available as a bundled dataset:
+
+```{r district-names-data, eval = FALSE}
 info_2007
+```
+
+### Cook PVI
+
+Use `cd_pvi()` to retrieve the data. See `?cd_pvi` for documentation and
+`cd_available()` for coverage.
+
+The map below shows Cook PVI for all 435 districts in the 120th Congress
+(2027–2028), using the district maps for the 2026 election. Red indicates a
+Republican lean and blue a Democratic lean. The legend is in PVI points.
+The optional `ggredist` package supplies the district and state outlines,
+partisan color scale, and legend labels; `midpoint = 0` preserves the PVI scale.
+
+PVI data: [The Cook Political Report](https://www.cookpolitical.com/races),
+collected October 25, 2026. Hex cartogram:
+[The Downballot](https://the-db.co/maps), via `cd_hexmap()`.
+
+```{r pvi-hexmap, fig.width=5, fig.height=3, dev="ragg_png", dpi=300, fig.retina=1, message=FALSE, fig.alt="2027 House hex map colored by Cook PVI: Republican-leaning districts in red, Democratic-leaning districts in blue, with state outlines."}
+library(dplyr)
+library(ggplot2)
+
+hex_pvi <- cd_hexmap(year = 2027) |>
+  sf::st_make_valid() |>
+  left_join(
+    cd_pvi(year = 2027) |> select(cong, cd, pvi),
+    by = c("cong", "cd"), relationship = "one-to-one"
+  ) |>
+  mutate(pvi_D = pvi_to_numeric(pvi), state = substr(cd, 1, 2))
+
+ggplot(hex_pvi) +
+  ggredist::geom_district(
+    aes(group = cd, fill = pvi_D), color = "white", linewidth = 0.1
+  ) +
+  ggredist::geom_district(
+    aes(group = state), fill = NA, color = "grey40", linewidth = 0.25,
+    show.legend = FALSE
+  ) +
+  ggredist::scale_fill_party_c(
+    name = "Cook PVI", midpoint = 0, limits = c(-0.4, 0.4),
+    labels = ggredist::label_party_margin(midpoint = 0)
+  ) +
+  ggredist::theme_map(
+    text = element_text(family = "sans", size = 11, color = "black"),
+    legend.position = "bottom",
+    legend.title.position = "top",
+    legend.text = element_text(size = 11, color = "black"),
+    legend.title = element_text(size = 11, color = "black"),
+    legend.key.width = grid::unit(1.2, "cm"),
+    legend.key.height = grid::unit(0.25, "cm"),
+    plot.margin = margin(2, 2, 2, 2)
+  )
 ```
 
 
