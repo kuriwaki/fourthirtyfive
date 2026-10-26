@@ -347,3 +347,12 @@ congress.
 | `**_2023` | 118th    | 2023-2024        | 2022         | 2024                 |
 | `**_2025` | 119th    | 2025-2026        | 2024         | 2026                 |
 | `**_2027` | 120th    | 2027-2028        | 2026         | 2028                 |
+
+## AI assistance
+
+Fronteir AI models assisted with package code, documentation, data
+collection and preparation, and checks of district descriptions and map
+geometry. The human authors reviewed the output and core functionalities
+of the code, and retain responsibility for the package’s content and
+accuracy. Data sources and contributors are credited in the relevant
+documentation.
