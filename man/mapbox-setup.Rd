@@ -49,9 +49,12 @@ For a dedicated website token, allow \verb{https://www.shirokuriwaki.com} in its
 URL restrictions and retain the public \code{styles:read} and \code{fonts:read} scopes.
 The token is embedded in the published widget HTML; storing it as a GitHub
 secret keeps it out of source files but does not hide it from site visitors.
-Builds without the secret, including fork pull requests, show links to the
-live maps. The GitHub README always shows code examples and links to the
-interactive maps on the website.
+The website displays a labeled TN-09 fallback screenshot if the live map
+cannot load, including token, network, or WebGL failures. A slow map can
+replace the screenshot once it finishes loading. Builds without the secret,
+including fork pull requests, or with rendering errors show the screenshots
+directly. The GitHub README links to the live maps and keeps its labeled
+screenshots collapsed because GitHub cannot display interactive widgets.
 
 To preview locally, set \code{MAPBOX_PUBLIC_TOKEN} in R, run
 \code{source(".github/scripts/build-home.R")}, then \code{pkgdown::build_site()}.

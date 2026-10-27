@@ -207,7 +207,7 @@ get_lewis_sf <- function(state, congress) {
 # Shared Census input for geographic maps and dot-map generation ----
 redrawn_states_2027 = c("AL", "CA", "FL", "LA", "NC", "OH", "TN", "TX", "UT")
 
-get_census_cd_sf <- function(congress, state = NULL) {
+get_census_cd_sf <- function(congress, state = NULL, cartographic = TRUE) {
   loaded_version <- as.character(getNamespaceVersion("tigris"))
   if (congress == 120L && utils::compareVersion(loaded_version, "2.3.0") < 0L) {
     stop(stringr::str_glue(
@@ -215,7 +215,7 @@ get_census_cd_sf <- function(congress, state = NULL) {
       "Update tigris, restart R, and reload fourthirtyfive."
     ), call. = FALSE)
   }
-  read_map <- function(year, state = NULL, cb = TRUE) {
+  read_map <- function(year, state = NULL, cb = cartographic) {
     raw <- tigris::congressional_districts(
       state = state, year = year, cb = cb, resolution = "20m"
     )

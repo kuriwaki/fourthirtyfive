@@ -8,24 +8,21 @@ figures:
   fig.width: 5
   fig.height: 3
 
+home:
+  sidebar:
+    structure: [toc, links, license, community, citation, authors, dev]
+
 navbar:
   structure:
-    left: [intro, reference, coverage, interactive, news]
+    left: [intro, reference, interactive, news]
     right: [search, github]
   components:
     intro:
       text: Get started
       href: index.html#installation
-    coverage:
-      text: Coverage and sources
-      href: reference/cd_available.html
     interactive:
       text: Interactive maps
-      menu:
-      - text: Compare districts
-        href: reference/cd_mapbox.html
-      - text: Mapbox setup
-        href: reference/mapbox-setup.html
+      href: index.html#interactive-comparisons
 
 reference:
 - title: District data functions

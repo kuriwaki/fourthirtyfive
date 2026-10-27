@@ -10,7 +10,8 @@ cd_mapbox(
   state = NULL,
   cities = NULL,
   zoom_to_cities = FALSE,
-  colors = c("#2166AC", "#D95F02", "#009E73")
+  colors = c("#2166AC", "#D95F02", "#009E73"),
+  detailed = TRUE
 )
 }
 \arguments{
@@ -32,6 +33,11 @@ Defaults to FALSE.}
 
 \item{colors}{Colors for district lines. Accepts up to three, for different
 Congresses.}
+
+\item{detailed}{Use full-resolution Census TIGER/Line district boundaries
+for modern Congresses and unsimplified historical boundaries? Defaults to
+\code{TRUE}, suitable for zooming into cities. Set \code{FALSE} for smaller,
+generalized maps. City boundaries always use full-resolution TIGER/Line.}
 }
 \value{
 A \code{mapgl} Mapbox HTML widget.
@@ -44,6 +50,10 @@ district maps together.
 \details{
 Supply exactly one district with \code{cd} or one state with \code{state},
 and one to three Congress numbers from 1-120 with \code{congress}.
+
+\code{detailed = FALSE} restores the lighter cartographic boundaries for modern
+Congresses. Redrawn 120th-Congress districts and North Carolina's special
+117th-Congress plan retain their original detailed sources in either mode.
 
 City outlines only use 2026
 Census incorporated-place boundaries, shared across the compared Congresses.

@@ -1,6 +1,6 @@
 # Written by Codex
 
-cd_mapbox_test_boundaries <- function(state = "TN", congress = 119L, cd = NULL) {
+cd_mapbox_test_boundaries <- function(state = "TN", congress = 119L, cd = NULL, detailed = TRUE) {
   offset <- (congress - 119) * 0.03
   polygons <- lapply(seq_len(2L), function(index) {
     x <- -90 + (index - 1) * 0.2 + offset
@@ -42,11 +42,36 @@ cd_mapbox_test_setup <- function(.env = parent.frame()) {
   )
 }
 
+test_that("interactive maps use full Census detail by default with a lighter opt-out", {
+  cd_mapbox_test_setup()
+  requests <- list()
+  local_mocked_bindings(
+    congressional_districts = function(state, year, cb, resolution) {
+      requests[[length(requests) + 1L]] <<- list(year = year, cb = cb)
+      fixture <- cd_mapbox_test_boundaries(congress = 119L)
+      attributes <- data.frame(STATEFP = c("47", "47"), district = c("01", "02"))
+      names(attributes)[2L] <- glue::glue("CD{if (year == 2024L) 119L else 120L}FP")
+      sf::st_sf(attributes, geometry = sf::st_geometry(fixture))
+    },
+    .package = "tigris"
+  )
+
+  detailed_view <- cd_mapbox(cd = "TN-01", congress = c(119, 120))
+  expect_length(detailed_view$x$sources, 2L)
+  expect_identical(requests, list(
+    list(year = 2024L, cb = FALSE), list(year = 2026L, cb = FALSE)
+  ))
+
+  light_view <- cd_mapbox(cd = "TN-01", congress = 119, detailed = FALSE)
+  expect_length(light_view$x$sources, 1L)
+  expect_identical(tail(requests, 1L)[[1L]], list(year = 2024L, cb = TRUE))
+})
+
 test_that("statewide views compare unique Congresses without fetching cities by default", {
   cd_mapbox_test_setup()
   requests <- list()
   local_mocked_bindings(
-    .cd_mapbox_boundaries = function(state, congress, cd = NULL) {
+    .cd_mapbox_boundaries = function(state, congress, cd = NULL, detailed = TRUE) {
       requests[[length(requests) + 1L]] <<- list(state = state, congress = congress, cd = cd)
       cd_mapbox_test_boundaries(state, congress, cd)
     },
@@ -135,6 +160,8 @@ test_that("invalid selections and missing public credentials fail before retriev
   expect_error(cd_mapbox(state = "TN", congress = c(119, NA)), "whole Congress")
   expect_error(cd_mapbox(state = "TN", congress = 121), "whole Congress")
   expect_error(cd_mapbox(state = "TN", congress = 119, cities = c("A", "B", "C")), "two cities")
+  expect_error(cd_mapbox(state = "TN", congress = 119, detailed = NA), "detailed")
+  expect_error(cd_mapbox(state = "TN", congress = 119, detailed = c(TRUE, FALSE)), "detailed")
   expect_error(cd_mapbox(state = "TN", congress = 119, zoom_to_cities = TRUE), "Select a city")
   expect_error(cd_mapbox(congress = 119), "exactly one")
   expect_error(cd_mapbox("TN-01", congress = 119, state = "TN"), "exactly one")

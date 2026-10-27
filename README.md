@@ -53,6 +53,8 @@ library(fourthirtyfive)
 | `pvi_to_numeric()` | Cook PVI labels as signed proportions for either party |
 | `cd_available()` | A CLI summary and an invisible availability table |
 
+### Dot maps
+
 We provide several types of maps. First, the **dotmap** is where one CD
 is treated as a point. We use the centroid of the actual map, and dodge
 it so that crowded points do not completely overlap with each other.
@@ -94,6 +96,8 @@ shp_dot_2023
 #> 10  118 AR-02  POINT (328419.7 1351219)
 ```
 
+### Hex maps
+
 We also provide **hexmaps** (i.e., maps that present CDs as combinations
 of hexagons) for Congresses starting in 2005–2027. The 2013–2027 maps
 are sourced from the Downballot’s hex map shapefiles
@@ -118,6 +122,8 @@ Note: An earlier version of these hex maps was provided in the
 shapefiles used unprojected coordinates that do not match the coordinate
 system of the other hex maps here. The hex maps in `fourthirtyfive` use
 the projected Web Mercator versions (`wm` suffix) from the Downballot.
+
+### Boundary maps
 
 We do not store actual CD shapefiles, but we provide a function to draw
 these from either the Census or Jeff Lewis’s historical shapefiles.
@@ -145,30 +151,68 @@ Congresses. The maps use the same extent and district colors, with the
 
 Mapbox is a recent tool that allows for *interactive* maps, so users can
 zoom into particular places and overlay them with real city names. The
-package provides a wrapper, `cd_mapbox()`, to do this. This tool is
-useful too to compare how much of a distrit overlaps with a city, or how
+package provides a wrapper,
+[`cd_mapbox()`](https://www.shirokuriwaki.com/fourthirtyfive/reference/cd_mapbox.html),
+to do this. This tool is useful too to compare how much of a district overlaps with a city, or how
 redistricting has changed.
 
-For example, consider how Tennesse’s map changed between 2025 and 2027.
+For example, compare Tennessee’s 9th district, represented by [Steve
+Cohen](https://clerk.house.gov/members/C001068) in the 119th Congress,
+between the 2025 and 2027 maps.
 
 ``` r
-cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis")
+cd_mapbox(cd = "TN-09", congress = c(119, 120), cities = "Memphis", detailed = TRUE)
 ```
 
 [Explore the interactive district comparison on the package
 website.](https://www.shirokuriwaki.com/fourthirtyfive/#interactive-comparisons)
 
+<details class="map-fallback-details">
+
+<summary>
+
+Show fallback screenshot (interactive mapgl is unavailable here)
+</summary>
+
+<figure>
+<img src="man/figures/README-tn-interactive.jpg"
+alt="Static fallback: TN-09 in the 119th Congress in blue and the 120th in orange, with Memphis in magenta." />
+<figcaption aria-hidden="true">Static fallback: TN-09 in the 119th
+Congress in blue and the 120th in orange, with Memphis in
+magenta.</figcaption>
+</figure>
+
+</details>
+
 We can zoom to Memphis by default too:
 
 ``` r
-cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis", zoom_to_cities = TRUE)
+cd_mapbox(cd = "TN-09", congress = c(119, 120), cities = "Memphis", zoom_to_cities = TRUE, detailed = TRUE)
 ```
 
 [Explore the interactive Memphis view on the package
 website.](https://www.shirokuriwaki.com/fourthirtyfive/maps/memphis-interactive.html)
 
-Be warned that the granularity of district boundaries can vary and users
-should toggle options if they want higher precision maps.
+<details class="map-fallback-details">
+
+<summary>
+
+Show fallback screenshot (interactive mapgl is unavailable here)
+</summary>
+
+<figure>
+<img src="man/figures/README-memphis-interactive.jpg"
+alt="Static fallback: Memphis with TN-09 in the 119th Congress in blue and the 120th in orange." />
+<figcaption aria-hidden="true">Static fallback: Memphis with TN-09 in
+the 119th Congress in blue and the 120th in orange.</figcaption>
+</figure>
+
+</details>
+
+`detailed = TRUE` (the default) uses full-resolution Census TIGER/Line district
+boundaries for these interactive maps, including the 119th Congress. Use
+`detailed = FALSE` for smaller, generalized maps. Historical boundary precision
+still depends on the original source.
 
 These interactive maps require the optional `mapgl` package and a Mapbox
 public token. See the [Mapbox setup

@@ -13,9 +13,17 @@
 #'  Defaults to FALSE.
 #' @param colors Colors for district lines. Accepts up to three, for different
 #'  Congresses.
+#' @param detailed Use full-resolution Census TIGER/Line district boundaries
+#'   for modern Congresses and unsimplified historical boundaries? Defaults to
+#'   `TRUE`, suitable for zooming into cities. Set `FALSE` for smaller,
+#'   generalized maps. City boundaries always use full-resolution TIGER/Line.
 #' @return A `mapgl` Mapbox HTML widget.
 #' @details Supply exactly one district with `cd` or one state with `state`,
 #'   and one to three Congress numbers from 1-120 with `congress`.
+#'
+#'   `detailed = FALSE` restores the lighter cartographic boundaries for modern
+#'   Congresses. Redrawn 120th-Congress districts and North Carolina's special
+#'   117th-Congress plan retain their original detailed sources in either mode.
 #'
 #'   City outlines only use 2026
 #'   Census incorporated-place boundaries, shared across the compared Congresses.
@@ -34,7 +42,8 @@
 #' @author Codex
 cd_mapbox <- function(cd = NULL, congress, state = NULL, cities = NULL,
                     zoom_to_cities = FALSE,
-                    colors = c("#2166AC", "#D95F02", "#009E73")) {
+                    colors = c("#2166AC", "#D95F02", "#009E73"),
+                    detailed = TRUE) {
   geography <- .cd_mapbox_geography(cd, state)
   if (missing(congress) || !is.numeric(congress) || !length(congress) ||
       anyNA(congress) || any(!is.finite(congress)) ||
@@ -63,6 +72,9 @@ cd_mapbox <- function(cd = NULL, congress, state = NULL, cities = NULL,
   if (!is.character(colors) || length(colors) < length(congress_ids) || anyNA(colors)) {
     cli::cli_abort("Supply one color for each Congress with {.arg colors}.")
   }
+  if (!is.logical(detailed) || length(detailed) != 1L || is.na(detailed)) {
+    cli::cli_abort("{.arg detailed} must be {.val TRUE} or {.val FALSE}.")
+  }
   if (!requireNamespace("mapgl", quietly = TRUE)) {
     cli::cli_abort(c(
       "Interactive maps require {.pkg mapgl}.",
@@ -78,7 +90,9 @@ cd_mapbox <- function(cd = NULL, congress, state = NULL, cities = NULL,
   }
 
   district_layers <- lapply(congress_ids, function(congress_id) {
-    district_input <- .cd_mapbox_boundaries(geography$state, congress_id, geography$cd)
+    district_input <- .cd_mapbox_boundaries(
+      geography$state, congress_id, geography$cd, detailed = detailed
+    )
     dplyr::mutate(
       district_input,
       label = glue::glue("{district_input$cd} \u2014 Congress {congress_id}")
@@ -178,11 +192,20 @@ cd_mapbox <- function(cd = NULL, congress, state = NULL, cities = NULL,
   list(state = state_code, cd = if (is.null(cd)) NULL else toupper(cd))
 }
 
-.cd_mapbox_boundaries <- function(state, congress, cd = NULL) {
+.cd_mapbox_boundaries <- function(state, congress, cd = NULL, detailed = TRUE) {
   boundary_input <- if (state == "NC" && congress == 117L) {
     .cd_mapbox_nc117()
+  } else if (detailed && congress >= 113L) {
+    get_census_cd_sf(congress, state = state, cartographic = FALSE) |>
+      dplyr::mutate(
+        congress = .env$congress,
+        year = if (.env$congress == 119L) 2024L else cong_to_firstyear(.env$congress)
+      )
   } else {
-    cd_boundaries(congress = congress, state = state, simplify = congress != 120L)
+    cd_boundaries(
+      congress = congress, state = state,
+      simplify = !detailed && congress != 120L
+    )
   }
   selected <- if (is.null(cd)) boundary_input else {
     dplyr::filter(boundary_input, .data$cd == .env$cd)

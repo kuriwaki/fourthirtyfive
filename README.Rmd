@@ -19,15 +19,53 @@ interactive_maps <- isTRUE(getOption("fourthirtyfive.website", FALSE)) &&
 
 render_map_widget <- function(x, options, ...) {
   map_file <- glue::glue("{options$label}.html")
+  screenshot_file <- glue::glue("README-{options$label}.jpg")
   map_dir <- file.path("pkgdown", "assets", "maps")
   dir.create(map_dir, recursive = TRUE, showWarnings = FALSE)
+  if (!file.copy(
+    file.path("man", "figures", screenshot_file), map_dir, overwrite = TRUE
+  )) {
+    stop("Could not copy the interactive map's fallback screenshot.")
+  }
+  fallback_dependency <- htmltools::htmlDependency(
+    name = "cd-map-fallback", version = "1.0.0",
+    src = c(file = normalizePath("pkgdown")),
+    script = "extra.js", stylesheet = "extra.css",
+    all_files = FALSE
+  )
+  fallback_figure <- htmltools::attachDependencies(
+    htmltools::tags$figure(
+      class = "cd-map-fallback",
+      htmltools::tags$img(src = screenshot_file, alt = options$fig.alt),
+      htmltools::tags$figcaption(
+        "Fallback screenshot \u2014 the interactive mapgl map is unavailable."
+      )
+    ),
+    fallback_dependency
+  )
+  map_with_fallback <- htmlwidgets::prependContent(x, fallback_figure)
   htmlwidgets::saveWidget(
-    x, file.path(map_dir, map_file), selfcontained = FALSE, libdir = "lib",
+    map_with_fallback, file.path(map_dir, map_file),
+    selfcontained = FALSE, libdir = "lib",
     title = options$fig.alt
   )
-  knitr::asis_output(as.character(htmltools::tags$iframe(
-    src = glue::glue("maps/{map_file}"), title = options$fig.alt,
-    width = "100%", height = "650", style = "border: 0;", loading = "lazy"
+  knitr::asis_output(as.character(htmltools::tags$div(
+    class = "cd-map-frame",
+    htmltools::tags$iframe(
+      class = "cd-map-iframe",
+      src = glue::glue("maps/{map_file}"), title = options$fig.alt,
+      width = "100%", height = "650", style = "border: 0;", loading = "lazy"
+    ),
+    htmltools::tags$figure(
+      class = "cd-map-outer-fallback",
+      htmltools::tags$img(
+        src = file.path("man", "figures", screenshot_file),
+        alt = options$fig.alt
+      ),
+      htmltools::tags$figcaption(
+        "Fallback screenshot \u2014 the interactive mapgl map is unavailable."
+      )
+    )
   )))
 }
 ```
@@ -80,6 +118,8 @@ library(fourthirtyfive)
 | `pvi_to_numeric()` | Cook PVI labels as signed proportions for either party |
 | `cd_available()` | A CLI summary and an invisible availability table |
 
+### Dot maps
+
 We provide several types of maps. First, the **dotmap** is where one CD is treated as a point. We use the centroid of the actual map, and dodge it so that crowded points do not completely overlap with each other.
 
 ```{r dotmap}
@@ -93,12 +133,8 @@ cd_dotmap(2023) |>
   theme_void()
 ```
 
-Dotmaps are also available as bundled datasets:
 
-```{r dotmap-data}
-shp_dot_2023
-```
-
+### Hex maps
 
 We also provide **hexmaps** (i.e., maps that present CDs as combinations of hexagons) for Congresses starting in 2005–2027. The 2013–2027 maps are sourced from the Downballot's hex map shapefiles (<https://the-db.co/maps>). The 2005–2011 maps reuse a 2009 map generated with Cory McCartan's [hexmap](https://github.com/CoryMcCartan/hexmap) package. The 2013–2021 maps also reuse one cartogram, so these historical hexmaps do not capture every mid-decade boundary change.
 
@@ -113,6 +149,8 @@ cd_hexmap(2023) |>
 Note: An earlier version of these hex maps was provided in the [`donnermap`](https://github.com/kuriwaki/donnermap) package. Those shapefiles used unprojected coordinates that do not match the coordinate system of the other hex maps here. The hex maps in `fourthirtyfive` use the projected Web Mercator versions (`wm` suffix) from the Downballot.
 
 
+
+### Boundary maps
 
 We do not store actual CD shapefiles, but we provide a function to draw these from either the Census or Jeff Lewis's historical shapefiles.
 
@@ -172,30 +210,50 @@ tn_120 <- plot_tn(120, "120th Congress (2027-2028)")
 
 Mapbox is a recent tool that allows for _interactive_ maps, so users can zoom into particular
 places and overlay them with real city names. The package provides a wrapper, 
-`cd_mapbox()`, to do this. This tool is useful too to compare how much of a distrit overlaps
+[`cd_mapbox()`](https://www.shirokuriwaki.com/fourthirtyfive/reference/cd_mapbox.html),
+to do this. This tool is useful too to compare how much of a district overlaps
 with a city, or how redistricting has changed.
 
-For example, consider how Tennesse's map changed between 2025 and 2027.
+For example, compare Tennessee's 9th district, represented by
+[Steve Cohen](https://clerk.house.gov/members/C001068) in the 119th Congress,
+between the 2025 and 2027 maps.
 
-```{r tn-interactive, eval=interactive_maps, render=render_map_widget, message=FALSE, fig.alt="Tennessee's 8th district in the 119th and 120th Congresses, with Memphis highlighted"}
-cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis")
+```{r tn-interactive, eval=interactive_maps, render=render_map_widget, message=FALSE, fig.alt="Tennessee's 9th district in the 119th and 120th Congresses, with Memphis highlighted"}
+cd_mapbox(cd = "TN-09", congress = c(119, 120), cities = "Memphis", detailed = TRUE)
 ```
 
 ```{asis tn-interactive-link, echo=!interactive_maps}
 [Explore the interactive district comparison on the package website.](https://www.shirokuriwaki.com/fourthirtyfive/#interactive-comparisons)
+
+<details class="map-fallback-details">
+<summary>Show fallback screenshot (interactive mapgl is unavailable here)</summary>
+
+![Static fallback: TN-09 in the 119th Congress in blue and the 120th in orange, with Memphis in magenta.](man/figures/README-tn-interactive.jpg)
+
+</details>
 ```
 
 We can zoom to Memphis by default too:
 
-```{r memphis-interactive, eval=interactive_maps, render=render_map_widget, message=FALSE, fig.alt="Memphis city boundaries with the 119th and 120th congressional districts overlaid"}
-cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis", zoom_to_cities = TRUE)
+```{r memphis-interactive, eval=interactive_maps, render=render_map_widget, message=FALSE, fig.alt="Memphis city boundaries with TN-09 in the 119th and 120th Congresses overlaid"}
+cd_mapbox(cd = "TN-09", congress = c(119, 120), cities = "Memphis", zoom_to_cities = TRUE, detailed = TRUE)
 ```
 
 ```{asis memphis-interactive-link, echo=!interactive_maps}
 [Explore the interactive Memphis view on the package website.](https://www.shirokuriwaki.com/fourthirtyfive/maps/memphis-interactive.html)
+
+<details class="map-fallback-details">
+<summary>Show fallback screenshot (interactive mapgl is unavailable here)</summary>
+
+![Static fallback: Memphis with TN-09 in the 119th Congress in blue and the 120th in orange.](man/figures/README-memphis-interactive.jpg)
+
+</details>
 ```
 
-Be warned that the granularity of district boundaries can vary and users should toggle options if they want higher precision maps.
+`detailed = TRUE` (the default) uses full-resolution Census TIGER/Line district
+boundaries for these interactive maps, including the 119th Congress. Use
+`detailed = FALSE` for smaller, generalized maps. Historical boundary precision
+still depends on the original source.
 
 These interactive maps require the optional `mapgl` package and a Mapbox public token.
 See the [Mapbox setup guide](https://www.shirokuriwaki.com/fourthirtyfive/reference/mapbox-setup.html)
