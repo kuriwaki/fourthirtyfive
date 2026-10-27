@@ -11,6 +11,25 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+# Website widgets ----
+
+interactive_maps <- isTRUE(getOption("fourthirtyfive.website", FALSE)) &&
+  startsWith(Sys.getenv("MAPBOX_PUBLIC_TOKEN"), "pk.")
+
+render_map_widget <- function(x, options, ...) {
+  map_file <- glue::glue("{options$label}.html")
+  map_dir <- file.path("pkgdown", "assets", "maps")
+  dir.create(map_dir, recursive = TRUE, showWarnings = FALSE)
+  htmlwidgets::saveWidget(
+    x, file.path(map_dir, map_file), selfcontained = FALSE, libdir = "lib",
+    title = options$fig.alt
+  )
+  knitr::asis_output(as.character(htmltools::tags$iframe(
+    src = glue::glue("maps/{map_file}"), title = options$fig.alt,
+    width = "100%", height = "650", style = "border: 0;", loading = "lazy"
+  )))
+}
 ```
 
 # fourthirtyfive
@@ -158,19 +177,23 @@ with a city, or how redistricting has changed.
 
 For example, consider how Tennesse's map changed between 2025 and 2027.
 
-```{r tn-interactive, eval=FALSE}
+```{r tn-interactive, eval=interactive_maps, render=render_map_widget, message=FALSE, fig.alt="Tennessee's 8th district in the 119th and 120th Congresses, with Memphis highlighted"}
 cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis")
 ```
 
-![Tennessee's 8th district with 119th-Congress boundaries in blue, 120th-Congress boundaries in orange, and Memphis in magenta.](man/figures/README-tn-interactive.png)
+```{asis tn-interactive-link, echo=!interactive_maps}
+[Explore the interactive district comparison on the package website.](https://www.shirokuriwaki.com/fourthirtyfive/#interactive-comparisons)
+```
 
 We can zoom to Memphis by default too:
 
-```{r memphis-interactive, eval=FALSE}
+```{r memphis-interactive, eval=interactive_maps, render=render_map_widget, message=FALSE, fig.alt="Memphis city boundaries with the 119th and 120th congressional districts overlaid"}
 cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis", zoom_to_cities = TRUE)
 ```
 
-![Memphis city boundaries in magenta with the 119th and 120th congressional districts overlaid.](man/figures/README-memphis-interactive.png)
+```{asis memphis-interactive-link, echo=!interactive_maps}
+[Explore the interactive Memphis view on the package website.](https://www.shirokuriwaki.com/fourthirtyfive/maps/memphis-interactive.html)
+```
 
 Be warned that the granularity of district boundaries can vary and users should toggle options if they want higher precision maps.
 

@@ -12,3 +12,4 @@ explore/
 ^\.claude$
 ^_pkgdown\.yml$
 ^docs$
+^pkgdown$

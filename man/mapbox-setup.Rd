@@ -35,6 +35,29 @@ cannot have URL restrictions. Restricted development tokens must allow
 See \href{https://docs.mapbox.com/accounts/guides/tokens/}{token management}.
 }
 
+\section{Package website on GitHub Pages}{
+
+The website workflow renders the interactive README examples when the
+repository has an Actions secret named \code{MAPBOX_PUBLIC_TOKEN}. On GitHub, open
+\strong{Settings > Secrets and variables > Actions > New repository secret}. Use
+\code{MAPBOX_PUBLIC_TOKEN} for the name and your public \code{pk.} token for the value.
+Then run \strong{Actions > Package website > Run workflow} on \code{main}, after the
+website build changes have been merged. See GitHub's
+\href{https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets}{secret setup instructions}.
+
+For a dedicated website token, allow \verb{https://www.shirokuriwaki.com} in its
+URL restrictions and retain the public \code{styles:read} and \code{fonts:read} scopes.
+The token is embedded in the published widget HTML; storing it as a GitHub
+secret keeps it out of source files but does not hide it from site visitors.
+Builds without the secret, including fork pull requests, show links to the
+live maps. The GitHub README always shows code examples and links to the
+interactive maps on the website.
+
+To preview locally, set \code{MAPBOX_PUBLIC_TOKEN} in R, run
+\code{source(".github/scripts/build-home.R")}, then \code{pkgdown::build_site()}.
+Allow \verb{http://localhost} on the development token when serving locally.
+}
+
 \section{Free usage and billing}{
 
 The card-free trial permits \strong{5,000 GL JS map loads per month} and provides

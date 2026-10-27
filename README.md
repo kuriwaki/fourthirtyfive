@@ -155,13 +155,8 @@ For example, consider how Tennesse’s map changed between 2025 and 2027.
 cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis")
 ```
 
-<figure>
-<img src="man/figures/README-tn-interactive.png"
-alt="Tennessee’s 8th district with 119th-Congress boundaries in blue, 120th-Congress boundaries in orange, and Memphis in magenta." />
-<figcaption aria-hidden="true">Tennessee’s 8th district with
-119th-Congress boundaries in blue, 120th-Congress boundaries in orange,
-and Memphis in magenta.</figcaption>
-</figure>
+[Explore the interactive district comparison on the package
+website.](https://www.shirokuriwaki.com/fourthirtyfive/#interactive-comparisons)
 
 We can zoom to Memphis by default too:
 
@@ -169,12 +164,8 @@ We can zoom to Memphis by default too:
 cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis", zoom_to_cities = TRUE)
 ```
 
-<figure>
-<img src="man/figures/README-memphis-interactive.png"
-alt="Memphis city boundaries in magenta with the 119th and 120th congressional districts overlaid." />
-<figcaption aria-hidden="true">Memphis city boundaries in magenta with
-the 119th and 120th congressional districts overlaid.</figcaption>
-</figure>
+[Explore the interactive Memphis view on the package
+website.](https://www.shirokuriwaki.com/fourthirtyfive/maps/memphis-interactive.html)
 
 Be warned that the granularity of district boundaries can vary and users
 should toggle options if they want higher precision maps.

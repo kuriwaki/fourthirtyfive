@@ -28,8 +28,12 @@ jobs:
           use-public-rspm: true
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, local::.
+          extra-packages: any::pkgdown, any::rmarkdown, any::htmlwidgets, local::.
           needs: website
+      - name: Render homepage with interactive maps
+        env:
+          MAPBOX_PUBLIC_TOKEN: ${{ secrets.MAPBOX_PUBLIC_TOKEN }}
+        run: Rscript .github/scripts/build-home.R
       - name: Build website
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE, run_dont_run = FALSE)
         shell: Rscript {0}
