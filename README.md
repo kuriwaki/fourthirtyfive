@@ -34,27 +34,6 @@ You can install the development version of fourthirtyfive from
 remotes::install_github("kuriwaki/fourthirtyfive")
 ```
 
-Use `cd_available()` for the full coverage and main options:
-
-``` r
-fourthirtyfive::cd_available()
-#> 
-#> ── Available congressional district data ──
-#> 
-#> • `cd_boundaries()`: 1789-2027 (Congresses 1-120); Lewis / US Census.
-#> • `cd_dotmap()`: 2005-2027 (Congresses 109-120); Lewis / US Census, dodged
-#>   centroids.
-#> • `cd_hexmap()`: 2005-2027 (Congresses 109-120); hexmap / The Downballot.
-#> • `cd_names()`: 2005-2027 (Congresses 109-120); Daily Kos / The Downballot /
-#>   contributors.
-#> • `cd_pvi()`: 1999-2027 (Congresses 106-120); The Cook Political Report;
-#>   public-source gaps are NA.
-#> Years refer to the start of a Congress, not its election year.
-#> Historical hexmaps for 2005-2011 reuse the generated 2009 map.
-#> PVI tables flag unavailable and documented unchanged values; inspect their
-#> status column.
-```
-
 ## Example
 
 Use the `cd_` functions to retrieve district data. Type `cd_` in RStudio
@@ -156,74 +135,38 @@ cd_shps |>
 
 <img src="man/figures/README-boundaries-1.png" alt="" width="100%" />
 
-Compare Tennessee’s district boundaries for the 119th and 120th
+We can compare Tennessee’s district boundaries for the 119th and 120th
 Congresses. The maps use the same extent and district colors, with the
 119th Congress above the 120th.
-
-``` r
-library(patchwork)
-
-tn_boundaries <- cd_boundaries(congress = c(119, 120), state = "TN")
-tn_extent <- st_bbox(tn_boundaries)
-
-plot_tn <- function(congress_number, title) {
-  tn_boundaries |>
-    dplyr::filter(.data$congress == congress_number) |>
-    ggplot(aes(fill = cd)) +
-    geom_sf(color = "white", linewidth = 0.35) +
-    geom_sf_text(aes(label = stringr::str_remove(cd, "^TN-0?")), size = 3) +
-    scale_fill_brewer(palette = "Set3", guide = "none") +
-    coord_sf(
-      xlim = unname(tn_extent[c("xmin", "xmax")]),
-      ylim = unname(tn_extent[c("ymin", "ymax")]),
-      expand = FALSE
-    ) +
-    labs(title = title) +
-    theme_void() +
-    theme(plot.title = element_text(face = "bold", size = 13))
-}
-
-tn_119 <- plot_tn(119, "119th Congress (2025-2026)")
-tn_120 <- plot_tn(120, "120th Congress (2027-2028)")
-
-(tn_119 / tn_120) +
-  plot_annotation(
-    title = "Tennessee congressional districts",
-    caption = "Source: U.S. Census Bureau via tigris. 119th: 2024 cartographic boundaries;\n120th: 2026 TIGER/Line boundaries, simplified for display. Colors identify district numbers."
-  )
-```
 
 <img src="man/figures/README-tn-boundaries-1.png" alt="" width="100%" />
 
 ### Interactive comparisons
 
-Use `cd_mapbox()` to overlay one to three Congresses on a single
-interactive map. Select a state or a district, and use the map’s layer
-controls to switch Congresses on and off. City boundaries are absent by
-default; select one or two incorporated cities to highlight only those
-cities in magenta.
+Mapbox is a recent tool that allows for *interactive* maps, so users can
+zoom into particular places and overlay them with real city names. The
+package provides a wrapper, `cd_mapbox()`, to do this. This tool is
+useful too to compare how much of a distrit overlaps with a city, or how
+redistricting has changed.
 
-Tennessee’s 119th and 120th Congresses, with Memphis highlighted:
+For example, consider how Tennesse’s map changed between 2025 and 2027.
 
 ``` r
-cd_mapbox(state = "TN", congress = c(119, 120), cities = "Memphis")
+cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis")
 ```
 
 <figure>
 <img src="man/figures/README-tn-interactive.png"
-alt="Tennessee with 119th-Congress boundaries in blue, 120th-Congress boundaries in orange, and Memphis in magenta." />
-<figcaption aria-hidden="true">Tennessee with 119th-Congress boundaries
-in blue, 120th-Congress boundaries in orange, and Memphis in
-magenta.</figcaption>
+alt="Tennessee’s 8th district with 119th-Congress boundaries in blue, 120th-Congress boundaries in orange, and Memphis in magenta." />
+<figcaption aria-hidden="true">Tennessee’s 8th district with
+119th-Congress boundaries in blue, 120th-Congress boundaries in orange,
+and Memphis in magenta.</figcaption>
 </figure>
 
-Zoom to Memphis while retaining both Congress layers:
+We can zoom to Memphis by default too:
 
 ``` r
-cd_mapbox(
-  state = "TN", congress = c(119, 120), cities = "Memphis",
-  zoom_to_cities = TRUE
-)
+cd_mapbox(cd = "TN-08", congress = c(119, 120), cities = "Memphis", zoom_to_cities = TRUE)
 ```
 
 <figure>
@@ -233,16 +176,16 @@ alt="Memphis city boundaries in magenta with the 119th and 120th congressional d
 the 119th and 120th congressional districts overlaid.</figcaption>
 </figure>
 
-City outlines use the same 2026 Census geography in both views. District
-boundary detail varies across Congresses, so small differences at street
-scale may reflect cartographic generalization. The camera control saves
-the current map as a PNG.
+Be warned that the granularity of district boundaries can vary and users
+should toggle options if they want higher precision maps.
 
-Interactive maps require the optional `mapgl` package and a Mapbox
+These interactive maps require the optional `mapgl` package and a Mapbox
 public token. See the [Mapbox setup
 guide](https://www.shirokuriwaki.com/fourthirtyfive/reference/mapbox-setup.html)
 for installation, token configuration, and usage limits, or run
 `help("mapbox-setup", package = "fourthirtyfive")` in R.
+
+### Descriptive Names
 
 We also provide a dataset of the **descriptive names** of each district
 (e.g., calling AZ-01 in the 110th Congress “Phoenix exurbs, Prescott,
@@ -266,12 +209,6 @@ cd_names(2007)
 #>  9   110 AR-01 Northeastern Arkansas                         
 #> 10   110 AR-02 Greater Little Rock                           
 #> # ℹ 425 more rows
-```
-
-The same district names are available as a bundled dataset:
-
-``` r
-info_2007
 ```
 
 ### Cook PVI
@@ -328,7 +265,7 @@ ggplot(hex_pvi) +
 
 <img src="man/figures/README-pvi-hexmap-1.png" alt="2027 House hex map colored by Cook PVI: Republican-leaning districts in red, Democratic-leaning districts in blue, with state outlines." width="100%" />
 
-## Data format
+## Year definition and availability
 
 We name the datasets (`shp_dot_**`, `info_**`) by the year of the
 congress.
@@ -348,7 +285,29 @@ congress.
 | `**_2025` | 119th    | 2025-2026        | 2024         | 2026                 |
 | `**_2027` | 120th    | 2027-2028        | 2026         | 2028                 |
 
-## AI assistance
+Currently most of the function covers the years above. You can run the
+following function for an overview:
+
+``` r
+fourthirtyfive::cd_available()
+#> 
+#> ── Available congressional district data ──
+#> 
+#> • `cd_boundaries()`: 1789-2027 (Congresses 1-120); Lewis / US Census.
+#> • `cd_dotmap()`: 2005-2027 (Congresses 109-120); Lewis / US Census, dodged
+#>   centroids.
+#> • `cd_hexmap()`: 2005-2027 (Congresses 109-120); hexmap / The Downballot.
+#> • `cd_names()`: 2005-2027 (Congresses 109-120); Daily Kos / The Downballot /
+#>   contributors.
+#> • `cd_pvi()`: 1999-2027 (Congresses 106-120); The Cook Political Report;
+#>   public-source gaps are NA.
+#> Years refer to the start of a Congress, not its election year.
+#> Historical hexmaps for 2005-2011 reuse the generated 2009 map.
+#> PVI tables flag unavailable and documented unchanged values; inspect their
+#> status column.
+```
+
+## AI assistance for this package
 
 Fronteir AI models assisted with package code, documentation, data
 collection and preparation, and checks of district descriptions and map
