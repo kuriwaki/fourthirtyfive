@@ -70,7 +70,7 @@ render_map_widget <- function(x, options, ...) {
 }
 ```
 
-# fourthirtyfive
+# fourthirtyfive <img src="man/figures/logo.png" align="right" width="160" alt="fourthirtyfive hex sticker with a normal-vote cartogram and geographic district map" />
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/kuriwaki/fourthirtyfive/actions/workflows/R-CMD-check.yaml)

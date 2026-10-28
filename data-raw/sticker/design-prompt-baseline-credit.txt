@@ -1,0 +1,10 @@
+Generation method: built-in image_gen edit of man/figures/logo.png.
+National baselines are fixed statistics; their source URLs are recorded in data-raw/normal-vote/national-baselines.csv.
+
+Edit only the small source-credit text at the lower LEFT of this sticker. Keep the first line exactly "Votes & hex map: The Downballot". Replace the second line, currently "National baseline: FEC · the-db.co/presbycd", with exactly "the-db.co/presbycd", in the same small navy sans-serif style, left aligned beneath the first line. Remove the words "National baseline: FEC" and the dot separator completely.
+
+Keep absolutely everything else unchanged: every map shape and red/white/blue district fill, Utah's all-red districts, the right Mapbox map, "© Mapbox", the large lowercase "fourthirtyfive" wordmark, the clean navy point-up hexagonal border, warm white interior, transparent exterior, and all spacing. Do not redraw the maps, restyle the image, add decoration, or change colors. This is only a two-line source-credit text edit.
+
+Final approved credit edit (built-in image_gen):
+
+Edit target: the existing fourthirtyfive package hex sticker. Make only one tiny text deletion: remove the second source-credit line reading "the-db.co/presbycd" from the lower LEFT of the sticker. Leave the first line exactly "Votes & hex map: The Downballot" in its current position and style. Fill the deleted line area with the same warm white background. Preserve absolutely everything else, including every red/white/blue district fill and state outline, Utah's entirely red districts, the right geographic map, the "© Mapbox" credit, the bold lowercase "fourthirtyfive" wordmark, the navy hex border, the warm white interior, the transparent exterior, dimensions and composition. Do not redraw maps or change colors, lettering or spacing elsewhere. Final result: just the first Downballot credit line, no URL beneath it.

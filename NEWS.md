@@ -6,7 +6,7 @@
   vote, weighting the newer election 75% and the older election 25%. Source gaps
   remain missing; no scores are copied from Cook's tables.
 - Use the complete 2024-election district map (Congress start year 2025) for
-  the normal-vote example in the README.
+  the normal-vote example in the README and the package hex sticker.
 
 # fourthirtyfive 0.1.0
 

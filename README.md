@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# fourthirtyfive
+# fourthirtyfive <img src="man/figures/logo.png" align="right" width="160" alt="fourthirtyfive hex sticker with a normal-vote cartogram and geographic district map" />
 
 <!-- badges: start -->
 

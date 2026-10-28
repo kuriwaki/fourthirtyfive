@@ -11,3 +11,12 @@
 /pkgdown/assets/maps/
 /data-raw/cook-pvi/
 /data-raw/normal-vote/raw/
+/data-raw/sticker/design-prompt.txt
+/data-raw/sticker/design-prompt-pvi.txt
+/data-raw/sticker/design-prompt-credits.txt
+/data-raw/sticker/hex-2026.png
+/data-raw/sticker/hex-pvi-2026.png
+/data-raw/sticker/mapbox-2026.png
+/data-raw/sticker/render-map-references.R
+/data-raw/sticker/render-pvi-reference.R
+/man/figures/logo-draft*.png
