@@ -43,8 +43,8 @@ regular House election, calculate Democratic two-party vote share, and label
 them X\if{html}{\out{<sub>}}2\if{html}{\out{</sub>}} (older) and X\if{html}{\out{<sub>}}1\if{html}{\out{</sub>}} (newer). Then we compute the
 normal vote as 0.25*(X\if{html}{\out{<sub>}}2\if{html}{\out{</sub>}} - Avg(X\if{html}{\out{<sub>}}2\if{html}{\out{</sub>}})) + 0.75*(X\if{html}{\out{<sub>}}1\if{html}{\out{</sub>}} - Avg(X\if{html}{\out{<sub>}}1\if{html}{\out{</sub>}}))
 where the Avg( ) operator indicates the national popular vote
-(not exactly, but close to, an average). As noted above, this follows the
-method of the Cook PVI.
+(not exactly, but close to, an average of the 435 districts).
+As noted above, this follows the method of the Cook PVI.
 
 In light of the intellectual-property language in
 \href{https://www.cookpolitical.com/terms-and-conditions}{The Cook Political Report's terms and conditions},
@@ -57,8 +57,7 @@ reuse policy, which welcomes reuse with a citation and a source link.
 These independently calculated values may differ from Cook's published
 scores because the underlying vote allocations can differ.
 The Downballot's compilation does not yet provide both 2020 and 2024
-presidential results for all redrawn 2027 districts. The package therefore
-provides 262 normal vote estimates for the 2027 map and leaves 173 missing.
+presidential results for all redrawn 2027 districts.
 Cook's published PVI scores for that map can be obtained publicly from its
 \href{https://www.cookpolitical.com/cook-pvi/2026-partisan-voting-index/district-map-and-list}{district page}
 (published July 2026).
@@ -79,6 +78,7 @@ hex_normal_vote <- cd_hexmap(year = 2025) |>
 
 ggplot(hex_normal_vote, aes(group = cd, fill = normal_vote)) +
   ggredist::geom_district(color = "white", linewidth = 0.1) +
+  labs(title = "Normal vote, 2024 election map") +
   ggredist::scale_fill_party_c(
     name = "Normal vote", midpoint = 0, limits = c(-0.4, 0.4),
     labels = ggredist::label_party_margin(midpoint = 0)

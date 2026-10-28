@@ -233,18 +233,16 @@ documented 75/25 methodology of the well-known [Cook Partisan Voting
 Index (Cook PVI)](https://www.cookpolitical.com/cook-pvi). It averages
 the district’s Democratic two-party vote share relative to the national
 share in the two most recent presidential elections, weighting the newer
-election 75% and the older election 25%. National shares include DC;
-third-party votes are excluded from the denominator. The numeric
-`normal_vote` column is unrounded and expressed as a proportion: `0.05`
-means five percentage points more Democratic than the nation, and
-`-0.05` means five points more Republican.
+election 75% and the older election 25%. `+0.05` thus indicates five
+percentage points more Democratic than the nation, and `-0.05` indicates
+five points more Republican.
 
-The map below uses the **2024 election’s district boundaries**,
+The map below uses the **2024** election’s district boundaries,
 corresponding to `year = 2025` / the 119th Congress, with 2020 and 2024
-presidential returns available for all 435 districts. The 2027 district
-table retains missing values where 2020 returns on the redrawn
-boundaries are unavailable; see `?cd_normal_vote` and `cd_available()`
-for coverage.
+presidential returns available for all 435 districts. Cook’s PVI for the
+2027 map can be obtained from their
+[website](https://www.cookpolitical.com/cook-pvi) but we do not download
+them here due to their stringent IP rules.
 
 Red indicates a Republican lean and blue a Democratic lean. The legend
 is in percentage points. The optional `ggredist` package supplies the
@@ -286,12 +284,14 @@ ggplot(hex_normal_vote) +
     aes(group = state), fill = NA, color = "grey40", linewidth = 0.25,
     show.legend = FALSE
   ) +
+  labs(title = "Normal vote, 2024 election map") +
   ggredist::scale_fill_party_c(
     name = "Normal vote", midpoint = 0, limits = c(-0.4, 0.4),
     labels = ggredist::label_party_margin(midpoint = 0)
   ) +
   ggredist::theme_map(
     text = element_text(family = "sans", size = 11, color = "black"),
+    plot.title = element_text(size = 12, hjust = 0.5),
     legend.position = "bottom",
     legend.title.position = "top",
     legend.text = element_text(size = 11, color = "black"),
