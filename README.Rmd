@@ -100,7 +100,7 @@ remotes::install_github("kuriwaki/fourthirtyfive")
 ```
 
 
-## Example
+## Examples
 
 Use the `cd_` functions to retrieve district data. Type `cd_` in RStudio to discover the family with autocomplete.
 
@@ -170,10 +170,10 @@ cd_shps |>
 ```
 
 We can compare Tennessee's district boundaries for the 119th and 120th Congresses.
-The maps use the same extent and district colors, with the 119th Congress above
-the 120th.
+The maps use the same extent and district colors, with the 119th Congress on the
+left and the 120th on the right.
 
-```{r tn-boundaries, fig.width=9, fig.height=6.5, message=FALSE, echo=FALSE}
+```{r tn-boundaries, fig.width=12, fig.height=4, message=FALSE, echo=FALSE}
 library(patchwork)
 
 tn_boundaries <- cd_boundaries(congress = c(119, 120), state = "TN")
@@ -199,7 +199,7 @@ plot_tn <- function(congress_number, title) {
 tn_119 <- plot_tn(119, "119th Congress (2025-2026)")
 tn_120 <- plot_tn(120, "120th Congress (2027-2028)")
 
-(tn_119 / tn_120) +
+(tn_119 | tn_120) +
   plot_annotation(
     title = "Tennessee congressional districts",
     caption = "Source: U.S. Census Bureau via tigris. 119th: 2024 cartographic boundaries;\n120th: 2026 TIGER/Line boundaries, simplified for display. Colors identify district numbers."
@@ -287,7 +287,10 @@ PVI data: [The Cook Political Report](https://www.cookpolitical.com/races),
 collected October 25, 2026. Hex cartogram:
 [The Downballot](https://the-db.co/maps), via `cd_hexmap()`.
 
-```{r pvi-hexmap, fig.width=5, fig.height=3, dev="ragg_png", dpi=300, fig.retina=1, message=FALSE, fig.alt="2027 House hex map colored by Cook PVI: Republican-leaning districts in red, Democratic-leaning districts in blue, with state outlines."}
+<details>
+<summary>Show the R code for the Cook PVI map</summary>
+
+```{r pvi-hexmap-code, eval=FALSE}
 library(dplyr)
 library(ggplot2)
 
@@ -322,6 +325,11 @@ ggplot(hex_pvi) +
   )
 ```
 
+</details>
+
+```{r pvi-hexmap, ref.label="pvi-hexmap-code", echo=FALSE, fig.width=5, fig.height=3, dev="ragg_png", dpi=300, fig.retina=1, message=FALSE, fig.alt="2027 House hex map colored by Cook PVI: Republican-leaning districts in red, Democratic-leaning districts in blue, with state outlines."}
+```
+
 
 
 ## Year definition and availability
@@ -352,8 +360,9 @@ fourthirtyfive::cd_available()
 
 ## AI assistance for this package
 
-Fronteir AI models assisted with package code, documentation,
+Frontier AI models wrote a large share of package code, documentation,
 data collection and preparation, and checks of district descriptions and map
-geometry. The human authors reviewed the output and core functionalities of the code, and retain responsibility for the package's content
+geometry. These contributions are documented in the public Github source code. 
+The human authors reviewed the output and core functionalities of the code, to vouch for the package's content
 and accuracy. Data sources and contributors are credited in the relevant
 documentation.

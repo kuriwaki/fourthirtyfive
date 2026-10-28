@@ -34,7 +34,7 @@ You can install the development version of fourthirtyfive from
 remotes::install_github("kuriwaki/fourthirtyfive")
 ```
 
-## Example
+## Examples
 
 Use the `cd_` functions to retrieve district data. Type `cd_` in RStudio
 to discover the family with autocomplete.
@@ -72,29 +72,6 @@ cd_dotmap(2023) |>
 ```
 
 <img src="man/figures/README-dotmap-1.png" alt="" width="100%" />
-
-Dotmaps are also available as bundled datasets:
-
-``` r
-shp_dot_2023
-#> Simple feature collection with 435 features and 2 fields
-#> Geometry type: POINT
-#> Dimension:     XY
-#> Bounding box:  xmin: -2288151 ymin: 118141.6 xmax: 2073753 ymax: 3105727
-#> Projected CRS: NAD83 / Conus Albers
-#> First 10 features:
-#>    cong    cd                  geometry
-#> 1   118 AK-01 POINT (-1935091 654711.3)
-#> 2   118 AL-01 POINT (780145.2 921677.4)
-#> 3   118 AL-02  POINT (934714.7 1007996)
-#> 4   118 AL-03  POINT (947758.5 1172320)
-#> 5   118 AL-04  POINT (799973.5 1270900)
-#> 6   118 AL-05  POINT (852955.2 1339883)
-#> 7   118 AL-06  POINT (851197.4 1185212)
-#> 8   118 AL-07  POINT (783499.7 1078747)
-#> 9   118 AR-01  POINT (421002.1 1377139)
-#> 10  118 AR-02  POINT (328419.7 1351219)
-```
 
 ### Hex maps
 
@@ -143,7 +120,7 @@ cd_shps |>
 
 We can compare Tennessee’s district boundaries for the 119th and 120th
 Congresses. The maps use the same extent and district colors, with the
-119th Congress above the 120th.
+119th Congress on the left and the 120th on the right.
 
 <img src="man/figures/README-tn-boundaries-1.png" alt="" width="100%" />
 
@@ -153,8 +130,8 @@ Mapbox is a recent tool that allows for *interactive* maps, so users can
 zoom into particular places and overlay them with real city names. The
 package provides a wrapper,
 [`cd_mapbox()`](https://www.shirokuriwaki.com/fourthirtyfive/reference/cd_mapbox.html),
-to do this. This tool is useful too to compare how much of a district overlaps with a city, or how
-redistricting has changed.
+to do this. This tool is useful too to compare how much of a district
+overlaps with a city, or how redistricting has changed.
 
 For example, compare Tennessee’s 9th district, represented by [Steve
 Cohen](https://clerk.house.gov/members/C001068) in the 119th Congress,
@@ -209,10 +186,10 @@ the 119th Congress in blue and the 120th in orange.</figcaption>
 
 </details>
 
-`detailed = TRUE` (the default) uses full-resolution Census TIGER/Line district
-boundaries for these interactive maps, including the 119th Congress. Use
-`detailed = FALSE` for smaller, generalized maps. Historical boundary precision
-still depends on the original source.
+`detailed = TRUE` (the default) uses full-resolution Census TIGER/Line
+district boundaries for these interactive maps, including the 119th
+Congress. Use `detailed = FALSE` for smaller, generalized maps.
+Historical boundary precision still depends on the original source.
 
 These interactive maps require the optional `mapgl` package and a Mapbox
 public token. See the [Mapbox setup
@@ -263,6 +240,13 @@ Report](https://www.cookpolitical.com/races), collected October 25,
 2026. Hex cartogram: [The Downballot](https://the-db.co/maps), via
 `cd_hexmap()`.
 
+<details>
+
+<summary>
+
+Show the R code for the Cook PVI map
+</summary>
+
 ``` r
 library(dplyr)
 library(ggplot2)
@@ -297,6 +281,8 @@ ggplot(hex_pvi) +
     plot.margin = margin(2, 2, 2, 2)
   )
 ```
+
+</details>
 
 <img src="man/figures/README-pvi-hexmap-1.png" alt="2027 House hex map colored by Cook PVI: Republican-leaning districts in red, Democratic-leaning districts in blue, with state outlines." width="100%" />
 
@@ -344,9 +330,10 @@ fourthirtyfive::cd_available()
 
 ## AI assistance for this package
 
-Fronteir AI models assisted with package code, documentation, data
-collection and preparation, and checks of district descriptions and map
-geometry. The human authors reviewed the output and core functionalities
-of the code, and retain responsibility for the package’s content and
+Frontier AI models wrote a large share of package code, documentation,
+data collection and preparation, and checks of district descriptions and
+map geometry. These contributions are documented in the public Github
+source code. The human authors reviewed the output and core
+functionalities of the code, to vouch for the package’s content and
 accuracy. Data sources and contributors are credited in the relevant
 documentation.
