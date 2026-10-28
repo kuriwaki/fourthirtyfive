@@ -51,7 +51,8 @@ Other congressional district functions:
 \code{\link[=cd_boundaries]{cd_boundaries()}},
 \code{\link[=cd_hexmap]{cd_hexmap()}},
 \code{\link[=cd_mapbox]{cd_mapbox()}},
-\code{\link[=cd_names]{cd_names()}}
+\code{\link[=cd_names]{cd_names()}},
+\code{\link[=cd_normal_vote]{cd_normal_vote()}}
 }
 \author{
 Zoya Ahmer, Shiro Kuriwaki, Cory McCartan

@@ -13,3 +13,4 @@ explore/
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^man/figures/logo-draft.*\.png$

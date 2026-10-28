@@ -19,8 +19,8 @@ does not imply that every product uses distinct geometry for every Congress.
 \description{
 Print a compact guide to the package's data functions, their coverage, and
 their sources. Availability of bundled dotmaps, hexmaps, and district names
-is read from the package data index. PVI coverage counts are read from the
-bundled PVI table. No maps are downloaded or loaded.
+is read from the package data index. Normal vote coverage counts are read
+from the bundled normal vote table. No maps are downloaded or loaded.
 }
 \details{
 Boundary maps cover Congresses 1 through 120 and are retrieved from
@@ -42,6 +42,7 @@ Other congressional district functions:
 \code{\link[=cd_dotmap]{cd_dotmap()}},
 \code{\link[=cd_hexmap]{cd_hexmap()}},
 \code{\link[=cd_mapbox]{cd_mapbox()}},
-\code{\link[=cd_names]{cd_names()}}
+\code{\link[=cd_names]{cd_names()}},
+\code{\link[=cd_normal_vote]{cd_normal_vote()}}
 }
 \concept{congressional district functions}

@@ -4,8 +4,8 @@
 #'
 #' Print a compact guide to the package's data functions, their coverage, and
 #' their sources. Availability of bundled dotmaps, hexmaps, and district names
-#' is read from the package data index. PVI coverage counts are read from the
-#' bundled PVI table. No maps are downloaded or loaded.
+#' is read from the package data index. Normal vote coverage counts are read
+#' from the bundled normal vote table. No maps are downloaded or loaded.
 #'
 #' @param quiet Logical. Set to `TRUE` to suppress the guide and obtain only the
 #'   returned availability table.
@@ -58,17 +58,21 @@ cd_available <- function(quiet = FALSE) {
       source = sources
     )
   })
-  pvi_data <- .cd_pvi_table()
-  pvi_congresses <- sort(unique(pvi_data$cong[pvi_data$geography == "district"]))
-  pvi_available <- tibble::tibble(
-    accessor = rep("cd_pvi", length(pvi_congresses)),
-    year = cong_to_firstyear(pvi_congresses),
-    congress = pvi_congresses,
-    source = vapply(pvi_congresses, function(congress) {
-      .cd_pvi_source_summary(pvi_data[pvi_data$cong == congress, ])
+  normal_vote_data <- .cd_normal_vote_table()
+  normal_vote_congresses <- sort(unique(
+    normal_vote_data$cong[normal_vote_data$geography == "district"]
+  ))
+  normal_vote_available <- tibble::tibble(
+    accessor = rep("cd_normal_vote", length(normal_vote_congresses)),
+    year = cong_to_firstyear(normal_vote_congresses),
+    congress = normal_vote_congresses,
+    source = vapply(normal_vote_congresses, function(congress) {
+      .cd_normal_vote_source_summary(
+        normal_vote_data[normal_vote_data$cong == congress, ]
+      )
     }, character(1))
   )
-  available <- dplyr::bind_rows(boundaries, bundled, pvi_available)
+  available <- dplyr::bind_rows(boundaries, bundled, normal_vote_available)
 
   if (!quiet) {
     cli::cli_h2("Available congressional district data")
@@ -77,9 +81,9 @@ cd_available <- function(quiet = FALSE) {
       cd_dotmap = "Lewis / US Census, dodged centroids",
       cd_hexmap = "hexmap / The Downballot",
       cd_names = "Daily Kos / The Downballot / contributors",
-      cd_pvi = "The Cook Political Report; public-source gaps are NA"
+      cd_normal_vote = "calculated from The Downballot; missing input pairs are NA"
     )
-    for (accessor in c("cd_boundaries", names(prefixes), "cd_pvi")) {
+    for (accessor in c("cd_boundaries", names(prefixes), "cd_normal_vote")) {
       product <- available[available$accessor == accessor, ]
       if (nrow(product) == 0L) {
         cli::cli_bullets(c("*" = "{.fun {accessor}}: no bundled data."))
@@ -94,7 +98,7 @@ cd_available <- function(quiet = FALSE) {
     }
     cli::cli_text("Years refer to the start of a Congress, not its election year.")
     cli::cli_text("Historical hexmaps for 2005-2011 reuse the generated 2009 map.")
-    cli::cli_text("PVI tables flag unavailable and documented unchanged values; inspect their status column.")
+    cli::cli_text("Normal vote values require two presidential results on matching maps; missing pairs are NA.")
   }
 
   invisible(available)
