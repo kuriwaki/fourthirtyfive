@@ -1,12 +1,12 @@
-# fourthirtyfive (development version)
+# fourthirtyfive 0.1.1
 
-- Replace the bundled Cook PVI scores and `cd_pvi()` / `pvi_to_numeric()` API
-  with independently calculated normal vote, retrieved by `cd_normal_vote()`.
-  Normal vote uses two-party presidential vote shares relative to the national
-  vote, weighting the newer election 75% and the older election 25%. Source gaps
-  remain missing; no scores are copied from Cook's tables.
-- Use the complete 2024-election district map (Congress start year 2025) for
-  the normal-vote example in the README and the package hex sticker.
+- Recomputed normal vote from Donwballot sources
+- Repair gaps between hexmap districts before bundling the data, so state
+  outlines draw without spurious inner borders.
+- Use full-resolution district boundaries by default in `cd_mapbox()` for
+  closer inspection of cities. Set `detailed = FALSE` for lighter maps.
+- Add a package hex sticker combining a normal-vote cartogram and geographic
+  district boundaries. 
 
 # fourthirtyfive 0.1.0
 
@@ -17,8 +17,6 @@ First public version, released 2026-10-25
   Older `load_*()` functions remain aliases with the same arguments and
   results. 
 - Update data to the districts for the 120th (2027) Congress.
-- Repair gaps between hexmap districts before bundling the data, so state
-  outlines draw without spurious inner borders.
 - Correct FL and NC district names for the 113th and 114th Congresses, and
   NC names for the 117th Congress, using descriptions for the matching maps.
 - Retrieve district or statewide Cook PVI with `cd_pvi()` for Congress start
