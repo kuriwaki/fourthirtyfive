@@ -25,6 +25,24 @@
 #'  for all of 2005-2011, since the number of districts per state was constant over the
 #'  2000-census apportionment decade.
 #'
+#' @section Licensing and attribution:
+#' The Downballot-derived cartogram material is the Congressional District
+#' Hexmap by Daniel Donner for [The Downballot](https://the-db.co/maps), licensed
+#' under [Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+#' Older source files may be branded Daily Kos Elections.
+#'
+#' The package standardizes district identifiers, repairs narrow geometry gaps,
+#' translates the 2023 cartogram to align with later maps, and reuses version
+#' 2.1 for 2013-2021. The generated 2005-2011 maps also use The Downballot's
+#' state layout for placement and scaling. The README figures and logo adapt
+#' this map material through plotting, recoloring, cropping, or composition.
+#'
+#' Retain the creator credit, source and license links, and an indication of
+#' changes when publishing or redistributing the licensed map material.
+#' Full attribution and scope are in the installed `LICENSE.note`, located by
+#' `system.file("LICENSE.note", package = "fourthirtyfive")`. The package's R
+#' code remains under the MIT License.
+#'
 #' @author Daniel Donner (2013–2027 shapefiles); Cory McCartan (2005-2011 hexmap generation)
 #' @source 2013–2027: \url{https://the-db.co/maps}. 2005-2011: created with
 #'   \href{https://github.com/CoryMcCartan/hexmap}{CoryMcCartan/hexmap} using
@@ -83,6 +101,8 @@ cd_hexmap <- function(year = NULL, congress = NULL) {
 #' @docType data
 #' @keywords datasets
 #' @description Loads Daily Kos / Downballot Elections cartogram shapefile of coordinates for each district.
+#'
+#' @inheritSection cd_hexmap Licensing and attribution
 #'
 #' @format Each object is for a particular year. The year indicates the start
 #'  of that Congress. Each observation is a congressional district, represented by

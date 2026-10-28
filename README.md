@@ -79,12 +79,17 @@ cd_dotmap(2023) |>
 
 We also provide **hexmaps** (i.e., maps that present CDs as combinations
 of hexagons) for Congresses starting in 2005–2027. The 2013–2027 maps
-are sourced from the Downballot’s hex map shapefiles
-(<https://the-db.co/maps>). The 2005–2011 maps reuse a 2009 map
-generated with Cory McCartan’s
-[hexmap](https://github.com/CoryMcCartan/hexmap) package. The 2013–2021
-maps also reuse one cartogram, so these historical hexmaps do not
-capture every mid-decade boundary change.
+adapt [Daniel Donner’s Congressional District Hexmap for The
+Downballot](https://the-db.co/maps), licensed under [Creative Commons
+Attribution 4.0 International (CC BY
+4.0)](https://creativecommons.org/licenses/by/4.0/). The 2005–2011 maps
+reuse a 2009 map generated with Cory McCartan’s
+[hexmap](https://github.com/CoryMcCartan/hexmap) package, using The
+Downballot’s state layout for placement and scaling. The 2013–2021 maps
+also reuse one cartogram, so these historical hexmaps do not capture
+every mid-decade boundary change. See the [licensing and modification
+notice](https://github.com/kuriwaki/fourthirtyfive/blob/main/inst/LICENSE.note)
+for details.
 
 ``` r
 cd_hexmap(2023) |>
@@ -244,20 +249,6 @@ presidential returns available for all 435 districts. Cook’s PVI for the
 [website](https://www.cookpolitical.com/cook-pvi) but we do not download
 them here due to their stringent IP rules.
 
-Red indicates a Republican lean and blue a Democratic lean. The legend
-is in percentage points. The optional `ggredist` package supplies the
-district and state outlines, partisan color scale, and legend labels;
-`midpoint = 0` centers the colors on the national vote.
-
-Presidential returns: [The Downballot](https://the-db.co/presbycd).
-National baseline: fixed national two-party shares, verified against the
-[2020](https://en.wikipedia.org/wiki/2020_United_States_presidential_election)
-and
-[2024](https://en.wikipedia.org/wiki/2024_United_States_presidential_election)
-presidential vote totals. Hex cartogram: [The
-Downballot](https://the-db.co/maps), via `cd_hexmap()`. These are the
-package’s own calculations, separate from published Cook PVI scores.
-
 <details>
 
 <summary>
@@ -347,6 +338,29 @@ fourthirtyfive::cd_available()
 #> Normal vote values require two presidential results on matching maps; missing
 #> pairs are NA.
 ```
+
+## Licensing and attribution
+
+The package’s R code is licensed under the [MIT License](LICENSE.md).
+The Downballot-derived hexmap material, including that used in the
+README figures and the package logo, is licensed under [CC BY
+4.0](https://creativecommons.org/licenses/by/4.0/). Credit:
+[Congressional District Hexmap by Daniel Donner for The
+Downballot](https://the-db.co/maps).
+
+The package standardizes identifiers, repairs narrow geometry gaps,
+translates the 2023 cartogram, and reuses cartograms for some historical
+Congresses. The normal-vote figure adds partisan colors; the logo
+recolors and crops the hex cartogram and combines it with a geographic
+map. The CC BY notice covers the Downballot-derived map material. The
+presidential vote inputs and Mapbox basemap have separate source and
+reuse information.
+
+Full credits and modifications are recorded in
+[LICENSE.note](https://github.com/kuriwaki/fourthirtyfive/blob/main/inst/LICENSE.note),
+which is also included in the installed package. When sharing a figure
+or sticker separately, include the creator credit, source and license
+links, and an indication of changes in its accompanying credits.
 
 ## AI assistance for this package
 

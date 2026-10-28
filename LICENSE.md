@@ -1,5 +1,11 @@
 # MIT License
 
+The package's R code is licensed under the MIT License below. The
+Downballot-derived hexmap material is licensed under
+[Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/).
+See [LICENSE.note](https://github.com/kuriwaki/fourthirtyfive/blob/main/inst/LICENSE.note)
+for its attribution, scope, and modifications.
+
 Copyright (c) 2025 fourthirtyfive authors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

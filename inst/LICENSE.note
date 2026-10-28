@@ -1,0 +1,56 @@
+Licensing and attribution for fourthirtyfive
+
+R code
+
+The package's R code is licensed under the MIT License. The separate notice
+below applies to The Downballot's map material incorporated in the package.
+
+The Downballot's hex cartogram material
+
+Credit: Congressional District Hexmap by Daniel Donner for The Downballot.
+Some older source files are branded Daily Kos Elections.
+Source maps: https://the-db.co/maps
+Publisher's license notice:
+https://docs.google.com/spreadsheets/d/13XkF59JKzvw4SeSq5mbgIFrJfYjK4amg9JoQE5e9grQ/edit?gid=1250379179#gid=1250379179
+License: Creative Commons Attribution 4.0 International (CC BY 4.0).
+License and warranty disclaimer: https://creativecommons.org/licenses/by/4.0/
+Legal code: https://creativecommons.org/licenses/by/4.0/legalcode.en
+
+The Downballot-derived map material retains its CC BY 4.0 license; the MIT
+notice for the package's R code does not replace that license.
+
+Scope and modifications
+
+The shp_hex_2013 through shp_hex_2027 datasets adapt The Downballot's district
+cartograms: version 2.1 for Congress start years 2013-2021, version 3.0 for
+2023, version 3.1 for 2025, and version 3.2 for 2027. District identifiers and
+attributes are standardized, narrow gaps and invalid geometry are repaired,
+and the 2023 cartogram is translated to align with later versions. The same
+version 2.1 geometry is reused for 2013-2021, so these maps do not represent
+every historical boundary change.
+
+The shp_hex_2005 through shp_hex_2011 datasets reuse a generated 2009 district
+cartogram made with Cory McCartan's hexmap package and Jeffrey B. Lewis's
+historical district boundaries. State placement and scaling use The
+Downballot / Daily Kos Elections state cartogram, with adjustments for the
+older apportionment. The result is rescaled and centered to match the extent
+of the version 2.1 district cartogram, and geometry gaps are repaired. This
+notice covers those Downballot-derived layout inputs; it does not assert
+that all inputs to the generated maps share the same license.
+
+The README figures and sticker reference maps visualize these adapted
+cartograms. The normal-vote figure adds independently calculated partisan
+colors. The hex cartogram in man/figures/logo.png is recolored, cropped, and
+combined with a geographic district map. This CC BY 4.0 notice applies to
+the Downballot-derived hexmap material, not the Mapbox basemap or other
+components of the logo. Presidential election inputs have separate source
+and reuse information documented by cd_normal_vote().
+
+Redistribution
+
+Retain the Daniel Donner / The Downballot credit, source and license links,
+and an indication of modifications when sharing the licensed map material,
+including in figures or the logo. Accompanying credits may be used where
+appropriate to the medium. When distributing a map or sticker separately
+from the package, include those credits with it. The licensed material is
+provided as-is, subject to the warranty disclaimer in CC BY 4.0.

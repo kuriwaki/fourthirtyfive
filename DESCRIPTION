@@ -16,6 +16,8 @@ URL: https://www.shirokuriwaki.com/fourthirtyfive/,
     https://github.com/kuriwaki/fourthirtyfive
 BugReports: https://github.com/kuriwaki/fourthirtyfive/issues
 License: MIT + file LICENSE
+Note: The Downballot-derived hexmap material is licensed under CC BY 4.0.
+    See the installed LICENSE.note for attribution, scope, and modifications.
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Imports:

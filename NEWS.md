@@ -7,6 +7,9 @@
   closer inspection of cities. Set `detailed = FALSE` for lighter maps.
 - Add a package hex sticker combining a normal-vote cartogram and geographic
   district boundaries. 
+- Document the CC BY 4.0 license for The Downballot's hexmap material, with
+  Daniel Donner's attribution, source and license links, and modification
+  notices in the README, help pages, and installed package.
 
 # fourthirtyfive 0.1.0
 

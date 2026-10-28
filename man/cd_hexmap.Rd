@@ -46,6 +46,26 @@ by a redistricting algorithm. The same hexmap (the 111th Congress / 2009 distric
 for all of 2005-2011, since the number of districts per state was constant over the
 2000-census apportionment decade.
 }
+\section{Licensing and attribution}{
+
+The Downballot-derived cartogram material is the Congressional District
+Hexmap by Daniel Donner for \href{https://the-db.co/maps}{The Downballot}, licensed
+under \href{https://creativecommons.org/licenses/by/4.0/}{Creative Commons Attribution 4.0 International (CC BY 4.0)}.
+Older source files may be branded Daily Kos Elections.
+
+The package standardizes district identifiers, repairs narrow geometry gaps,
+translates the 2023 cartogram to align with later maps, and reuses version
+2.1 for 2013-2021. The generated 2005-2011 maps also use The Downballot's
+state layout for placement and scaling. The README figures and logo adapt
+this map material through plotting, recoloring, cropping, or composition.
+
+Retain the creator credit, source and license links, and an indication of
+changes when publishing or redistributing the licensed map material.
+Full attribution and scope are in the installed \code{LICENSE.note}, located by
+\code{system.file("LICENSE.note", package = "fourthirtyfive")}. The package's R
+code remains under the MIT License.
+}
+
 \examples{
 # load one dataset
 cd_hexmap(year = 2019)
