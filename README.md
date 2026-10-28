@@ -14,15 +14,18 @@ coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-c
 coverage](https://raw.githubusercontent.com/kuriwaki/fourthirtyfive/codex/data-coverage/names.svg)](https://github.com/kuriwaki/fourthirtyfive/tree/main/data)
 <!-- badges: end -->
 
-Creator / Maintainer: Shiro Kuriwaki
+`fourthirtyfive` is a R library collecting shapefiles, CD descriptors,
+and other data for the 435 congressional districts in the U.S. House,
+gathering good ideas from various authors.
 
-Contributors: Zoya Ahmer, Zachary Donnini, Cory McCartan
-
-Copyright holders: Downballot and Cook Political Report (some data)
-
-`fourthirtyfive` is a package that provides shapefiles and other data
-for the 435 congressional districts, gathering good ideas from various
-authors.
+It is created and maintained by [Shiro
+Kuriwaki](https://www.shirokuriwaki.com), with contributions from Cory
+McCartan, Zachary Donnini, Zoya Ahmer, featuring data made generously
+public by Jeffrey Lewis, [The
+Downballot](https://www.the-downballot.com/p/data), and others. It also
+plays well with a standardized set of candidate election results and
+incumbency information,
+[CAGE](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DGDRDT).
 
 ## Installation
 
@@ -49,8 +52,7 @@ library(fourthirtyfive)
 | `cd_dotmap()` | Dodged district points as an `sf` object |
 | `cd_hexmap()` | District hex cartograms as an `sf` object |
 | `cd_names()` | Descriptive geographical district names as a tibble |
-| `cd_pvi()` | Historical Cook PVI labels, with public-source gaps flagged |
-| `pvi_to_numeric()` | Cook PVI labels as signed proportions for either party |
+| `cd_normal_vote()` | Independently calculated presidential partisan lean, with source gaps flagged |
 | `cd_available()` | A CLI summary and an invisible availability table |
 
 ### Dot maps
@@ -223,51 +225,69 @@ cd_names(2007)
 #> # ℹ 425 more rows
 ```
 
-### Cook PVI
+### Normal vote
 
-Use `cd_pvi()` to retrieve the data. See `?cd_pvi` for documentation and
-`cd_available()` for coverage.
+Use `cd_normal_vote()` to retrieve an independently calculated measure
+of presidential partisan lean. The calculation follows the publicly
+documented 75/25 methodology of the well-known [Cook Partisan Voting
+Index (Cook PVI)](https://www.cookpolitical.com/cook-pvi). It averages
+the district’s Democratic two-party vote share relative to the national
+share in the two most recent presidential elections, weighting the newer
+election 75% and the older election 25%. National shares include DC;
+third-party votes are excluded from the denominator. The numeric
+`normal_vote` column is unrounded and expressed as a proportion: `0.05`
+means five percentage points more Democratic than the nation, and
+`-0.05` means five points more Republican.
 
-The map below shows Cook PVI for all 435 districts in the 120th Congress
-(2027–2028), using the district maps for the 2026 election. Red
-indicates a Republican lean and blue a Democratic lean. The legend is in
-PVI points. The optional `ggredist` package supplies the district and
-state outlines, partisan color scale, and legend labels; `midpoint = 0`
-preserves the PVI scale.
+The map below uses the **2024 election’s district boundaries**,
+corresponding to `year = 2025` / the 119th Congress, with 2020 and 2024
+presidential returns available for all 435 districts. The 2027 district
+table retains missing values where 2020 returns on the redrawn
+boundaries are unavailable; see `?cd_normal_vote` and `cd_available()`
+for coverage.
 
-PVI data: [The Cook Political
-Report](https://www.cookpolitical.com/races), collected October 25,
-2026. Hex cartogram: [The Downballot](https://the-db.co/maps), via
-`cd_hexmap()`.
+Red indicates a Republican lean and blue a Democratic lean. The legend
+is in percentage points. The optional `ggredist` package supplies the
+district and state outlines, partisan color scale, and legend labels;
+`midpoint = 0` centers the colors on the national vote.
+
+Presidential returns: [The Downballot](https://the-db.co/presbycd).
+National baseline: fixed national two-party shares, verified against the
+[2020](https://en.wikipedia.org/wiki/2020_United_States_presidential_election)
+and
+[2024](https://en.wikipedia.org/wiki/2024_United_States_presidential_election)
+presidential vote totals. Hex cartogram: [The
+Downballot](https://the-db.co/maps), via `cd_hexmap()`. These are the
+package’s own calculations, separate from published Cook PVI scores.
 
 <details>
 
 <summary>
 
-Show the R code for the Cook PVI map
+Show the R code for the normal-vote map
 </summary>
 
 ``` r
 library(dplyr)
 library(ggplot2)
 
-hex_pvi <- cd_hexmap(year = 2027) |>
+hex_normal_vote <- cd_hexmap(year = 2025) |>
   left_join(
-    cd_pvi(year = 2027) |> select(cong, cd, pvi),
+    cd_normal_vote(year = 2025) |> select(cong, cd, normal_vote),
     by = c("cong", "cd"), relationship = "one-to-one"
   ) |>
-  mutate(pvi_D = pvi_to_numeric(pvi), state = substr(cd, 1, 2))
+  mutate(state = substr(cd, 1, 2))
 
-ggplot(hex_pvi) +
+ggplot(hex_normal_vote) +
   ggredist::geom_district(
-    aes(group = cd, fill = pvi_D), color = "white", linewidth = 0.1
+    aes(group = cd, fill = normal_vote), color = "white", linewidth = 0.1
   ) +
   ggredist::geom_district(
     aes(group = state), fill = NA, color = "grey40", linewidth = 0.25,
     show.legend = FALSE
   ) +
   ggredist::scale_fill_party_c(
-    name = "Cook PVI", midpoint = 0, limits = c(-0.4, 0.4),
+    name = "Normal vote", midpoint = 0, limits = c(-0.4, 0.4),
     labels = ggredist::label_party_margin(midpoint = 0)
   ) +
   ggredist::theme_map(
@@ -284,7 +304,7 @@ ggplot(hex_pvi) +
 
 </details>
 
-<img src="man/figures/README-pvi-hexmap-1.png" alt="2027 House hex map colored by Cook PVI: Republican-leaning districts in red, Democratic-leaning districts in blue, with state outlines." width="100%" />
+<img src="man/figures/README-normal-vote-hexmap-1.png" alt="2024 election House hex map colored by independently calculated normal vote: Republican-leaning districts in red, Democratic-leaning districts in blue, with state outlines." width="100%" />
 
 ## Year definition and availability
 
@@ -320,12 +340,12 @@ fourthirtyfive::cd_available()
 #> • `cd_hexmap()`: 2005-2027 (Congresses 109-120); hexmap / The Downballot.
 #> • `cd_names()`: 2005-2027 (Congresses 109-120); Daily Kos / The Downballot /
 #>   contributors.
-#> • `cd_pvi()`: 1999-2027 (Congresses 106-120); The Cook Political Report;
-#>   public-source gaps are NA.
+#> • `cd_normal_vote()`: 2013-2027 (Congresses 113-120); calculated from The
+#>   Downballot; missing input pairs are NA.
 #> Years refer to the start of a Congress, not its election year.
 #> Historical hexmaps for 2005-2011 reuse the generated 2009 map.
-#> PVI tables flag unavailable and documented unchanged values; inspect their
-#> status column.
+#> Normal vote values require two presidential results on matching maps; missing
+#> pairs are NA.
 ```
 
 ## AI assistance for this package

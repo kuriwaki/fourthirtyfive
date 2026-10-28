@@ -1,3 +1,13 @@
+# fourthirtyfive (development version)
+
+- Replace the bundled Cook PVI scores and `cd_pvi()` / `pvi_to_numeric()` API
+  with independently calculated normal vote, retrieved by `cd_normal_vote()`.
+  Normal vote uses two-party presidential vote shares relative to the national
+  vote, weighting the newer election 75% and the older election 25%. Source gaps
+  remain missing; no scores are copied from Cook's tables.
+- Use the complete 2024-election district map (Congress start year 2025) for
+  the normal-vote example in the README.
+
 # fourthirtyfive 0.1.0
 
 First public version, released 2026-10-25

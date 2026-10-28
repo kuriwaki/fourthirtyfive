@@ -26,11 +26,9 @@ navbar:
 
 reference:
 - title: District data functions
-- contents: [cd_available, cd_boundaries, cd_dotmap, cd_hexmap, cd_names, cd_pvi, cd_mapbox]
-- title: Partisanship helpers
-- contents: [pvi_to_numeric]
+- contents: [cd_available, cd_boundaries, cd_dotmap, cd_hexmap, cd_names, cd_normal_vote, cd_mapbox]
 - title: Bundled datasets
-- contents: [shp_dot, shp_hex, shp_states, info, pvi]
+- contents: [shp_dot, shp_hex, shp_states, info, normal_vote]
 - title: Years and Congresses
 - contents: [year_to_cong, cong_to_firstyear]
 - title: Interactive map setup

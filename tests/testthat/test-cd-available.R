@@ -12,7 +12,7 @@ test_that("availability reports each bundled product without fetching maps", {
   expect_s3_class(available, "tbl_df")
   expect_named(available, c("accessor", "year", "congress", "source"))
   expect_setequal(unique(available$accessor), c(
-    "cd_boundaries", "cd_dotmap", "cd_hexmap", "cd_names", "cd_pvi"
+    "cd_boundaries", "cd_dotmap", "cd_hexmap", "cd_names", "cd_normal_vote"
   ))
   expect_identical(anyDuplicated(available[c("accessor", "congress")]), 0L)
   expect_identical(available$year, cong_to_firstyear(available$congress))
@@ -35,16 +35,23 @@ test_that("availability reports each bundled product without fetching maps", {
       sort(unique(bundled_years))
     )
   }
-  pvi_available <- available[available$accessor == "cd_pvi", ]
-  expect_identical(pvi_available$congress, 106:120)
-  expect_identical(pvi_available$year, seq.int(1999L, 2027L, 2L))
-  expected_counts <- c(412L, rep(0L, 11L), rep(435L, 3L))
-  expect_identical(
-    pvi_available$source,
-    as.character(glue::glue(
-      "The Cook Political Report ({expected_counts}/435 district values; gaps are NA)"
+  normal_vote_available <- available[available$accessor == "cd_normal_vote", ]
+  normal_vote_data <- cd_normal_vote()
+  expected_congresses <- sort(unique(normal_vote_data$cong))
+  expect_identical(normal_vote_available$congress, expected_congresses)
+  expect_identical(normal_vote_available$year, cong_to_firstyear(expected_congresses))
+  for (congress_id in expected_congresses) {
+    scores <- normal_vote_data$normal_vote[normal_vote_data$cong == congress_id]
+    expected_source <- as.character(glue::glue(
+      "Calculated from The Downballot ({sum(!is.na(scores))}/{length(scores)} district values; gaps are NA)"
     ))
-  )
+    expect_identical(
+      normal_vote_available$source[normal_vote_available$congress == congress_id],
+      expected_source
+    )
+  }
+  expect_match(normal_vote_available$source[normal_vote_available$year == 2025], "435/435")
+  expect_match(normal_vote_available$source[normal_vote_available$year == 2027], "262/435")
   historical_hexes <- available[
     available$accessor == "cd_hexmap" & available$year <= 2011L,
   ]
@@ -66,6 +73,8 @@ test_that("availability supports silent programmatic use and explains year seman
   guide <- capture.output(cd_available(), type = "message")
   expect_match(paste(guide, collapse = "\n"), "Years refer to the start of a Congress")
   expect_match(paste(guide, collapse = "\n"), "cd_boundaries")
+  expect_match(paste(guide, collapse = "\n"), "cd_normal_vote")
+  expect_match(paste(guide, collapse = "\n"), "matching maps")
   expect_error(cd_available(quiet = NA), "quiet.*TRUE.*FALSE")
   expect_error(cd_available(quiet = 1), "quiet.*TRUE.*FALSE")
 })
